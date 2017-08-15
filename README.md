@@ -81,6 +81,8 @@ For further information please have a look at the user manual (https://s3.comput
 ### Downloads
 ASA³P directory containing software and databases: https://s3.computational.bio.uni-giessen.de/swift/v1/asap/latest/asap.tar.gz
 
+As an internally used framework (BiBiGrid) is currently based on Ubuntu 14.04 LTS we have to provide a distinct directory containing certain workarounds: https://s3.computational.bio.uni-giessen.de/swift/v1/asap/latest/asap-os.tar.gz
+
 Additional files:
 - comprehensive manual: https://s3.computational.bio.uni-giessen.de/swift/v1/asap/latest/manual.pdf
 - configuration template: https://s3.computational.bio.uni-giessen.de/swift/v1/asap/latest/config.xls
