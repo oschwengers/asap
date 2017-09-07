@@ -20,7 +20,7 @@ import static bio.comp.jlu.asap.api.RunningStates.*
 /**
  * Creates an HTML report page for assemblies.
  *
- * @author Oliver Schwengers <oliver.schwengers@computational.bio.uni-giessen.de
+ * @author Oliver Schwengers <oliver.schwengers@computational.bio.uni-giessen.de>
  */
 @Slf4j
 class AnnotationReportStep extends ReportStep {
