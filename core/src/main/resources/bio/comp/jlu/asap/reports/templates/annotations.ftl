@@ -244,6 +244,11 @@
                                         const chart = new google.visualization.ScatterChart( document.getElementById( 'chartAnnotations' ) );
                                             chart.draw( data, options );
 
+                                        document.getElementById('chartAnnotations').addEventListener('contextmenu', function (ev) {
+                                            var chart = new google.visualization.ScatterChart(document.getElementById('chartAnnotations'));
+                                            chart.draw(data, options);
+                                        });
+
                                     } )
 
                                 }
