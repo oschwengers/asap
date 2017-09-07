@@ -17,7 +17,7 @@ import static bio.comp.jlu.asap.api.RunningStates.*
 
 /**
  *
- * @author Oliver Schwengers <oliver.schwengers@computational.bio.uni-giessen.de
+ * @author Oliver Schwengers <oliver.schwengers@computational.bio.uni-giessen.de>
  */
 @Slf4j
 abstract class ReportStep extends Step {
