@@ -10,7 +10,7 @@ import freemarker.template.Template
 
 /**
  *
- * @author Oliver Schwengers <oliver.schwengers@computational.bio.uni-giessen.de
+ * @author Oliver Schwengers <oliver.schwengers@computational.bio.uni-giessen.de>
  */
 @Slf4j
 class ProjectMetaReportStep extends ReportStep {
