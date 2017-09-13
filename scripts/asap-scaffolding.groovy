@@ -483,13 +483,17 @@ private def parseNucmer( Path nucmerResultsPath, boolean isScaffolded ) {
         }
     } )
 
-    if( isScaffolded ) // contig names adhere to asap convention
-        return alignments.toSorted( { a,b -> a.contig.split('_')[2] as int <=> b.contig.split('_')[2] as int ?: a.cStart <=> b.cStart } )
-    else { // raw output from assembler
-        if( alignments[0].contig.contains( '_' ) ) // SPAdes assembly
-            return alignments.toSorted( { a,b -> (a.contig.split('_')[1]) as int <=> (b.contig.split('_')[1]) as int ?: a.cStart <=> b.cStart } )
-        else // HGAP assembly
-            return alignments.toSorted( { a,b -> (a.contig-'F|quiver') as int <=> (b.contig-'F|quiver') as int ?: a.cStart <=> b.cStart } )
+    if( alignments.isEmpty() )
+	return []
+    else {
+        if( isScaffolded ) // contig names adhere to asap convention
+            return alignments.toSorted( { a,b -> a.contig.split('_')[2] as int <=> b.contig.split('_')[2] as int ?: a.cStart <=> b.cStart } )
+        else { // raw output from assembler
+            if( alignments[0].contig.contains( '_' ) ) // SPAdes assembly
+                return alignments.toSorted( { a,b -> (a.contig.split('_')[1]) as int <=> (b.contig.split('_')[1]) as int ?: a.cStart <=> b.cStart } )
+            else // HGAP assembly
+                return alignments.toSorted( { a,b -> (a.contig-'F|quiver') as int <=> (b.contig-'F|quiver') as int ?: a.cStart <=> b.cStart } )
+        }
     }
 
 }
