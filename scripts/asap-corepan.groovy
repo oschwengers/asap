@@ -218,22 +218,17 @@ tmpPath.resolve( 'gene_presence_absence.csv' ).eachLine( { line ->
             abundance: Integer.parseInt( cols[3].replaceAll('"', '') )
         ]
         genes << gene
-//        log.debug( "gene-name: ${gene.name}, # cols: ${cols.size()}" )
         for( int i=14; i<cols.size(); i++ ) { // store gene availability for each genome
             log.trace( "gene: ${cols[i]}" )
             if( cols[ i ] ) { // if column is not empty, genome contains gene
-//                log.debug( "gene present: ${cols[i]}" )
                 String genomeName = genomeNames[ i - 14 ]
                 assert genomeName != null
                 if( gene.abundance == 1 )
                     gene.source = genomeName
-//                log.debug( "genome name: ${genomeName}" )
                 if( genomeGeneSets.containsKey( genomeName ) ) {
                     genomeGeneSets[ (genomeName) ] << gene
-//                    log.debug( "genome gene set: present, size: ${genomeGeneSets[ (genomeName) ].size()}, added: ${gene.name}" )
                 } else {
                     genomeGeneSets[ (genomeName) ] = [ gene ]
-//                    log.debug( "genome gene set: created, added: ${gene.name}" )
                 }
             }
         }
@@ -243,10 +238,6 @@ tmpPath.resolve( 'gene_presence_absence.csv' ).eachLine( { line ->
 assert noGenomes == genomeNames.size()
 assert genomeGeneSets.size() == genomeNames.size()
 assert genomeGeneSets.size() == noGenomes
-genomeGeneSets.each( { k, v ->
-    assert v.size() > 1000
-} )
-log.info( "genomeGeneSets: ${genomeGeneSets.keySet()}" )
 
 
 info.corepan.noGenomes = noGenomes
