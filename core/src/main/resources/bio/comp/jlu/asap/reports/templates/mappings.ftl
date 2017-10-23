@@ -13,7 +13,7 @@
                     ordering: true,
                     info:     true,
                     columnDefs: [
-                        { orderable: false, targets: 6 }
+                        { orderable: false, targets: 7 }
                     ],
 		    dom: "<'row'<'col-md-3'l><'col-md-3 col-md-offset-5'f><'col-md-1'B>><'row'<'col-md-12't>><'row'<'col-md-6'i><'col-md-6'p>>",
                     buttons: [
