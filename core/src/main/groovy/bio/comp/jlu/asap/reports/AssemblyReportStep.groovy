@@ -134,7 +134,7 @@ class AssemblyReportStep extends ReportStep {
                 overview.n50s << stat.n50
                 overview.n90s << stat.n90
                 overview.n50Covs << stat.n50Coverage
-                overview.n50Covs << stat.n90Coverage
+                overview.n90Covs << stat.n90Coverage
 
                 model << stat
                 Writer detailWriter = new StringWriter()
