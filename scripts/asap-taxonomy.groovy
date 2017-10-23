@@ -204,13 +204,16 @@ stdOut.eachLine( { line ->
 taxList.sort( { it.dist } )
 log.debug( "# tax hits: ${taxList.size()}" )
 
+if( taxList.size() > 100 )
+    taxList = taxList[ 0..99 ]
+
 // parse assembly id -> tax id mapping file and enrich Mash hits
 assemblyTaxMap = [:]
 Paths.get( ASSEMBLY_TAX_MAPPING ).eachLine( { line ->
     def cols = line.split( '\t' )
     assemblyTaxMap[ (cols[0]) ] = [
         assemblyId: cols[0],
-        taxId: cols[1],
+        taxId: cols[1] as int,
         orgName: cols[2]
     ]
 } )
@@ -221,8 +224,9 @@ log.debug( "# assembly-tax mappings: ${assemblyTaxMap.size()}" )
 ncbiTaxonomies = [:]
 Paths.get( NCBI_TAXONOMY_DB ).eachLine( { line ->
     def cols = line.split( '\t' )
-    ncbiTaxonomies[ (cols[0]) ] = [
-        taxId: cols[0],
+    int taxId = cols[0] as int
+    ncbiTaxonomies[ (taxId) ] = [
+        taxId: taxId,
         orgName: cols[1],
         lineage: cols[2].split( ';' ).toList(),
     ]
@@ -250,10 +254,18 @@ taxList.each( {
     it.remove( 'orgName' )
 
 } )
+def taxSet = []
+taxList.collect( {it.taxId} ).toSet().each( { taxId ->
+    def taxGroup = taxList.findAll( { it.taxId == taxId } )
+    def tax = taxGroup[0]
+    tax.freq = taxGroup.size()
+    taxSet << tax
+} )
+taxSet.sort( {-it.freq} )
 
-
-info.kmer.classification = taxList[0]
-info.kmer.lineages = taxList
+info.kmer.classification = taxSet[0]
+info.kmer.lineages = taxSet
+info.kmer.hits = taxSet.collect( {it.freq} ).sum()
 
 
 
