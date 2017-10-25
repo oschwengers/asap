@@ -492,7 +492,7 @@ private def parseNucmer( Path nucmerResultsPath, boolean isScaffolded ) {
             if( alignments[0].contig.contains( '_' ) ) // SPAdes assembly
                 return alignments.toSorted( { a,b -> (a.contig.split('_')[1]) as int <=> (b.contig.split('_')[1]) as int ?: a.cStart <=> b.cStart } )
             else // HGAP assembly
-                return alignments.toSorted( { a,b -> (a.contig-'F|quiver') as int <=> (b.contig-'F|quiver') as int ?: a.cStart <=> b.cStart } )
+                return alignments.toSorted( { a,b -> (a.contig-'|quiver'-'F') as int <=> (b.contig-'|quiver'-'F') as int ?: a.cStart <=> b.cStart } )
         }
     }
 
