@@ -25,6 +25,8 @@ class ABRDetectionStep extends GenomeStep {
 
     private static final String ABR_SCRIPT_PATH = "${ASAP_HOME}/scripts/asap-abr.groovy"
 
+    private static final GenomeSteps STEP_DEPENDENCY = ASSEMBLY
+
     private Path   abrPath = projectPath.resolve( PROJECT_PATH_ABR )
 
 
@@ -49,7 +51,7 @@ class ABRDetectionStep extends GenomeStep {
     boolean check() {
 
         log.trace( "check: genome.id=${genome.id}" )
-        if( genome?.stepselection.contains( SCAFFOLDING.getCharCode() ) ) {
+        if( genome?.stepselection.contains( STEP_DEPENDENCY.getCharCode() ) ) {
             long waitingTime = System.currentTimeMillis()
             while( shouldWait() ) {
                 if( System.currentTimeMillis() - waitingTime > MAX_STEP_WAITING_PERIOD ) {
@@ -64,7 +66,7 @@ class ABRDetectionStep extends GenomeStep {
             }
 
             // check necessary scaffolding analysis status
-            return hasStepFinished( SCAFFOLDING )
+            return hasStepFinished( STEP_DEPENDENCY )
 
         } else
             return true
@@ -74,7 +76,7 @@ class ABRDetectionStep extends GenomeStep {
 
     private boolean shouldWait() {
 
-        def status = genome.steps[ SCAFFOLDING.getAbbreviation() ]?.status
+        def status = genome.steps[ STEP_DEPENDENCY.getAbbreviation() ]?.status
         log.trace( "scaffolding step status=${status}" )
         return (status != FINISHED.toString()
             &&  status != SKIPPED.toString()

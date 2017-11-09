@@ -25,6 +25,8 @@ class VFDetectionStep extends GenomeStep {
 
     private static final String VF_SCRIPT_PATH = "${ASAP_HOME}/scripts/asap-vf.groovy"
 
+    private static final GenomeSteps STEP_DEPENDENCY = ANNOTATION
+
     private Path   vfPath = projectPath.resolve( PROJECT_PATH_VF )
 
 
@@ -49,7 +51,7 @@ class VFDetectionStep extends GenomeStep {
     boolean check() {
 
         log.trace( "check: genome.id=${genome.id}" )
-        if( genome?.stepselection.contains( ANNOTATION.getCharCode() ) ) {
+        if( genome?.stepselection.contains( STEP_DEPENDENCY.getCharCode() ) ) {
             // wait for assembly step
             long waitingTime = System.currentTimeMillis()
             while( shouldWait() ) {
@@ -65,7 +67,7 @@ class VFDetectionStep extends GenomeStep {
             }
 
             // check necessary qc analysis status
-            return hasStepFinished( ANNOTATION )
+            return hasStepFinished( STEP_DEPENDENCY )
 
         } else
             return true
@@ -75,7 +77,7 @@ class VFDetectionStep extends GenomeStep {
 
     private boolean shouldWait() {
 
-        def status = genome.steps[ ANNOTATION.getAbbreviation() ]?.status
+        def status = genome.steps[ STEP_DEPENDENCY.getAbbreviation() ]?.status
         log.trace( "scaffolding step status=${status}" )
         return (status != FINISHED.toString()
             &&  status != SKIPPED.toString()

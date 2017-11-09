@@ -25,6 +25,9 @@ import static bio.comp.jlu.asap.api.RunningStates.*
 class TaxonomyStep extends GenomeStep {
 
     private static final String TAXONOMY_SCRIPT_PATH = "${ASAP_HOME}/scripts/asap-taxonomy.groovy"
+
+    private static final GenomeSteps STEP_DEPENDENCY = ASSEMBLY
+
     private static final String QSUB_SLOTS = '5'
     private static final String QSUB_FREE_MEM = '2' // 10 Gig Memory divided by 5 PE instances -> 2
 
@@ -52,7 +55,7 @@ class TaxonomyStep extends GenomeStep {
     boolean check() {
 
         log.trace( "check: genome.id=${genome.id}" )
-        if( genome?.stepselection.contains( SCAFFOLDING.getCharCode() ) ) {
+        if( genome?.stepselection.contains( STEP_DEPENDENCY.getCharCode() ) ) {
             long waitingTime = System.currentTimeMillis()
             while( shouldWait() ) {
                 if( System.currentTimeMillis() - waitingTime > MAX_STEP_WAITING_PERIOD ) {
@@ -67,7 +70,7 @@ class TaxonomyStep extends GenomeStep {
             }
 
             // check necessary scaffolding analysis status
-            return hasStepFinished( SCAFFOLDING )
+            return hasStepFinished( STEP_DEPENDENCY )
 
         } else
             return true
@@ -77,7 +80,7 @@ class TaxonomyStep extends GenomeStep {
 
     private boolean shouldWait() {
 
-        def status = genome.steps[ SCAFFOLDING.getAbbreviation() ]?.status
+        def status = genome.steps[ STEP_DEPENDENCY.getAbbreviation() ]?.status
         log.trace( "scaffolding step status=${status}" )
         return (status != FINISHED.toString()
             &&  status != SKIPPED.toString()

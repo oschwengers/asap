@@ -22,6 +22,8 @@ class SNPDetectionStep extends GenomeStep {
 
     private static final String SNP_DETECTION_SCRIPT_PATH = "${ASAP_HOME}/scripts/asap-snp.groovy"
 
+    private static final GenomeSteps STEP_DEPENDENCY = MAPPING
+
     private final Path snpDetectionPath
 
 
@@ -63,14 +65,14 @@ class SNPDetectionStep extends GenomeStep {
         }
 
         // check necessary mapping analysis status
-        return hasStepFinished( MAPPING )
+        return hasStepFinished( STEP_DEPENDENCY )
 
     }
 
 
     private boolean shouldWait() {
 
-        def status = genome.steps[ MAPPING.getAbbreviation() ]?.status
+        def status = genome.steps[ STEP_DEPENDENCY.getAbbreviation() ]?.status
         log.trace( "SNP detection step status=${status}" )
         return (status != FINISHED.toString()
             &&  status != SKIPPED.toString()

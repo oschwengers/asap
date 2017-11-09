@@ -26,6 +26,8 @@ class AssemblyStep extends GenomeStep {
 
     private static final String ASSEMBLY_SCRIPT_PATH = "${ASAP_HOME}/scripts/asap-assembly.groovy"
 
+    private static final GenomeSteps STEP_DEPENDENCY = QC
+
     private static final String QSUB_SLOTS = '8'
     private static final String QSUB_FREE_MEM = '2' // 16 Gig Memory divided by 8 PE instances -> 2
 
@@ -67,14 +69,14 @@ class AssemblyStep extends GenomeStep {
         }
 
         // check necessary qc analysis status
-        return hasStepFinished( QC )
+        return hasStepFinished( STEP_DEPENDENCY )
 
     }
 
 
     private boolean shouldWait() {
 
-        def status = genome.steps[ QC.getAbbreviation() ]?.status
+        def status = genome.steps[ STEP_DEPENDENCY.getAbbreviation() ]?.status
         log.trace( "qc step status=${status}" )
         return (status != FINISHED.toString()
             &&  status != SKIPPED.toString()

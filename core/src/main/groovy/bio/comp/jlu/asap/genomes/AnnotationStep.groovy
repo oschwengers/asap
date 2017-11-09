@@ -26,6 +26,8 @@ class AnnotationStep extends GenomeStep {
     private static final String BARNAP = "${ASAP_HOME}/share/barrnap"
     private static final String PROTEINS = "${ASAP_HOME}/data/sequences/asap-proteins.ffa"
 
+    private static final GenomeSteps STEP_DEPENDENCY = SCAFFOLDING
+
     private Path    genomePath
     private Path    contigsPath
 
@@ -51,7 +53,7 @@ class AnnotationStep extends GenomeStep {
     boolean check() {
 
         log.trace( "check: genome.id=${genome.id}" )
-        if( genome?.stepselection.contains( SCAFFOLDING.getCharCode() ) ) { // draft genome should get scaffolded
+        if( genome?.stepselection.contains( STEP_DEPENDENCY.getCharCode() ) ) { // draft genome should get scaffolded
 
             // wait for scaffolding step
             long waitingTime = System.currentTimeMillis()
@@ -68,7 +70,7 @@ class AnnotationStep extends GenomeStep {
             }
 
             // check necessary scaffolding analysis status
-            if( !hasStepFinished( SCAFFOLDING ) )
+            if( !hasStepFinished( STEP_DEPENDENCY ) )
                 return false
 
         } // else: contigs are already ordered & scaffolded
@@ -93,7 +95,7 @@ class AnnotationStep extends GenomeStep {
 
     private boolean shouldWait() {
 
-        def status = genome.steps[ SCAFFOLDING.getAbbreviation() ]?.status
+        def status = genome.steps[ STEP_DEPENDENCY.getAbbreviation() ]?.status
         log.trace( "scaffolding step status=${status}" )
         return (status != FINISHED.toString()
             &&  status != SKIPPED.toString()

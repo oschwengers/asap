@@ -24,6 +24,9 @@ import static bio.comp.jlu.asap.api.RunningStates.*
 class MLSTStep extends GenomeStep {
 
     private static final String MLST_SCRIPT_PATH = "${ASAP_HOME}/scripts/asap-mlst.groovy"
+
+    private static final GenomeSteps STEP_DEPENDENCY = ASSEMBLY
+
     private static final String QSUB_FREE_MEM = '2'
 
     private Path   mlstPath = projectPath.resolve( PROJECT_PATH_MLST )
@@ -50,7 +53,7 @@ class MLSTStep extends GenomeStep {
     boolean check() {
 
         log.trace( "check: genome.id=${genome.id}" )
-        if( genome?.stepselection.contains( SCAFFOLDING.getCharCode() ) ) {
+        if( genome?.stepselection.contains( STEP_DEPENDENCY.getCharCode() ) ) {
             // wait for assembly step
             long waitingTime = System.currentTimeMillis()
             while( shouldWait() ) {
@@ -66,7 +69,7 @@ class MLSTStep extends GenomeStep {
             }
 
             // check necessary qc analysis status
-            return hasStepFinished( SCAFFOLDING )
+            return hasStepFinished( STEP_DEPENDENCY )
 
         } else
             return true
@@ -76,7 +79,7 @@ class MLSTStep extends GenomeStep {
 
     private boolean shouldWait() {
 
-        def status = genome.steps[ SCAFFOLDING.getAbbreviation() ]?.status
+        def status = genome.steps[ STEP_DEPENDENCY.getAbbreviation() ]?.status
         log.trace( "scaffolding step status=${status}" )
         return (status != FINISHED.toString()
             &&  status != SKIPPED.toString()

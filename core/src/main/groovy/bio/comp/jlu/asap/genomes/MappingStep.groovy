@@ -20,6 +20,9 @@ import static bio.comp.jlu.asap.api.Paths.*
 class MappingStep extends GenomeStep {
 
     private static final String MAPPING_SCRIPT_PATH = "${ASAP_HOME}/scripts/asap-mapping.groovy"
+
+    private static final GenomeSteps STEP_DEPENDENCY = QC
+
     private static final String QSUB_SLOTS = '8'
 
     private final Path mappingsPath
@@ -63,14 +66,14 @@ class MappingStep extends GenomeStep {
         }
 
         // check necessary qc analysis status
-        return hasStepFinished( QC )
+        return hasStepFinished( STEP_DEPENDENCY )
 
     }
 
 
     private boolean shouldWait() {
 
-        def status = genome.steps[ QC.getAbbreviation() ]?.status
+        def status = genome.steps[ STEP_DEPENDENCY.getAbbreviation() ]?.status
         log.trace( "qc step status=${status}" )
         return (status != FINISHED.toString()
             &&  status != SKIPPED.toString()

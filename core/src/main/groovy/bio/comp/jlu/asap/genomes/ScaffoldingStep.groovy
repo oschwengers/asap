@@ -25,6 +25,8 @@ class ScaffoldingStep extends GenomeStep {
 
     private static final String SCAFFOLDING_PATH = "${ASAP_HOME}/scripts/asap-scaffolding.groovy"
 
+    private static final GenomeSteps STEP_DEPENDENCY = ASSEMBLY
+
     private Path   genomePath
 
 
@@ -49,7 +51,7 @@ class ScaffoldingStep extends GenomeStep {
     boolean check() {
 
         log.trace( "check: genome.id=${genome.id}" )
-        if( genome?.stepselection.contains( ASSEMBLY.getCharCode() ) ) {
+        if( genome?.stepselection.contains( STEP_DEPENDENCY.getCharCode() ) ) {
             // wait for assembly step
             long waitingTime = System.currentTimeMillis()
             while( shouldWait() ) {
@@ -65,7 +67,7 @@ class ScaffoldingStep extends GenomeStep {
             }
 
             // check necessary qc analysis status
-            return hasStepFinished( ASSEMBLY )
+            return hasStepFinished( STEP_DEPENDENCY )
 
         } else
             return true
@@ -75,7 +77,7 @@ class ScaffoldingStep extends GenomeStep {
 
     private boolean shouldWait() {
 
-        def status = genome.steps[ ASSEMBLY.getAbbreviation() ]?.status
+        def status = genome.steps[ STEP_DEPENDENCY.getAbbreviation() ]?.status
         log.trace( "assembly step status=${status}" )
         return (status != FINISHED.toString()
             &&  status != SKIPPED.toString()
