@@ -7,9 +7,9 @@ import java.nio.file.*
 import groovy.io.FileType
 import groovy.json.JsonOutput
 import groovy.util.logging.Slf4j
+import bio.comp.jlu.asap.api.GenomeSteps
 
 import static bio.comp.jlu.asap.ASAPConstants.*
-import static bio.comp.jlu.asap.api.GenomeSteps.*
 import static bio.comp.jlu.asap.api.Paths.*
 import static bio.comp.jlu.asap.api.RunningStates.*
 
@@ -26,7 +26,7 @@ class AnnotationStep extends GenomeStep {
     private static final String BARNAP = "${ASAP_HOME}/share/barrnap"
     private static final String PROTEINS = "${ASAP_HOME}/data/sequences/asap-proteins.ffa"
 
-    private static final GenomeSteps STEP_DEPENDENCY = SCAFFOLDING
+    private static final GenomeSteps STEP_DEPENDENCY = GenomeSteps.SCAFFOLDING
 
     private Path    genomePath
     private Path    contigsPath
@@ -34,7 +34,7 @@ class AnnotationStep extends GenomeStep {
 
     AnnotationStep( def config, def genome, boolean localMode ) {
 
-        super( ANNOTATION.getAbbreviation(), config, genome, localMode )
+        super( GenomeSteps.ANNOTATION.getAbbreviation(), config, genome, localMode )
 
         setName( "Annotation-Step-Thread-${genome.id}" )
 
@@ -44,7 +44,7 @@ class AnnotationStep extends GenomeStep {
     @Override
     boolean isSelected() {
 
-        return genome?.stepselection.contains( ANNOTATION.getCharCode() )
+        return genome?.stepselection.contains( GenomeSteps.ANNOTATION.getCharCode() )
 
     }
 
@@ -64,7 +64,7 @@ class AnnotationStep extends GenomeStep {
                 }
                 try {
                     sleep( 1000 * 60 )
-                    log.trace( "${ANNOTATION.getName()} step slept for 1 min" )
+                    log.trace( "${GenomeSteps.ANNOTATION.getName()} step slept for 1 min" )
                 }
                 catch( Throwable t ) { log.error( 'Error: could not sleep!', t ) }
             }

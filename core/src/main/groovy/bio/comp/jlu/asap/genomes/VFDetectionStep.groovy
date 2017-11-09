@@ -9,9 +9,9 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
 import bio.comp.jlu.asap.api.FileType
+import bio.comp.jlu.asap.api.GenomeSteps
 
 import static bio.comp.jlu.asap.ASAPConstants.*
-import static bio.comp.jlu.asap.api.GenomeSteps.*
 import static bio.comp.jlu.asap.api.Paths.*
 import static bio.comp.jlu.asap.api.RunningStates.*
 
@@ -25,14 +25,14 @@ class VFDetectionStep extends GenomeStep {
 
     private static final String VF_SCRIPT_PATH = "${ASAP_HOME}/scripts/asap-vf.groovy"
 
-    private static final GenomeSteps STEP_DEPENDENCY = ANNOTATION
+    private static final GenomeSteps STEP_DEPENDENCY = GenomeSteps.ANNOTATION
 
     private Path   vfPath = projectPath.resolve( PROJECT_PATH_VF )
 
 
     VFDetectionStep( def config, def genome, boolean localMode ) {
 
-        super( VF.getAbbreviation(), config, genome, localMode )
+        super( GenomeSteps.VF.getAbbreviation(), config, genome, localMode )
 
         setName( "VFDetection-Step-Thread-${genome.id}" )
 
@@ -42,7 +42,7 @@ class VFDetectionStep extends GenomeStep {
     @Override
     boolean isSelected() {
 
-        return genome?.stepselection.contains( VF.getCharCode() )
+        return genome?.stepselection.contains( GenomeSteps.VF.getCharCode() )
 
     }
 

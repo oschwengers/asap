@@ -10,9 +10,9 @@ import java.nio.file.Path
 import java.nio.file.Paths
 import bio.comp.jlu.asap.api.FileType
 import bio.comp.jlu.asap.api.DataType
+import bio.comp.jlu.asap.api.GenomeSteps
 
 import static bio.comp.jlu.asap.ASAPConstants.*
-import static bio.comp.jlu.asap.api.GenomeSteps.*
 import static bio.comp.jlu.asap.api.Paths.*
 import static bio.comp.jlu.asap.api.RunningStates.*
 
@@ -26,7 +26,7 @@ class TaxonomyStep extends GenomeStep {
 
     private static final String TAXONOMY_SCRIPT_PATH = "${ASAP_HOME}/scripts/asap-taxonomy.groovy"
 
-    private static final GenomeSteps STEP_DEPENDENCY = ASSEMBLY
+    private static final GenomeSteps STEP_DEPENDENCY = GenomeSteps.ASSEMBLY
 
     private static final String QSUB_SLOTS = '5'
     private static final String QSUB_FREE_MEM = '2' // 10 Gig Memory divided by 5 PE instances -> 2
@@ -36,7 +36,7 @@ class TaxonomyStep extends GenomeStep {
 
     TaxonomyStep( def config, def genome, boolean localMode ) {
 
-        super( TAXONOMY.getAbbreviation(), config, genome, localMode )
+        super( GenomeSteps.TAXONOMY.getAbbreviation(), config, genome, localMode )
 
         setName( "Taxonomy-Step-Thread-${genome.id}" )
 
@@ -46,7 +46,7 @@ class TaxonomyStep extends GenomeStep {
     @Override
     boolean isSelected() {
 
-        return genome?.stepselection.contains( TAXONOMY.getCharCode() )
+        return genome?.stepselection.contains( GenomeSteps.TAXONOMY.getCharCode() )
 
     }
 
@@ -64,7 +64,7 @@ class TaxonomyStep extends GenomeStep {
                 }
                 try {
                     sleep( 1000 * 60 )
-                    log.trace( "${TAXONOMY.getName()} step slept for 1 min" )
+                    log.trace( "${GenomeSteps.TAXONOMY.getName()} step slept for 1 min" )
                 }
                 catch( Throwable t ) { log.error( 'Error: could not sleep!', t ) }
             }

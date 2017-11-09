@@ -9,9 +9,9 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
 import bio.comp.jlu.asap.api.FileType
+import bio.comp.jlu.asap.api.GenomeSteps
 
 import static bio.comp.jlu.asap.ASAPConstants.*
-import static bio.comp.jlu.asap.api.GenomeSteps.*
 import static bio.comp.jlu.asap.api.Paths.*
 import static bio.comp.jlu.asap.api.RunningStates.*
 
@@ -25,14 +25,14 @@ class ScaffoldingStep extends GenomeStep {
 
     private static final String SCAFFOLDING_PATH = "${ASAP_HOME}/scripts/asap-scaffolding.groovy"
 
-    private static final GenomeSteps STEP_DEPENDENCY = ASSEMBLY
+    private static final GenomeSteps STEP_DEPENDENCY = GenomeSteps.ASSEMBLY
 
     private Path   genomePath
 
 
     ScaffoldingStep( def config, def genome, boolean localMode ) {
 
-        super( SCAFFOLDING.getAbbreviation(), config, genome, localMode )
+        super( GenomeSteps.SCAFFOLDING.getAbbreviation(), config, genome, localMode )
 
         setName( "Scaffolding-Step-Thread-${genome.id}" )
 
@@ -42,7 +42,7 @@ class ScaffoldingStep extends GenomeStep {
     @Override
     boolean isSelected() {
 
-        return genome?.stepselection.contains( SCAFFOLDING.getCharCode() )
+        return genome?.stepselection.contains( GenomeSteps.SCAFFOLDING.getCharCode() )
 
     }
 
@@ -61,7 +61,7 @@ class ScaffoldingStep extends GenomeStep {
                 }
                 try {
                     sleep( 1000 * 60 )
-                    log.trace( "${SCAFFOLDING.getName()} step slept for 1 min" )
+                    log.trace( "${GenomeSteps.SCAFFOLDING.getName()} step slept for 1 min" )
                 }
                 catch( Throwable t ) { log.error( 'Error: could not sleep!', t ) }
             }
