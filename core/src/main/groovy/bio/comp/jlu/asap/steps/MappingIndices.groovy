@@ -15,7 +15,7 @@ import static bio.comp.jlu.asap.api.Paths.*
 
 /**
  *
- * @author Oliver Schwengers <oliver.schwengers@computational.bio.uni-giessen.de
+ * @author Oliver Schwengers <oliver.schwengers@computational.bio.uni-giessen.de>
  */
 @Slf4j
 class MappingIndices extends Step {
