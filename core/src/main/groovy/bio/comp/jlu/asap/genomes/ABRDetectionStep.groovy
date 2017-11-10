@@ -25,7 +25,7 @@ class ABRDetectionStep extends GenomeStep {
 
     private static final String ABR_SCRIPT_PATH = "${ASAP_HOME}/scripts/asap-abr.groovy"
 
-    private static final GenomeSteps STEP_DEPENDENCY = GenomeSteps.ASSEMBLY
+    private static final GenomeSteps STEP_DEPENDENCY = GenomeSteps.SCAFFOLDING
 
     private Path   abrPath = projectPath.resolve( PROJECT_PATH_ABR )
 

@@ -126,7 +126,7 @@ Files.createFile( taxPath.resolve( "${genomeName}.running" ) ) // create state.r
 
 
 // scaffolds path
-final Path genomeAssemblyPath = Paths.get( projectPath.toString(), PROJECT_PATH_ASSEMBLIES, genomeName, "${genomeName}.fasta" )
+final Path genomeAssemblyPath = Paths.get( projectPath.toString(), PROJECT_PATH_SCAFFOLDS, genomeName, "${genomeName}.fasta" )
 
 // create local tmp directory
 final Path tmpPath = Paths.get( '/', 'var', 'scratch', "tmp-${System.currentTimeMillis()}-${Math.round(Math.random()*1000)}" )

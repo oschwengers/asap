@@ -25,7 +25,7 @@ class MLSTStep extends GenomeStep {
 
     private static final String MLST_SCRIPT_PATH = "${ASAP_HOME}/scripts/asap-mlst.groovy"
 
-    private static final GenomeSteps STEP_DEPENDENCY = GenomeSteps.ASSEMBLY
+    private static final GenomeSteps STEP_DEPENDENCY = GenomeSteps.SCAFFOLDING
 
     private static final String QSUB_FREE_MEM = '2'
 

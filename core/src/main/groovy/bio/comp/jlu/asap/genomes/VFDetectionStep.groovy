@@ -61,7 +61,7 @@ class VFDetectionStep extends GenomeStep {
                 }
                 try {
                     sleep( 1000 * 60 )
-                    log.trace( "${ABR.getName()} step slept for 1 min" )
+                    log.trace( "${GenomeSteps.VF.getName()} step slept for 1 min" )
                 }
                 catch( Throwable t ) { log.error( 'Error: could not sleep!', t ) }
             }

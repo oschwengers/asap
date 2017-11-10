@@ -26,7 +26,7 @@ class TaxonomyStep extends GenomeStep {
 
     private static final String TAXONOMY_SCRIPT_PATH = "${ASAP_HOME}/scripts/asap-taxonomy.groovy"
 
-    private static final GenomeSteps STEP_DEPENDENCY = GenomeSteps.ASSEMBLY
+    private static final GenomeSteps STEP_DEPENDENCY = GenomeSteps.SCAFFOLDING
 
     private static final String QSUB_SLOTS = '5'
     private static final String QSUB_FREE_MEM = '2' // 10 Gig Memory divided by 5 PE instances -> 2
