@@ -67,6 +67,7 @@ Path projectPath = rawProjectPath.toRealPath()
 // clear project folder
 if( opts.n ) {
     [
+        PROJECT_PATH_SEQUENCES,
         PROJECT_PATH_ABR,
         PROJECT_PATH_VF,
         PROJECT_PATH_ANNOTATIONS,
@@ -245,7 +246,8 @@ if( opts.c ) { // only check config and data files
     def initSteps = [
         new ReferenceProcessings( config ),
         new MappingIndices( config ),
-        new SNPAnnotationSetup( config )
+        new SNPAnnotationSetup( config ),
+        new GenomeConversions( config )
     ]
     initSteps.each( { it.start() } )
 
@@ -295,6 +297,10 @@ if( opts.c ) { // only check config and data files
     // shutdown config writer thread
     configWriterThread.finish()
     configWriterThread.join()
+
+
+    // delete tmp sequences dir
+    projectPath.resolve( PROJECT_PATH_SEQUENCES ).deleteDir()
 
 
     // print runtime statistics
@@ -383,44 +389,46 @@ def checkConfig( def config, Path projectPath ) {
             }
             idList << genome.id
 
-            genome.data.each( { read ->
-                if( !read.type ) {
-                    println( "Error: read file without type information!\n(${genome})" )
-                    System.exit( 1 )
-                }
-                FileType ft = FileType.getEnum( read.type )
-                try {
-                    if( ft?.getDataType() == DataType.READS ) {
-                        Path destPath = projectPath.resolve( PROJECT_PATH_READS_RAW )
-                        read.files.each( {
-                            if( !Files.isReadable( dataPath.resolve( it ) )  &&  !Files.isReadable( destPath.resolve( it ) ) ) {
-                                throw new IOException( "could not read file ${it}" )
-                            }
-                        } )
-                    } else {
-                        Path destPath
-                        if( ft == FileType.CONTIGS ) {
-                            destPath = Paths.get( projectPath.toString(), PROJECT_PATH_ASSEMBLIES, genomeName, "${genomeName}.fasta" )
-                        } else if( ft == FileType.CONTIGS_ORDERED ) {
-                            destPath = Paths.get( projectPath.toString(), PROJECT_PATH_SCAFFOLDS, genomeName, "${genomeName}.fasta" )
-                        } else if( ft == FileType.GENOME ) {
-                            destPath = Paths.get( projectPath.toString(), PROJECT_PATH_ANNOTATIONS, genomeName, "${genomeName}.gbk" )
-                        } else {
-                            log.error( "Error: wrong file type detected! (${ft})" )
-                            println( "Error: wrong file type detected! (${ft})" )
-                            System.exit( 1 )
+            def data = genome.data[0]
+//            genome.data.each( { data ->
+            if( !data.type ) {
+                println( "Error: read file without type information!\n(${genome})" )
+                System.exit( 1 )
+            }
+            FileType ft = FileType.getEnum( data.type )
+            try {
+                if( (ft?.getDataType() == DataType.READS)  ||  (ft == FileType.GENOME) ) {
+                    //Path destPath = projectPath.resolve( PROJECT_PATH_READS_RAW )
+                    data.files.each( {
+                        if( !Files.isReadable( dataPath.resolve( it ) ) ) {// &&  !Files.isReadable( destPath.resolve( it ) ) ) {
+                            throw new IOException( "could not read file ${it}" )
                         }
-                        String fileName = read.files[0]
-                        if( !Files.isReadable( dataPath.resolve( fileName ) )  &&  !Files.isReadable( destPath ) ) {
-                            throw new IOException( "could not read file ${fileName}" )
-                        }
+                    } )
+                } else {
+//                        Path destPath
+//                        if( ft == FileType.CONTIGS ) {
+//                            destPath = Paths.get( projectPath.toString(), PROJECT_PATH_ASSEMBLIES, genomeName, "${genomeName}.fasta" )
+//                        } else if( ft == FileType.CONTIGS_ORDERED ) {
+//                            destPath = Paths.get( projectPath.toString(), PROJECT_PATH_SCAFFOLDS, genomeName, "${genomeName}.fasta" )
+//                        } else if( ft == FileType.GENOME ) {
+//
+//                        } else {
+                    if( !(ft in [FileType.CONTIGS, FileType.CONTIGS_ORDERED] ) ) {
+                        log.error( "Error: wrong file type detected! (${ft})" )
+                        println( "Error: wrong file type detected! (${ft})" )
+                        System.exit( 1 )
                     }
-                } catch( IOException ex ) {
-                    log.error( "Error: file does not exist or is not readable! (${read.files})", ex )
-                    println( "Error: read file does not exist or is not readable! (${read.files})" )
-                    System.exit( 1 )
+                    String fileName = data.files[0]
+                    if( !Files.isReadable( dataPath.resolve( fileName ) ) ) {// &&  !Files.isReadable( destPath ) ) {
+                        throw new IOException( "could not read file ${fileName}" )
+                    }
                 }
-            } )
+            } catch( IOException ex ) {
+                log.error( "Error: file does not exist or is not readable! (${data.files})", ex )
+                println( "Error: read file does not exist or is not readable! (${data.files})" )
+                System.exit( 1 )
+            }
+//            } )
         } )
     }
 
@@ -435,7 +443,7 @@ def checkConfig( def config, Path projectPath ) {
             } else if( !Files.isReadable( dataPath.resolve( ref ) )  &&  !Files.isReadable( referencePath.resolve( ref ) ) ) {
                 println( "Error: reference file does not exist or is not readable! (${ref})" )
                 System.exit( 1 )
-            } else if( !ref.contains( '.' )  ||  ReferenceType.getEnum( ref.substring( ref.lastIndexOf( '.' ) + 1 ) ) == null ) {
+            } else if( !ref.contains( '.' )  ||  FileFormat.getEnum( ref.substring( ref.lastIndexOf( '.' ) + 1 ) ) == null ) {
                 println( "Error: reference file has wrong file suffix! (${ref})" )
                 System.exit( 1 )
             }
@@ -461,12 +469,12 @@ def setupStepSelections( config ) {
             necessarySteps << ASSEMBLY
             necessarySteps << SCAFFOLDING
             necessarySteps << ANNOTATION
+            necessarySteps << MAPPING
+            necessarySteps << SNP_DETECTION
             necessarySteps << TAXONOMY
             necessarySteps << MLST
             necessarySteps << ABR
             necessarySteps << VF
-            necessarySteps << MAPPING
-            necessarySteps << SNP_DETECTION
         } else if( ft == FileType.CONTIGS ) {
             necessarySteps << SCAFFOLDING
             necessarySteps << ANNOTATION
@@ -476,6 +484,11 @@ def setupStepSelections( config ) {
             necessarySteps << VF
         } else if( ft == FileType.CONTIGS_ORDERED  ||  ft == FileType.CONTIGS_LINKED ) {
             necessarySteps << ANNOTATION
+            necessarySteps << TAXONOMY
+            necessarySteps << MLST
+            necessarySteps << ABR
+            necessarySteps << VF
+        } else if( ft == FileType.GENOME ) {
             necessarySteps << TAXONOMY
             necessarySteps << MLST
             necessarySteps << ABR
@@ -493,6 +506,7 @@ def setupDirectories( def config, def projectPath ) {
 
     log.debug( 'build project folder structure' )
     [
+        PROJECT_PATH_SEQUENCES,
         PROJECT_PATH_REFERENCES,
         PROJECT_PATH_READS_RAW,
         PROJECT_PATH_READS_QC,
@@ -518,31 +532,59 @@ def setupDirectories( def config, def projectPath ) {
     } )
 
 
-    // copy (create hard links) files from DATA folder into corresponding subdirs
+    // hard link files from DATA folder into corresponding subdirs
     try {
         Path dataPath = projectPath.resolve( PROJECT_PATH_DATA )
         config.genomes.each( { genome ->
             String genomeName = "${config.project.genus}_${genome.species}_${genome.strain}"
-            genome.data.each( { read ->
-                FileType ft = FileType.getEnum( read.type )
+            def data = genome.data[0]
+//            genome.data.each( { read ->
+                FileType ft = FileType.getEnum( data.type )
                 if( ft?.getDataType() == DataType.READS ) {
                     Path destPath = Paths.get( projectPath.toString(), PROJECT_PATH_READS_RAW, genomeName )
                     if( !Files.exists( destPath ) ) Files.createDirectory( destPath )
-                    read.files.each( { Files.createLink( destPath.resolve( it ), dataPath.resolve( it ) ) } )
+                    data.files.each( { Files.createLink( destPath.resolve( it ), dataPath.resolve( it ) ) } )
                 } else if( ft == FileType.CONTIGS ) {
                     Path destPath = Paths.get( projectPath.toString(), PROJECT_PATH_ASSEMBLIES, genomeName )
                     if( !Files.exists( destPath ) ) Files.createDirectory( destPath )
-                    Files.createLink( destPath.resolve( "${genomeName}.fasta" ), dataPath.resolve( read.files[0] ) )
+                    Files.createLink( destPath.resolve( "${genomeName}.fasta" ), dataPath.resolve( data.files[0] ) )
                 } else if( ft == FileType.CONTIGS_ORDERED ) {
                     Path destPath = Paths.get( projectPath.toString(), PROJECT_PATH_SCAFFOLDS, genomeName )
                     if( !Files.exists( destPath ) ) Files.createDirectory( destPath )
-                    Files.createLink( destPath.resolve( "${genomeName}.fasta" ), dataPath.resolve( read.files[0] ) )
+                    Files.createLink( destPath.resolve( "${genomeName}.fasta" ), dataPath.resolve( data.files[0] ) )
+                    // link scaffold file to sequence directory for genome characterization steps
+                    destPath = projectPath.resolve( PROJECT_PATH_SEQUENCES )
+                    Files.createLink( destPath.resolve( "${genomeName}.fasta" ), dataPath.resolve( data.files[0] ) )
                 } else if( ft == FileType.GENOME ) {
                     Path destPath = Paths.get( projectPath.toString(), PROJECT_PATH_ANNOTATIONS, genomeName )
                     if( !Files.exists( destPath ) ) Files.createDirectory( destPath )
-                    Files.createLink( destPath.resolve( "${genomeName}.gbk" ), dataPath.resolve( read.files[0] ) )
+                    FileFormat ff = FileFormat.getEnum( data.files[0] )
+                    if( data.files.size() == 1 ) { // either GenBank or GFF3 (both including sequence information)
+                        String fileSuffix = null
+                        if( ff == FileFormat.GENBANK )
+                            fileSuffix = 'gbk'
+                        else if( ff == FileFormat.EMBL )
+                            fileSuffix = 'ebl'
+                        else if( ff == FileFormat.GFF )
+                            fileSuffix = 'gff'
+                        assert fileSuffix != null
+                        Files.createLink( destPath.resolve( "${genomeName}.${fileSuffix}" ), dataPath.resolve( data.files[0] ) )
+                    } else if( data.files.size() == 2 ) { // check if its GFF3 + Fasta
+                        FileFormat ff2 = FileFormat.getEnum( data.files[1] )
+                        if( (ff == FileFormat.FASTA)  &&  (ff2 == FileFormat.GFF) ) {
+                            Files.createLink( destPath.resolve( "${genomeName}.fasta" ), dataPath.resolve( data.files[0] ) )
+                            Files.createLink( destPath.resolve( "${genomeName}.gff" ), dataPath.resolve( data.files[1] ) )
+                        } else if( (ff == FileFormat.GFF)  &&  (ff2 == FileFormat.FASTA) ) {
+                            Files.createLink( destPath.resolve( "${genomeName}.gff" ), dataPath.resolve( data.files[0] ) )
+                            Files.createLink( destPath.resolve( "${genomeName}.fasta" ), dataPath.resolve( data.files[1] ) )
+                        } else {
+                            log.error( "Error: genome file suffices do not match GFF3/Fasta format! (${data.files})", ex )
+                            println( "Error: genome file suffices do not match GFF3/Fasta format! (${data.files})" )
+                            System.exit( 1 )
+                        }
+                    }
                 }
-            } )
+//            } )
         } )
         config.references.each( { ref ->
             Files.createLink( Paths.get( projectPath.toString(), PROJECT_PATH_REFERENCES, ref ), dataPath.resolve( ref ) )

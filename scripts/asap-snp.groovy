@@ -12,7 +12,7 @@ import groovy.json.JsonSlurper
 import org.slf4j.LoggerFactory
 import bio.comp.jlu.asap.api.DataType
 import bio.comp.jlu.asap.api.FileType
-import bio.comp.jlu.asap.api.ReferenceType
+import bio.comp.jlu.asap.api.FileFormat
 
 import static bio.comp.jlu.asap.api.MiscConstants.*
 import static bio.comp.jlu.asap.api.Paths.*
@@ -153,9 +153,9 @@ if( reads == null ) {
 
 // check if an annotated reference is provided
 String refFileName = config.references[0]
-ReferenceType refType = ReferenceType.getEnum( refFileName )
+FileFormat refType = FileFormat.getEnum( refFileName )
 boolean hasReferenceAnnotation = false
-if( refType == ReferenceType.GENBANK  ||  refType == ReferenceType.EMBL )
+if( refType == FileFormat.GENBANK  ||  refType == FileFormat.EMBL )
     hasReferenceAnnotation = true
 
 

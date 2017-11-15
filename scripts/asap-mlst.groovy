@@ -110,8 +110,20 @@ log.info( "genome-name: ${genomeName}")
 final Path mlstPath = projectPath.resolve( PROJECT_PATH_MLST )
 Files.createFile( mlstPath.resolve( "${genomeName}.running" ) ) // create state.running
 
-// scaffolds path
-final Path scaffoldsGenomePath = Paths.get( projectPath.toString(), PROJECT_PATH_SCAFFOLDS, genomeName, "${genomeName}.fasta" )
+
+// sequence path
+final Path genomeSequencePath
+Path scaffoldsPath = Paths.get( projectPath.toString(), PROJECT_PATH_SCAFFOLDS, genomeName, "${genomeName}.fasta" )
+Path sequencePath  = Paths.get( projectPath.toString(), PROJECT_PATH_SEQUENCES, "${genomeName}.fasta" )
+if( Files.isReadable( scaffoldsPath ) ) {
+    genomeSequencePath = scaffoldsPath
+    log.info( "sequence file (scaffolds): ${genomeSequencePath}" )
+} else if( Files.isReadable( sequencePath ) ) {
+    genomeSequencePath = sequencePath
+    log.info( "sequence file: ${genomeSequencePath}" )
+} else
+    terminate( "no sequence file! gid=${genomeId}, tmp-dir=${tmpPath}", genomeName, taxPath, tmpPath )
+
 
 // create info object
 def info = [
@@ -140,7 +152,7 @@ def info = [
 
 // blast genome vs mlst db
 ProcessBuilder pb = new ProcessBuilder( BLASTN,
-    '-query', scaffoldsGenomePath.toString(),
+    '-query', genomeSequencePath.toString(),
     '-db', "${MLST_DB}/mlst.fna".toString(),
     '-num_threads', '1',
     '-ungapped',

@@ -27,7 +27,7 @@ ASAP_HOME = env.ASAP_HOME
 ASAP_DB   = env.ASAP_DB
 
 MEDUSA = "${ASAP_HOME}/share/medusa"
-MUMMER      = "${ASAP_HOME}/share/mummer"
+MUMMER = "${ASAP_HOME}/share/mummer"
 
 LINKER      = 'NNNNNNNNNNCTAGCTAGCTAGCNNNNNNNNNN'
 LINE_LENGTH = 70
@@ -264,6 +264,10 @@ linkedScaffoldsPath.text = sbPseudoGenome.toString()
 // copy scaffolds and pseudo genome files to genome scaffold dir
 Files.copy( scaffoldsPath, genomeScaffoldsDirPath.resolve( "${genomeName}.fasta" ) )
 Files.copy( linkedScaffoldsPath, genomeScaffoldsDirPath.resolve( "${genomeName}-pseudo.fasta" ) )
+
+
+// copy scaffolds to sequence dir for characterization steps
+Files.copy( scaffoldsPath, Paths.get( projectPath.toString(), PROJECT_PATH_SEQUENCES, "${genomeName}.fasta" ) )
 
 
 // calc statistics

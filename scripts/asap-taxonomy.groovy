@@ -125,8 +125,19 @@ final Path taxPath = projectPath.resolve( PROJECT_PATH_TAXONOMY )
 Files.createFile( taxPath.resolve( "${genomeName}.running" ) ) // create state.running
 
 
-// scaffolds path
-final Path genomeAssemblyPath = Paths.get( projectPath.toString(), PROJECT_PATH_SCAFFOLDS, genomeName, "${genomeName}.fasta" )
+// sequence path
+final Path genomeSequencePath
+Path scaffoldsPath = Paths.get( projectPath.toString(), PROJECT_PATH_SCAFFOLDS, genomeName, "${genomeName}.fasta" )
+Path sequencePath  = Paths.get( projectPath.toString(), PROJECT_PATH_SEQUENCES, "${genomeName}.fasta" )
+if( Files.isReadable( scaffoldsPath ) ) {
+    genomeSequencePath = scaffoldsPath
+    log.info( "sequence file (scaffolds): ${genomeSequencePath}" )
+} else if( Files.isReadable( sequencePath ) ) {
+    genomeSequencePath = sequencePath
+    log.info( "sequence file: ${genomeSequencePath}" )
+} else
+    terminate( "no sequence file! gid=${genomeId}, tmp-dir=${tmpPath}", genomeName, taxPath, tmpPath )
+
 
 // create local tmp directory
 final Path tmpPath = Paths.get( '/', 'var', 'scratch', "tmp-${System.currentTimeMillis()}-${Math.round(Math.random()*1000)}" )
@@ -175,9 +186,8 @@ ProcessBuilder pb = new ProcessBuilder( MASH,
     'dist',
     '-p', Integer.toString( NUM_THREADS ),
     MASH_DB,
-    genomeAssemblyPath.toString() )
+    genomeSequencePath.toString() )
     .directory( tmpPath.toFile() )
-
 log.info( "exec: ${pb.command()}" )
 log.info( '----------------------------------------------------------------------------------------------' )
 def proc = pb.start()
@@ -282,7 +292,7 @@ pb = new ProcessBuilder( CMSEARCH,
     '--cpu', Integer.toString( NUM_THREADS ),
     '--tblout', cmOutPath.toString(),
     RFAM_CM_SSU_RRNA,
-    genomeAssemblyPath.toString() )
+    genomeSequencePath.toString() )
     .directory( tmpPath.toFile() )
 log.info( "exec: ${pb.command()}" )
 log.info( '----------------------------------------------------------------------------------------------' )
@@ -311,9 +321,9 @@ cmOutPath.eachLine( { line ->
 } )
 
 String ribSequence = null
-def m = genomeAssemblyPath.text =~ /(?m)^>(.+)$\r?\n([ATGCNatgcn\r\n]+)$/ //include Windows line breaks (\r\n) as user provided scaffolds might be written on Windows systems
+def m = genomeSequencePath.text =~ /(?m)^>(.+)$\r?\n([ATGCNatgcn\r\n]+)$/ //include Windows line breaks (\r\n) as user provided scaffolds might be written on Windows systems
 m.each( { match ->
-    String name = match[1].trim()
+    String name = match[1].split(' ')[0].trim()
     String contig = match[2].replaceAll( '[^ATGCNatgcn]', '' )
     if( name == ssu.contig ) {
         ribSequence = contig.substring( ssu.start - 1, ssu.end )
@@ -446,7 +456,7 @@ config.references.each( { ref ->
     Path dnaFragmentsPath = tmpPath.resolve( 'dna-fragments.fasta' )
     Files.deleteIfExists( dnaFragmentsPath )
     Files.createFile( dnaFragmentsPath )
-    m = genomeAssemblyPath.text =~ /(?m)^>.+$\r?\n([ATGCNatgcn\r\n]+)$/
+    m = genomeSequencePath.text =~ /(?m)^>.+$\r?\n([ATGCNatgcn\r\n]+)$/
     m.each( { match ->
         String sequence = match[1].replaceAll( '\n', '' )
         while( sequence.length() > 1020 ) {
