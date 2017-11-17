@@ -246,7 +246,7 @@ SeqIO.convert( "${emblPath}", "${Format.embl}", "${genbankPath}", "${Format.genb
                 // combine GFF3 annotation and Fasta sequence file (Roary expectation)
                 Path gffPath = Paths.get( projectPath.toString(), PROJECT_PATH_ANNOTATIONS, genomeName, "${genomeName}.gff" )
                 String sequence = fastaPath.text
-                String gffAnnotation = gffPath.text
+                String gffAnnotation = gffPath.text.split( '\n' ).findAll( {!it.isEmpty()} ).join( '\n' ) // remove empty lines at the end
                 gffPath.text = "${gffAnnotation}\n##Fasta\n${sequence}"
             }
 

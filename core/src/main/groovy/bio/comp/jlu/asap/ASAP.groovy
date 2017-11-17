@@ -570,12 +570,17 @@ def setupDirectories( def config, def projectPath ) {
                         assert fileSuffix != null
                         Files.createLink( destPath.resolve( "${genomeName}.${fileSuffix}" ), dataPath.resolve( data.files[0] ) )
                     } else if( data.files.size() == 2 ) { // check if its GFF3 + Fasta
+                        /** As Roary expects GFF files containing the sequence information
+                         *  we have to make a proper copy in order to later on join
+                         *  sequence and annotation during the GenomeConversion step.
+                        /*  This way, the raw data stays unmodified.
+                        */
                         FileFormat ff2 = FileFormat.getEnum( data.files[1] )
                         if( (ff == FileFormat.FASTA)  &&  (ff2 == FileFormat.GFF) ) {
                             Files.createLink( destPath.resolve( "${genomeName}.fasta" ), dataPath.resolve( data.files[0] ) )
-                            Files.createLink( destPath.resolve( "${genomeName}.gff" ), dataPath.resolve( data.files[1] ) )
+                            Files.copy( dataPath.resolve( data.files[1] ), destPath.resolve( "${genomeName}.gff" ) )
                         } else if( (ff == FileFormat.GFF)  &&  (ff2 == FileFormat.FASTA) ) {
-                            Files.createLink( destPath.resolve( "${genomeName}.gff" ), dataPath.resolve( data.files[0] ) )
+                            Files.copy( dataPath.resolve( data.files[0] ), destPath.resolve( "${genomeName}.gff" ) )
                             Files.createLink( destPath.resolve( "${genomeName}.fasta" ), dataPath.resolve( data.files[1] ) )
                         } else {
                             log.error( "Error: genome file suffices do not match GFF3/Fasta format! (${data.files})", ex )
