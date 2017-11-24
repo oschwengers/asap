@@ -107,10 +107,13 @@ class ReportRunner extends ReportStep {
             new ABRReportStep( config, templateConfiguration ),
             new VFReportStep( config, templateConfiguration ),
             new MappingReportStep( config, templateConfiguration ),
-            new SnpReportStep( config, templateConfiguration ),
-            new CorePanReportStep( config, templateConfiguration ),
-            new PhylogenyReportStep( config, templateConfiguration )
+            new SnpReportStep( config, templateConfiguration )
         ]
+
+        if( config.project.comp ) {
+            reportSteps << new CorePanReportStep( config, templateConfiguration )
+            reportSteps << new PhylogenyReportStep( config, templateConfiguration )
+        }
 
 
         // start reporting steps

@@ -5,6 +5,8 @@
 
 # v1.0.3
 ## Enhancements
+- Added option to skip comparative analyses
+- Applied many bugfixes and minor improvements to report pages
 - Replaced ResFinder by CARD as annotation database
 - Harmonized variable names in cloud property file
 - Fixed NPE in ANI calculation

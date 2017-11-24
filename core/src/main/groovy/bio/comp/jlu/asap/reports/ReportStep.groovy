@@ -130,15 +130,19 @@ abstract class ReportStep extends Step {
 
         def menu = [:]
 
-        menu.analyses = [
-            CORE_PAN,
-            PHYLOGENY
-        ].collect( { step ->
-            [
-                link: step.getAbbreviation(),
-                name: step.getName()
-            ]
-        } )
+        if( config.project.comp ) {
+            menu.analyses = [
+                CORE_PAN,
+                PHYLOGENY
+            ].collect( { step ->
+                [
+                    link: step.getAbbreviation(),
+                    name: step.getName()
+                ]
+            } )
+        } else {
+            menu.analyses = []
+        }
 
         return menu
 
