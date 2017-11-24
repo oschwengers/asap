@@ -1,6 +1,7 @@
 # v1.1
 ## Enhancements
 - Replaced Kraken based kmer classification by Mash GenBank lookup
+- Added option to skip comparative analyses
 - Applied many bugfixes and minor improvements to report pages
 
 # v1.0
