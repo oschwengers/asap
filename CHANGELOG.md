@@ -1,3 +1,7 @@
+# v1.0.1
+## Enhancements
+- Applied many bugfixes and minor improvements
+
 # v1.0
 ## Features
 - Added support for PacBio Sequel protocol
