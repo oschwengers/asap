@@ -137,7 +137,7 @@
 
                     <#-- content start -->
 
-                <#if (steps.finished?size > 2)>
+                <#if (steps.finished?size > 1)>
                     <div class="row" id="charts">
                         <div class="col-md-10">
 
