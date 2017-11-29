@@ -292,8 +292,8 @@
                                     </tr>
                                     <tr>
                                         <td>N90</td>
-                                        <td><input type="radio" name="xaxis" value="2" id="n90" onclick=updateGraph()></td>
-                                        <td><input type="radio" name="yaxis" value="2" id="n90" onclick=updateGraph()></td>
+                                        <td><input type="radio" name="xaxis" value="2" id="N90" onclick=updateGraph()></td>
+                                        <td><input type="radio" name="yaxis" value="2" id="N90" onclick=updateGraph()></td>
                                     </tr>
                                     <tr>
                                         <td>N50 Coverage</td>
