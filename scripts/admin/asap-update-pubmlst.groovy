@@ -7,8 +7,10 @@
 
 
 import java.nio.file.*
+import groovy.json.*
 import groovy.util.CliBuilder
 
+import static groovy.io.FileType.FILES
 
 
 
@@ -51,7 +53,7 @@ if( opt.u ) {
 
 
 // destination path and directory name handling
-def destinationPath = Paths.get( '' )
+def destinationPath = Paths.get( '' ).toRealPath()
 if( opt.o ){
     destinationPath = Paths.get( opt.o ).toRealPath()
     println "dest: ${destinationPath}"
@@ -130,3 +132,50 @@ if( pb.start().waitFor() != 0 ) {
 }
 println( '----------------------------------------------------------------------------------------------' )
 
+
+// build MLST JSON file
+def stProfiles = []
+def nonGeneNames = [ 'scheme', 'ST', 'species', 'clonal_complex', 'mlst_clade', 'Lineage' ,'CC'] // some lociNames got '_' in their name maybe that needs to be removed
+schemesPath.eachFileRecurse( FILES, { file ->
+
+    String fileName = file.toFile().name
+    if( fileName.endsWith( '.txt' )  &&  !fileName.contains( 'readme' ) ) { // skip readme files
+        String scheme = fileName - '.txt'
+        //println "scheme file: ${scheme}"
+        def stProfileCols = []
+        file.splitEachLine( '\t', { stProfileCols << it } )
+        def headers = stProfileCols[0].collect( { it.charAt(0) == '_' ? it.substring( 1 ) : it } )
+        int noCols = headers.size()
+        def genes  = headers - nonGeneNames
+        stProfileCols = stProfileCols.drop( 1 )
+        //println "\t#: ${noCols}\t${headers}"
+        stProfileCols.each( { cols ->
+            def stProfile = [
+                scheme: scheme,
+                alleles: [:]
+            ]
+            def data = [:]
+            for( int i=0; i<noCols; i++ ) {
+                data[ (headers[i]) ] = cols[i]
+            }
+            stProfile.st = data['ST']
+            for( gene in genes ) {
+                stProfile.alleles[ (gene) ] = data[ (gene) ]
+            }
+            String ccToken = [ 'CC', 'cc', 'clonal_complex' ].find( {data[(it)]} )
+            stProfile.cc = ccToken ? data[ (ccToken) ] : '-'
+
+            String lineageToken = [ 'Lineage', 'mlst_clade'  ].find( {data[(it)]} )
+            stProfile.lineage = lineageToken ? data[ (lineageToken) ] : '-'
+            stProfiles << stProfile
+            //println "\t\tprofile:\t${stProfile}"
+        } )
+    }
+
+} )
+
+destinationPath.resolve( 'mlst-db.json' ).text = JsonOutput.toJson( stProfiles )
+
+// delete tmp files
+Files.delete( destinationPath.resolve( 'mlst.fna' ) )
+schemesPath.deleteDir()
