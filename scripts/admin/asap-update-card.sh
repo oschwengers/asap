@@ -1,3 +1,4 @@
+#!/bin/bash
 
 curl -o card-software.tar.bz2 https://card.mcmaster.ca/latest/software
 tar -xjf card-software.tar.bz2

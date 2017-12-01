@@ -1,3 +1,4 @@
+#!/bin/bash
 
 curl -o resfinder.zip 'https://cge.cbs.dtu.dk/cge/download_data.php' -H 'Content-Type: application/x-www-form-urlencoded' --data 'folder=resfinder&filename=resfinder.zip'
 unzip resfinder.zip
