@@ -65,7 +65,7 @@
                 if( svgToSave ){
                     const pom = document.createElement( 'a' );
                         pom.setAttribute( 'href', 'data:text/xml;charset=utf-8,' + window.encodeURIComponent( svgToSave ) );
-                        pom.setAttribute( 'download', 'asap-snp-tree.svg' );
+                        pom.setAttribute( 'download', '${project.genus[0]}_${genome.species}_${genome.strain}.svg' );
                     const event = document.createEvent( 'MouseEvents' );
                         event.initEvent( 'click', true, true );
                     pom.dispatchEvent(event);
