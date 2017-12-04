@@ -5,7 +5,7 @@
 
     <groupId>bio.comp.jlu.asap</groupId>
     <artifactId>asap-cloud-setup</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <packaging>jar</packaging>
     <name>ASAP-Cloud-Setup</name>
 
