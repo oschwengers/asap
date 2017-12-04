@@ -7,14 +7,17 @@ LABEL maintainer="oliver.schwengers@computational.bio.uni-giessen.de"
 RUN apt-get -y update && apt-get -y install \
     gnuplot-nox \
     less \
-    libdatetime-perl libxml-simple-perl libdigest-md5-perl bioperl \
+    libdatetime-perl \
+    libxml-simple-perl \
+    libdigest-md5-perl \
+    bioperl \
     libtbb2 \
     openjdk-8-jdk \
     python-pip \
     roary
-RUN pip install biopython
-RUN pip install networkx
-RUN pip install numpy
+RUN pip install biopython \
+    networkx \
+    numpy
 RUN mkdir /var/scratch/
 
 ENV ASAP_HOME=/asap/
