@@ -44,23 +44,27 @@ Due to its complex dependencies installation is a non-trivial task. Therefore, A
 ### Docker
 For the sake of simplicity ASA³P offers a **Docker** container hosted at **Docker Hub** (https://hub.docker.com/r/oschwengers/asap/).
 
-
 Setup:
 ```bash
 sudo docker pull oschwengers/asap
 wget https://s3.computational.bio.uni-giessen.de/swift/v1/asap/latest/asap.tar.gz
 tar -xzf asap.tar.gz
 rm asap.tar.gz
+wget https://s3.computational.bio.uni-giessen.de/swift/v1/asap/latest/asap-docker.sh
+chmod 755 asap-docker.sh
 ```
 
-Running an ASA³P Container:
+Running an ASA³P Container using the `asap-docker.sh` shell wrapper script:
 ```bash
-sudo docker run -d -rm -v <path-to-asap-dir>:/asap:ro -v <path-to-project-data-dir>:/data --name <container-name> oschwengers/asap
+sudo asap-docker.sh <ASAP_DIR> <PROJECT_DIR>
 ```
+
+Parameters:
+* `<ASAP_DIR>`: absolute path to downloaded and extracted ASA³P directory
+* `<PROJECT_DIR>`: absolute path to the actual project data directory (containing `config.xls` and `data` directory)
 
 **Complete example**: (user name: ubuntu)
 ```bash
-cd ~
 sudo docker pull oschwengers/asap
 wget https://s3.computational.bio.uni-giessen.de/swift/v1/asap/latest/asap.tar.gz
 tar -xzf asap.tar.gz
@@ -68,9 +72,12 @@ rm asap.tar.gz
 wget https://s3.computational.bio.uni-giessen.de/swift/v1/asap/example-lmonocytogenes.tar.gz
 tar -xzf example-lmonocytogenes.tar.gz
 rm example-lmonocytogenes.tar.gz
-sudo docker run -d -rm -v /home/ubuntu/asap:/asap:ro -v /home/ubuntu/example-lmonocytogenes:/data --name test-container oschwengers/asap
+wget https://s3.computational.bio.uni-giessen.de/swift/v1/asap/latest/asap-docker.sh
+chmod 755 asap-docker.sh
+sudo ./asap-docker.sh asap/ example-lmonocytogenes/
 ```
 
+For further information have a look at the Docker readme (DOCKER.md ).
 
 ### Cloud - OpenStack
 ASA³P's **OpenStack** based cloud version offers automatic creation, setup and orchestration of a **SGE** based compute cluster and its entire underlying infrastructure.
@@ -92,11 +99,11 @@ Additional files:
 ## Input & Output
 
 ### Input
-ASA³P expects all input files and information regarding a single batch run (i.e. a "project") within a dedicated directory. 
-All necessary information (meta information, reference genomes, isolate/sample names and files) are provided via an Excel config file named *config.xls*. 
-A corresponding template can be downloaded [here](https://s3.computational.bio.uni-giessen.de/swift/v1/asap/latest/config.xls). For further details on how to fill out a proper configuration file, 
-please have a look at the [manual](https://s3.computational.bio.uni-giessen.de/swift/v1/asap/latest/manual.pdf). 
-All input files referenced in a configuration spreadsheet need to be placed in a subdirectory called *data*. 
+ASA³P expects all input files and information regarding a single batch run (i.e. a "project") within a dedicated directory.
+All necessary information (meta information, reference genomes, isolate/sample names and files) are provided via an Excel config file named *config.xls*.
+A corresponding template can be downloaded [here](https://s3.computational.bio.uni-giessen.de/swift/v1/asap/latest/config.xls). For further details on how to fill out a proper configuration file,
+please have a look at the [manual](https://s3.computational.bio.uni-giessen.de/swift/v1/asap/latest/manual.pdf).
+All input files referenced in a configuration spreadsheet need to be placed in a subdirectory called *data*.
 
 **Example**:
 ```
