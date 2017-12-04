@@ -68,6 +68,8 @@ final int noSlaves = desiredAmountSlaves > maxAmountSlaves ? maxAmountSlaves : d
 
 
 // import cloud and BiBiGrid values
+String region = props.getProperty( 'cloud.region' )
+String zone = props.getProperty( 'cloud.zone' )
 String subnet = props.getProperty( 'cloud.subnet' )
 String masterFlavour = props.getProperty( 'master.instance' )
 String slavesFlavour = props.getProperty( 'slaves.instance' )
@@ -84,8 +86,8 @@ mode=openstack
 #Access
 identity-file=${asapPath.toString()}/asap.cluster.key
 keypair=asap-cluster
-region=RegionOne
-availability-zone=nova
+region=${region}
+availability-zone=${zone}
 
 #Network
 subnet=${subnet}
