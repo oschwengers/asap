@@ -410,6 +410,5 @@
                 </div>
             </div>
         </div>
-        <#include "commons/footer.ftl">
     </body>
 </html>
