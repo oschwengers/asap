@@ -8,7 +8,7 @@
         <meta name="description" content="ASAP results for \"${project.name}\" project">
         <meta name="author" content="Oliver Schwengers">
 
-        <title>ASAP: ${project.name}</title>
+        <title>ASA&#179;P: ${project.name}</title>
 
         <#-- include Bootstrap css files -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
