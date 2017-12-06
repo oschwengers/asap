@@ -109,7 +109,7 @@
                             <h2 class="modal-title" id="myModalLabel">ASAP annotation detail</h2>
                           </div>
                           <div class="modal-body">
-                            <h3 id="interactivegenomeplot">Interactive genome plot</h3>
+                            <h3>Interactive genome plot</h3>
 
                             <p>The circular genome plot is generated utilising the <code>BioCircos.js</code> library. The most
                               outer circle displays the position <code>reference in million base pairs</code>. The most outer
@@ -122,26 +122,26 @@
                               green. <code>Positioning</code> of the whole genome plot can be applied via drag and drop and
                               <code>Zooming</code> can be applied via mouse wheel.</p>
 
-                            <h3 id="basicannotationstatistics">Basic annotation statistics</h3>
+                            <h3>Basic annotation statistics</h3>
 
                             <p>Abundance of the annotated feature types found in this genome. Visualization of the annotation
                               prediction rate.</p>
 
-                            <h3 id="interactivedatatablefeatures">Interactive data table Features</h3>
+                            <h3>Interactive data table Features</h3>
 
                             <p><code>Individual sorting</code> can be applied via clicking on the respective column header.
                               Use the <code>Search</code> function (top right of the table) to display only genomes that
                               contain the search term in any of their table fields. The <code>number of entries</code> displayed
                               per page can be chosen on the top left of the table.</p>
 
-                            <h3 id="downloads">Downloads</h3>
+                            <h3>Downloads</h3>
 
                             <p>Several annotation based files can be downloaded, including the genome as <code>gbk</code>, annotations
                               as <code>gff</code>, gene sequences as <code>ffn</code>, coding sequences as <code>faa</code>                              and the circular genome plot as <code>svg</code> file. The features table can be saved as comma
                               separated value (<code>csv</code>) file via click on the csv button (search and sorting are
                               contained in the downloaded file).</p>
 
-                            <h3 id="links">Links</h3>
+                            <h3>Links</h3>
 
                             <ul>
                               <li><a href="http://bioinfo.ibp.ac.cn/biocircos/">BioCircos.js</a>; BioCircos.js: an Interactive
@@ -149,7 +149,7 @@
                                 et al. Bioinformatics. (2016). <a href="https://www.ncbi.nlm.nih.gov/pubmed/26819473">PubMed</a>.</li>
                             </ul>
 
-                            <h3 id="glossary">Glossary</h3>
+                            <h3>Glossary</h3>
 
                             <ul>
                               <li><strong>End</strong>: End position of the feature in base pairs.</li>

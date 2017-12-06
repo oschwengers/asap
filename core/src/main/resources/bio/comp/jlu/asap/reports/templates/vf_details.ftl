@@ -67,12 +67,12 @@
                               contain the search term in any of their table fields. The <code>number of entries</code> displayed
                               per page can be chosen on the top left of the table.</p>
 
-                            <h3 id="downloads">Downloads</h3>
+                            <h3>Downloads</h3>
 
                             <p>The table can be saved as comma separated value (<code>csv</code>) file via click on the csv
                               button (search and sorting are contained in the downloaded file).</p>
 
-                            <h3 id="glossary">Glossary</h3>
+                            <h3>Glossary</h3>
 
                             <ul>
                               <li><strong>Category</strong>: Virulence factor category designation according to its function.</li>

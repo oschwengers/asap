@@ -68,23 +68,23 @@
                               consensus sequence and statistics is calculated with <code>BCFtools</code>. This page provides an average SNP distribution
                               mapping and a SNP comparison of the analysed genome.</p>
 
-                            <h3 id="snpdistributiongraph">SNP distribution graph</h3>
+                            <h3>SNP distribution graph</h3>
 
                             <p>The <code>mean number of SNPs</code> per <code>10 kb</code> compared to the reference genome are displayed. Mouse over the
                               graph to display the position and mean SNP number of an individual peak.</p>
 
-                            <h3 id="interactivedatatable">Interactive data table</h3>
+                            <h3>Interactive data table</h3>
 
                             <p><code>Individual sorting</code> can be applied via clicking on the respective column header. Use the <code>Search</code>  function (top right of the table) to display only genomes that contain the search term in any of their table fields. The
                               <code>number of entries</code> displayed per page can be chosen on the top left of the table. <code>Blue horizontal bar plots</code>  are displayed in most columns containing numeric values. They visualize the relative relation of this value compared to
                               the according values of the other genomes. Mouse over on underlined term to display further information on it.</p>
 
-                            <h3 id="downloads">Downloads</h3>
+                            <h3>Downloads</h3>
 
                             <p>The table can be saved as comma separated value (<code>csv</code>) file via click on the csv button (search and sorting are
                               contained in the downloaded file). The <code>vcf</code> file of each genome can be downloaded.</p>
 
-                            <h3 id="links">Links</h3>
+                            <h3>Links</h3>
 
                             <ul>
                               <li><code>Details</code> on the SNPs of a particular genome can be accessed via click on the magnifying glass in the overview
@@ -108,7 +108,7 @@
                               <li><a href="https://github.com/samtools/htslib">HTSlib</a>; Included in SAMtools.</li>
                             </ul>
 
-                            <h3 id="glossary">Glossary</h3>
+                            <h3>Glossary</h3>
 
                             <ul>
                               <li><strong>Change Range</strong>: Ratio of number single nucleotide polymorphisms to genome size.</li>

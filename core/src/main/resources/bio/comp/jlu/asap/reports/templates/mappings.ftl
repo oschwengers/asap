@@ -66,7 +66,7 @@
                               position in a project. For Illumina and Pacific Bioscience reads ASA³P uses <code>Bowtie 2</code>                            and <code>blasr</code>, respectively. Finally, generated Sequence Alignment/Map (<code>SAM</code>)
                               files are converted to ordered Binary Alignment/Map (<code>BAM</code>) files via <code>SAMtools</code>.</p>
 
-                            <h3 id="interactivedatatable">Interactive data table</h3>
+                            <h3>Interactive data table</h3>
 
                             <p><code>Individual sorting</code> can be applied via clicking on the respective column header.
                               Use the <code>Search</code> function (top right of the table) to display only genomes that
@@ -74,12 +74,12 @@
                               per page can be chosen on the top left of the table. Mouse over on underlined term to display
                               further information on it.</p>
 
-                            <h3 id="downloads">Downloads</h3>
+                            <h3>Downloads</h3>
 
                             <p>The table can be saved as comma separated value (<code>csv</code>) file via click on the csv
                               button (search and sorting are contained in the downloaded file). To download the <code>bam</code>                              file of a particular genome mapping click on bam in the data table.</p>
 
-                            <h3 id="links">Links</h3>
+                            <h3>Links</h3>
 
                             <ul>
                               <li><a href="http://www.htslib.org/">SAMtools</a>; Li H., Handsaker B., Wysoker A., Fennell T.,
@@ -93,7 +93,7 @@
                               <li><a href="https://github.com/PacificBiosciences/blasr">blasr</a>; The PacBio® long read aligner.</li>
                             </ul>
 
-                            <h3 id="glossary">Glossary</h3>
+                            <h3>Glossary</h3>
 
                             <ul>
                               <li><strong>Genome</strong>: Name of the processed genome.</li>

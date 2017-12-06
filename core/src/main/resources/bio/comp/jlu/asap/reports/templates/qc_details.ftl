@@ -55,69 +55,69 @@
                               sets. Forward and reverse reads, before and after quality control. Select a comparison by clicking
                               on the genome name (top middle) to open the drop down menu.</p>
 
-                            <h3 id="tableraw">Table raw</h3>
+                            <h3>Table raw</h3>
 
                             <p>Displays the properties of the raw data, including <code>File</code> names, the <code># Reads</code>,
                               read <code>Lengths</code>, <code>Quality</code> and <code>GC</code> percentage.</p>
 
-                            <h3 id="tableqc">Table QC</h3>
+                            <h3>Table QC</h3>
 
                             <p>Displays the properties of data after quality control, including <code>File</code> names, the
                               <code># Reads</code>, read <code>Lengths</code>, <code>Quality</code> and <code>GC</code> percentage.</p>
 
-                            <h3 id="boxplotpotentialcontaminations">Boxplot potential contaminations [%]</h3>
+                            <h3>Boxplot potential contaminations [%]</h3>
 
                             <p>The percentage of <code>reads that could not be mapped to the reference</code> but to different
                               contamination targets is shown per target. The different targets include human, mouse PhiX
                               and vectors.</p>
 
-                            <h3 id="interactivediagramgroups">Interactive diagram groups</h3>
+                            <h3>Interactive diagram groups</h3>
 
                             <p>The first diagram of each quartet refers to the forward reads of raw data, the second to forward
                               quality controlled data, the third to reverse reads of raw data and the fourth to reverse reads
                               of quality controlled data. Via mouse over on the diagram the according file name is displayed.</p>
 
-                            <h4 id="perbasequalities">Per base qualities</h4>
+                            <h4>Per base qualities</h4>
 
                             <p>Diagrams with the <code>quality scores across all bases</code>. On the x-axis the base position
                               in the reads is displayed. On the y-axis the <code>Quality</code> as PHRED score is shown.</p>
 
-                            <h4 id="persequencequalities">Per sequence qualities</h4>
+                            <h4>Per sequence qualities</h4>
 
                             <p>Diagrams with the <code>quality score distribution over all sequences</code>. On the x-axis the
                               mean sequence <code>Quality</code> as PHRED score of a read is shown. On the y-axis the number
                               of reads is display.</p>
 
-                            <h5 id="perbasesequencecontents">Per base sequence contents</h5>
+                            <h5>Per base sequence contents</h5>
 
                             <p>Diagrams with the <code>sequence content across all bases</code>. On the x-axis the base position
                               in the reads is displayed. On the y-axis the percentage of each base (A, C, G, T) across all
                               reads is displayed.</p>
 
-                            <h4 id="persequencegccontents">Per sequence GC contents</h4>
+                            <h4>Per sequence GC contents</h4>
 
                             <p>Diagrams with the <code>GC distribution over all sequences</code>. The red graph shows the GC
                               count per read, the blue graph shows the theoretical distribution. On the x-axis the mean GC
                               content of the reads is display. On the y-axis the number of reads is display.</p>
 
-                            <h4 id="perbasencontents">Per base N contents</h4>
+                            <h4>Per base N contents</h4>
 
                             <p>Diagrams with the <code>N content across all bases</code>. On the x-axis the base position in
                               the reads is displayed. On the y-axis the percentage of bases characterised as 'N' (not assignable)
                               is displayed.</p>
 
-                            <h4 id="sequencelengthdistributions">Sequence length distributions</h4>
+                            <h4>Sequence length distributions</h4>
 
                             <p>Diagrams with the <code>distribution of sequence lengths over all sequences</code>. On the x-axis
                               the sequence lengths of the reads are displayed. On the y-axis the number of reads is displayed.</p>
 
-                            <h4 id="kmerprofiles">Kmer profiles</h4>
+                            <h4>Kmer profiles</h4>
 
                             <p>Diagrams with the <code>log2 ratio from observations to expected kmers</code>. The six kmers
                               with the highest log2 obs/exp are displayed. On the x-axis the base position in the reads is
                               display. On the y-axis the log2 ratio from observations to expected kmers is displayed.</p>
 
-                            <h3 id="glossary">Glossary</h3>
+                            <h3>Glossary</h3>
 
                             <ul>
                               <li><strong>GC</strong>: GC content in percent.</li>

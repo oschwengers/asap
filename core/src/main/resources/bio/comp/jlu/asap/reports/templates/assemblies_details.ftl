@@ -134,28 +134,28 @@
                             <h2 class="modal-title" id="myModalLabel">ASAP assembly detail</h2>
                           </div>
                           <div class="modal-body">
-                            <h3 id="histogramsofcontigspecifications">Histograms of contig specifications</h3>
+                            <h3>Histograms of contig specifications</h3>
 
-                            <h5 id="contiglengths">Contig lengths</h5>
+                            <h5>Contig lengths</h5>
 
                             <p>Histogram of <code>contig length</code> in kb. Via mouse over the number of contigs in each bin
                               is displayed.</p>
 
-                            <h5 id="contigcoverage">Contig coverage</h5>
+                            <h5>Contig coverage</h5>
 
                             <p>Histogram of the <code>average read coverage</code> per contig. Via mouse over the average coverage
                               of each bin is displayed.</p>
 
-                            <h5 id="contiggccontents">Contig GC contents</h5>
+                            <h5>Contig GC contents</h5>
 
                             <p>Stacked histogram of <code>GC contents</code> per contig. Via mouse over the GC content of each
                               individual contig is displayed.</p>
 
-                            <h3 id="basicassemblystatistics">Basic assembly statistics</h3>
+                            <h3>Basic assembly statistics</h3>
 
                             <p>Provides information on the assembly in general and on the contig length.</p>
 
-                            <h3 id="interactivedatatablecontigs">Interactive data table contigs</h3>
+                            <h3>Interactive data table contigs</h3>
 
                             <p><code>Individual sorting</code> can be applied via clicking on the respective column header.
                               Use the <code>Search</code> function (top right of the table) to display only genomes that
@@ -163,14 +163,14 @@
                               per page can be chosen on the top left of the table. Mose over on underlined table headers
                               to display further information on it.</p>
 
-                            <h3 id="downloads">Downloads</h3>
+                            <h3>Downloads</h3>
 
                             <p>The contigs and scaffolds used in this assembly as well as the ones discarded (not used for assembly)
                               can be downloaded as <code>fasta</code> on the right below the histograms. The table can be
                               saved as comma separated value (<code>csv</code>) file via click on the csv button (search
                               and sorting are contained in the downloaded file).</p>
 
-                            <h3 id="glossary">Glossary</h3>
+                            <h3>Glossary</h3>
 
                             <ul>
                               <li><strong>Contigs</strong>: Set of overlapping DNA segments (reads).</li>

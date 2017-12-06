@@ -141,29 +141,29 @@
                                 These groups consist of genes present in all analysed genomes (<code>core</code>), genes present at least in one other
                                 analysed genome (<code>accessory</code>) and genes unique to one a single genome (<code>singletons</code>).
                                 Internally, <code>Roary</code> uses <code>CD-HIT</code> and <code>BLAST+</code> and is provided with <code>.gff</code> files resulting from prior annotation.</p>
-                            
 
-                            <h3 id="interactivedonutchart">Interactive donut chart</h3>
+
+                            <h3>Interactive donut chart</h3>
 
                             <p>The percentage distribution of Core, Accessory and Singleton genes is displayed.</p>
 
-                            <h3 id="genenumbers">Gene Numbers</h3>
+                            <h3>Gene Numbers</h3>
 
                             <p>Provides absolute numbers on Core, Pan, Accessory and Singleton genes.</p>
 
-                            <h3 id="interactivepancoresingletondevelopmentchart">Interactive PAN / Core / Singleton Development chart</h3>
+                            <h3>Interactive PAN / Core / Singleton Development chart</h3>
 
                             <p>Displays changes in number of CDS (loci) in <code>Pan</code>, <code>Core</code> and <code>Singletons</code>                              with increasing number of genomes included in comparison (x-axis). For each comparisons amount
                               the number of genomes is picked randomly ten times and the average values are displayed. <code>Pan</code>                              and <code>Core</code> genome size is referenced by the left y-axis. The number of <code>Singletons</code>                              is referenced by the right y-axis. Highlighting of an individual graph can be done via clicking
                               on the graph or the according legend. Individual values on the graphs can be accessed via mouse
                               over. Individual data points can be highlighted via clicking on them.</p>
 
-                            <h3 id="skippedgenome">Skipped Genome</h3>
+                            <h3>Skipped Genome</h3>
 
                             <p>In case a sequenced genome could not be analysed this frame is displayed and shows the affected
                               genomes.</p>
 
-                            <h3 id="interactivedatatables">Interactive data tables</h3>
+                            <h3>Interactive data tables</h3>
 
                             <p><code>Individual sorting</code> can be applied via clicking on the respective column header.
                               Use the <code>Search</code> function (top right of the table) to display only genomes that
@@ -173,27 +173,27 @@
                               They visualize the relative relation of this value compared to the according values of the
                               other genomes.</p>
 
-                            <h5 id="overview">Overview</h5>
+                            <h5>Overview</h5>
 
                             <p>Provides information on the <code># Accessory</code> and <code># Singletons</code> gene loci
                               of each genome.</p>
 
-                            <h5 id="coregenome">Core Genome</h5>
+                            <h5>Core Genome</h5>
 
                             <p>Provides information on the <code>Product</code>(function) for each loci of the core genome.</p>
 
-                            <h5 id="accessorygenome">Accessory Genome</h5>
+                            <h5>Accessory Genome</h5>
 
                             <p>Provides information on the <code>Product</code>(function) and the <code>Abundance</code> for
                               each loci of the accessory genome.
                             </p>
 
-                            <h5 id="singletons">Singletons</h5>
+                            <h5>Singletons</h5>
 
                             <p>Provides information on each <code>Locus</code>, its <code>Product</code>(function) and the genome
                               it was found.</p>
 
-                            <h3 id="downloads">Downloads</h3>
+                            <h3>Downloads</h3>
 
                             <p>The table can be saved as comma separated value (<code>csv</code>) file via click on the csv
                               button (search and sorting are contained in the downloaded file). A <code>fasta</code> file
@@ -201,7 +201,7 @@
                               The matrix maps which gene is present in which sequenced organism (present = 1, absent = 0)
                               can be downloaded as tab separated value 'tsv' file.</p>
 
-                            <h3 id="links">Links</h3>
+                            <h3>Links</h3>
 
                             <ul>
                               <li><code>Details</code> on the core and pan genome distribution of a particular genome can be
@@ -213,7 +213,7 @@
                                 Bioinformatics, (2015). <a href="https://www.ncbi.nlm.nih.gov/pubmed/26198102">PubMed</a>.</li>
                             </ul>
 
-                            <h3 id="glossary">Glossary</h3>
+                            <h3>Glossary</h3>
 
                             <ul>
                               <li><strong>Abundance</strong>: Number of locus occurrence in this analysis.</li>
