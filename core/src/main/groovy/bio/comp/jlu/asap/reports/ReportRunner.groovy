@@ -98,7 +98,6 @@ class ReportRunner extends ReportStep {
         def reportSteps = [
             new IndexReportStep( config, templateConfiguration ),
             new HelpReportStep( config, templateConfiguration ),
-            new ProjectMetaReportStep( config, templateConfiguration ),
             new QCReportStep( config, templateConfiguration ),
             new TaxClassificationReportStep( config, templateConfiguration ),
             new AssemblyReportStep( config, templateConfiguration ),

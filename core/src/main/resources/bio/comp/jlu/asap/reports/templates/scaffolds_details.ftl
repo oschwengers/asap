@@ -167,6 +167,5 @@
                 </div>
             </div>
         </div>
-        <#include "commons/footer_sub.ftl">
     </body>
 </html>
