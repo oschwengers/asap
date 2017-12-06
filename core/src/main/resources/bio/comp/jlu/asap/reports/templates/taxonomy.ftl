@@ -101,26 +101,26 @@
                             <p>Finally, the pipeline uses a proprietary ANI implementation based on <code>Nucmer</code> to calculate whole genome sequence
                               identity as a reference based solution.</p>
 
-                            <h3 id="interactivedatatables">Interactive data tables</h3>
+                            <h3>Interactive data tables</h3>
 
                             <p><code>Individual sorting</code> can be applied via clicking on the respective column header. Use the <code>Search</code>  function (top right of the table) to display only genomes that contain the search term in any of their table fields. The
                               <code>number of entries</code> displayed per page can be chosen on the top left of the table. Mouse over on underlined
                               table headers to display further information on it.</p>
 
-                            <h5 id="referencefreeclassifications">Reference Free Classifications</h5>
+                            <h5>Reference Free Classifications</h5>
 
                             <p>The results from Kraken and Infernal are displayed.</p>
 
-                            <h5 id="highestreferenceanis">Highest Reference ANIs</h5>
+                            <h5>Highest Reference ANIs</h5>
 
                             <p>The results from Nucmer based ANI classification are displayed.</p>
 
-                            <h3 id="downloads">Downloads</h3>
+                            <h3>Downloads</h3>
 
                             <p>The table can be saved as comma separated value (<code>csv</code>) file via click on the csv button (search and sorting are
                               contained in the downloaded file).</p>
 
-                            <h3 id="links">Links</h3>
+                            <h3>Links</h3>
 
                             <ul>
                               <li><a href="https://www.ncbi.nlm.nih.gov/pubmed/17220447">ANI</a>: Goris, Johan, et al. "DNA–DNA hybridization values and
@@ -149,7 +149,7 @@
                                 rRNA analysis Nucl. Acids Res. 42(Database issue):D633-D642; doi: 10.1093/nar/gkt1244. <a href="https://www.ncbi.nlm.nih.gov/pubmed/24288368">PubMed</a>.</li>
                             </ul>
 
-                            <h3 id="glossary">Glossary</h3>
+                            <h3>Glossary</h3>
 
                             <ul>
                               <li><strong>16S Classification</strong>: Rfam 16S based taxonomic classification via Infernal.</li>

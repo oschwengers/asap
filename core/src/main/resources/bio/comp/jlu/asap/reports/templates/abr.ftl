@@ -82,7 +82,7 @@
                               knowledge it’s the only database/tool which can detect, classify and describe several different
                               types of ABR, e.g. gene homology and mutations driven mechanisms.</p>
 
-                            <h3 id="interactivedatatable">Interactive data table</h3>
+                            <h3>Interactive data table</h3>
 
                             <p><code>Individual sorting</code> can be applied via clicking on the respective column header.
                               Use the <code>Search</code> function (top right of the table) to display only genomes that
@@ -93,12 +93,12 @@
                               the individual resistances. Mouse over on underlined term to display further information on
                               it.</p>
 
-                            <h3 id="downloads">Downloads</h3>
+                            <h3>Downloads</h3>
 
                             <p>The table can be saved as comma separated value (<code>csv</code>) file via click on the csv
                               button (search and sorting are contained in the downloaded file).</p>
 
-                            <h3 id="links">Links</h3>
+                            <h3>Links</h3>
 
                             <ul>
                               <li><code>Details</code> on the resistance of a particular genome can be accessed via click on
@@ -110,7 +110,7 @@
                                 <a href="https://www.ncbi.nlm.nih.gov/pubmed/27789705">PubMed</a>.</li>
                             </ul>
 
-                            <h3 id="glossary">Glossary</h3>
+                            <h3>Glossary</h3>
 
                             <ul>
                               <li><strong># ABR Genes</strong>: Number of antibiotic resistance genes found.</li>

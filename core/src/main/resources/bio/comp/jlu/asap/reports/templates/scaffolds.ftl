@@ -69,18 +69,18 @@
                               to link all scaffolds and contigs ASA³P also provides <code>pseudo genomes</code>. Finally, raw contigs as well as oriented
                               and linked scaffolds are mapped onto all provided reference genomes in order to compare the results of this step.</p>
 
-                            <h3 id="interactivedatatable">Interactive data table</h3>
+                            <h3>Interactive data table</h3>
 
                             <p><code>Individual sorting</code> can be applied via clicking on the respective column header. Use the <code>Search</code>  function (top right of the table) to display only genomes that contain the search term in any of their table fields. The
                               <code>number of entries</code> displayed per page can be chosen on the top left of the table. <code>Blue horizontal bar plots</code>  are displayed in columns containing numeric values. Their data field filling ratio corresponds to the ratio of field value
                               to column maximum. Mouse over on underlined table headers to display further information on it.</p>
 
-                            <h3 id="downloads">Downloads</h3>
+                            <h3>Downloads</h3>
 
                             <p>The table can be saved as comma separated value (<code>csv</code>) file via click on the csv button (search and sorting are
                               contained in the downloaded file). To download a <code>fasta</code> file containing the Scaffolds or the generated <code>Pseudo genome</code>  click on the according name in the data table.</p>
 
-                            <h3 id="links">Links</h3>
+                            <h3>Links</h3>
 
                             <ul>
                               <li><code>Details</code> on the contig layout of a particular genome can be accessed via click on the magnifying glass in the
@@ -94,7 +94,7 @@
                                 S.L. Salzberg, Genome Biology (2004), 5:R12. <a href="https://www.ncbi.nlm.nih.gov/pubmed/14759262">PubMed</a>.</li>
                             </ul>
 
-                            <h3 id="glossary">Glossary</h3>
+                            <h3>Glossary</h3>
 
                             <ul>
                               <li><strong># Contigs</strong>: Number of contigs (set of overlapping DNA segments).</li>

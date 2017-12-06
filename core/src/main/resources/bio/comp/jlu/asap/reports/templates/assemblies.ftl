@@ -65,14 +65,14 @@
                               and short reads are performed with the tool <code>SPAdes</code>. This page provides an overview
                               on assembly key data of all genomes in this analysis.</p>
 
-                            <h3 id="interactivedotplot">Interactive dotplot</h3>
+                            <h3>Interactive dotplot</h3>
 
                             <p>Via the radio buttons on the right <code>key data</code> for X and Y axis can be selected. Mouse
                               over a dot of interest to display the according <code>genome name</code> as well as horizontal
                               and vertical value extensions. <code>Zooming</code> can be applied via marking the area of
                               interest with left mouse button down. To reset the view right click.</p>
 
-                            <h3 id="interactivedatatable">Interactive data table</h3>
+                            <h3>Interactive data table</h3>
 
                             <p><code>Individual sorting</code> can be applied via clicking on the respective column header.
                               Use the <code>Search</code> function (top right of the table) to display only genomes that
@@ -81,12 +81,12 @@
                               to the ratio of field value to column maximum. Mouse over on underlined table headers to display
                               further information on it.</p>
 
-                            <h3 id="downloads">Downloads</h3>
+                            <h3>Downloads</h3>
 
                             <p>The table can be saved as comma separated value (<code>csv</code>) file via click on the csv
                               button (search and sorting are contained in the downloaded file). To download the <code>fasta</code>                              file of a particular genome assembly click on fasta in the data table.</p>
 
-                            <h3 id="links">Links</h3>
+                            <h3>Links</h3>
 
                             <ul>
                               <li><code>Details</code> on the assembly of a particular genome can be accessed via click on the
@@ -103,7 +103,7 @@
                                 Biology, 2012. <a href="https://www.ncbi.nlm.nih.gov/pubmed/22506599">PubMed</a>.</li>
                             </ul>
 
-                            <h3 id="glossary">Glossary</h3>
+                            <h3>Glossary</h3>
 
                             <ul>
                               <li><strong># Contigs</strong>: Number of contigs (set of overlapping DNA segments).</li>

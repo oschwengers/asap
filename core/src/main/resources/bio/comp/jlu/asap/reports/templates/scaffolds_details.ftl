@@ -40,11 +40,11 @@
                               genomes via Synteny plots. In order to visualize the scaffolding quality the comparison is
                               done before and after the scaffolding process.</p>
 
-                            <h3 id="basicscaffoldingstatistics">Basic scaffolding statistics</h3>
+                            <h3>Basic scaffolding statistics</h3>
 
                             <p>Provides information on scaffolding in general and on the scaffold length.</p>
 
-                            <h3 id="dnasyntenyplots">DNA synteny plots</h3>
+                            <h3>DNA synteny plots</h3>
 
                             <p>The upper synteny plot of each genome comparison displays the position of all contigs in both
                               genomes before the scaffolding process (<code>Pre Scaffolding</code>). The lower synteny plot
@@ -54,12 +54,12 @@
                               to the plus strand are displayed in blue. Mouse over a contig to receive information on its
                               name, length assigned strand as well as start and end position in the reference.</p>
 
-                            <h3 id="downloads">Downloads</h3>
+                            <h3>Downloads</h3>
 
                             <p>The scaffolds and the generated pseudo genome can be downloaded as <code>fasta</code> on the
                               top right.</p>
 
-                            <h3 id="glossary">Glossary</h3>
+                            <h3>Glossary</h3>
 
                             <ul>
                               <li><strong># Contigs</strong>: Number of contigs (set of overlapping DNA segments).</li>

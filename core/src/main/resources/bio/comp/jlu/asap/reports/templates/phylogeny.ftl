@@ -37,7 +37,7 @@
                       genomes are calculated via <code>FastTreeMP</code> based on their SNPs. Information on the runtime
                       of the analysis is provided. The calculated phylogenetic trees are displayed via <code>Phylocanvas</code>.</p>
 
-                    <h3 id="phylogenetictreedisplay">Phylogenetic tree display</h3>
+                    <h3>Phylogenetic tree display</h3>
 
                     <p>A tree type (<code>rectangular</code>, <code>radial</code>, <code>circular</code>, <code>diagonal</code> and <code>hierarchical</code>)
                         can be chosen via the drop down menu. The tree can be positioned via mouse drag and drop. The zoom function is controlled via mouse wheel.
@@ -47,11 +47,11 @@
                         Via a right click on a tree node additional display and export options are available
                         (including <code>Collapse/Expand Subtree</code> and <code>Export Subtree as Newick File</code>)</p>
 
-                    <h3 id="downloads">Downloads</h3>
+                    <h3>Downloads</h3>
 
                     <p>The SNP based phylogenetic distances can be downloaded as <code>nwk</code> file under <code>Downloads</code>                      on the top right.</p>
 
-                    <h3 id="links">Links</h3>
+                    <h3>Links</h3>
 
                     <ul>
                       <li><a href="http://www.microbesonline.org/fasttree/">FastTreeMP</a>; Price, M.N., Dehal, P.S., and Arkin,

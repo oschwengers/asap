@@ -66,14 +66,14 @@
                               all <code>RefSeq</code> genome annotations related to a certain genus. In order to further increase
                               annotation quality ASA³P uses a combination of smaller high quality databases such as <code>ResFinder</code>                            for antimicrobial resistance genes and <code>VFDB</code> for virulence factors.</p>
 
-                            <h3 id="interactivedotplot">Interactive dotplot</h3>
+                            <h3>Interactive dotplot</h3>
 
                             <p>Via the radio buttons on the right <code>key data</code> for X and Y axis can be selected. Mouse
                               over a dot of interest to display the according <code>genome name</code> as well as horizontal
                               and vertical value extensions. <code>Zooming</code> can be applied via marking the area of
                               interest with left mouse button down. To reset the view right click.</p>
 
-                            <h3 id="interactivedatatable">Interactive data table</h3>
+                            <h3>Interactive data table</h3>
 
                             <p><code>Individual sorting</code> can be applied via clicking on the respective column header.
                               Use the <code>Search</code> function (top right of the table) to display only genomes that
@@ -81,14 +81,14 @@
                               per page can be chosen on the top left of the table. <code>Blue horizontal bar plots</code>                              are displayed in columns containing numeric values. They visualize the relative relation of
                               this value compared to the according values of the other genomes.</p>
 
-                            <h3 id="downloads">Downloads</h3>
+                            <h3>Downloads</h3>
 
                             <p>The table can be saved as comma separated value (<code>csv</code>) file via click on the csv
                               button (search and sorting are contained in the downloaded file). To download the GenBank (<code>gbk</code>)
                               or General Feature Format (<code>gff</code>) file of a particular genome assembly click on
                               gbk or gff in the data table.</p>
 
-                            <h3 id="links">Links</h3>
+                            <h3>Links</h3>
 
                             <ul>
                               <li><a href="http://www.vicbioinformatics.com/software.barrnap.shtml">Barrnap</a>; Barrnap predicts
@@ -115,7 +115,7 @@
                                 Nucleic Acids Res. 44(Database issue):D694-D697. <a href="https://www.ncbi.nlm.nih.gov/pubmed/26578559">PubMed</a>.</li>
                             </ul>
 
-                            <h3 id="glossary">Glossary</h3>
+                            <h3>Glossary</h3>
 
                             <ul>
                               <li><strong># CDS</strong>: Number of coding DNA sequences found.</li>

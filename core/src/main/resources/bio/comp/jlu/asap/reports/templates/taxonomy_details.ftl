@@ -90,22 +90,22 @@
                             <h2 class="modal-title" id="myModalLabel">ASAP taxonomy detail</h2>
                           </div>
                           <div class="modal-body">
-                            <h3 id="interactivephylogenyvisualization">Interactive phylogeny visualization</h3>
+                            <h3>Interactive phylogeny visualization</h3>
 
                             <p>The height of the <code>phylogenetic levels</code> symbolizes the number of contigs classified
                               as such. The number of classified contigs may decreases with classification depth. On mouse
                               over the current and the next lower phylogenetic level together with the number of contigs
                               classified (weight) is displayed.</p>
 
-                            <h5 id="kmercontigclassifications">Kmer Contig Classifications</h5>
+                            <h5>Kmer Contig Classifications</h5>
 
                             <p>Taxonomy was calculated based on kmers.</p>
 
-                            <h5 id="16srrnaclassifications">16S rRNA Classifications</h5>
+                            <h5>16S rRNA Classifications</h5>
 
                             <p>Taxonomy was calculated based on 16S rRNAs.</p>
 
-                            <h3 id="interactivedatatablefeatures">Interactive data table features</h3>
+                            <h3>Interactive data table features</h3>
 
                             <p><code>Individual sorting</code> can be applied via clicking on the respective column header.
                               Use the <code>Search</code> function (top right of the table) to display only genomes that
@@ -113,26 +113,26 @@
                               per page can be chosen on the top left of the table. Mouse over on underlined table headers
                               to display further information on it.</p>
 
-                            <h5 id="kmercontigclassifications-1">Kmer Contig Classifications</h5>
+                            <h5>Kmer Contig Classifications</h5>
 
                             <p>Contains the set of kmer classification results of all contigs.</p>
 
-                            <h5 id="16srrnaclassifications-1">16S rRNA Classifications</h5>
+                            <h5>16S rRNA Classifications</h5>
 
                             <p>Contains the set of 16S rRNA classification results of all contigs based on highest scoring 16S
                               RNA.</p>
 
-                            <h3 id="referenceanis">Reference ANIs</h3>
+                            <h3>Reference ANIs</h3>
 
                             <p>Table of reference genomes and their percent average nucleotide identity and percentage of conserved
                               DNA.</p>
 
-                            <h3 id="downloads">Downloads</h3>
+                            <h3>Downloads</h3>
 
                             <p>The table can be saved as comma separated value (<code>csv</code>) file via click on the csv
                               button (search and sorting are contained in the downloaded file).</p>
 
-                            <h3 id="glossary">Glossary</h3>
+                            <h3>Glossary</h3>
 
                             <ul>
                               <li><strong>ANI [%]</strong>: Percent average nucleotide identity. Based on the ANI publication

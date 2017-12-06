@@ -122,7 +122,7 @@
                             <h2 class="modal-title" id="myModalLabel">ASAP antibiotic resistances detail</h2>
                           </div>
                           <div class="modal-body">
-                            <h3 id="interactivedatatables">Interactive data tables</h3>
+                            <h3>Interactive data tables</h3>
 
                             <p><code>Individual sorting</code> can be applied via clicking on the respective column header.
                               Use the <code>Search</code> function (top right of the table) to display only genomes that
@@ -132,31 +132,31 @@
                               and above in green. To display the <code>aligned sequence</code> mouse over the bit score value.
                               Mouse over on underlined term to display further information on it.</p>
 
-                            <h5 id="abrgenes">ABR Genes</h5>
+                            <h5>ABR Genes</h5>
 
                             <p>Provides information on the genes with a <code>perfect</code> reference match (100%) in the ABR
                               database.</p>
 
-                            <h5 id="potentialabrgenesbesthits">Potential ABR Genes - Best Hits</h5>
+                            <h5>Potential ABR Genes - Best Hits</h5>
 
                             <p>Provides information on genes and their <code>best</code> non perfect reference ABR database
                               match (40% &lt; match &lt;=100%).</p>
 
-                            <h5 id="potentialabrgenesallhits">Potential ABR Genes - All Hits</h5>
+                            <h5>Potential ABR Genes - All Hits</h5>
 
                             <p>Provides information on genes with <code>all</code> their non perfect reference ABR database
                               matches (40% &lt; match &lt;=100%).</p>
 
-                            <h3 id="links">Links</h3>
+                            <h3>Links</h3>
 
                             <p>Click on a model redirects to this <code>model reference</code> in the CARD database.</p>
 
-                            <h3 id="downloads">Downloads</h3>
+                            <h3>Downloads</h3>
 
                             <p>The table can be saved as comma separated value (<code>csv</code>) file via click on the csv
                               button (search and sorting are contained in the downloaded file).</p>
 
-                            <h3 id="glossary">Glossary</h3>
+                            <h3>Glossary</h3>
 
                             <ul>
                               <li><strong>ABR Target Drugs</strong>: The drug or drug family the resistance is associated with.</li>

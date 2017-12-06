@@ -62,15 +62,15 @@
                                 <div class="modal-body">
                                     <p>Provides an overview on the quality control of the analysed genomes. The quality of the sequenced reads is determined via <code>FastQC</code>. For reference based quality acquisition  <code>FastQ Screen</code> is utilised. Depending on sequencing source (NGS or PacBio) filtering based on qualities is performed with <code>Trimmomatic</code>. Trimmomatic setting are: "ILLUMINACLIP: <PE or SE adapter> and <phiX data base> :2:30:10", 'LEADING:15', 'TRAILING:15', 'SLIDINGWINDOW:4:20', 'MINLEN:20', 'TOPHRED33'. Only reads that pass the quality control are included in the following analysis.</p>
 
-                                    <h3 id="interactivedatatable">Interactive data table</h3>
+                                    <h3>Interactive data table</h3>
 
                                     <p><code>Individual sorting</code> can be applied via clicking on the respective column header. Use the <code>Search</code> function (top right of the table) to display only genomes that contain the search term in any of their table fields. The <code>number of entries</code> displayed per page can be chosen on the top left of the table.  <code>Blue horizontal bar plots</code> are displayed in '# Reads' column. Their data field filling ratio corresponds to the ratio of field value to column maximum. Mouse over on underlined table headers to display further information on it.</p>
 
-                                    <h3 id="downloads">Downloads</h3>
+                                    <h3>Downloads</h3>
 
                                     <p>The table can be saved as comma separated value (<code>csv</code>) file via click on the csv button (search and sorting are contained in the downloaded file).</p>
 
-                                    <h3 id="links">Links</h3>
+                                    <h3>Links</h3>
 
                                     <ul>
                                     <li><code>Details</code> on the quality control of a particular genome can be accessed via click on the magnifying glass in the overview table.</li>
@@ -82,7 +82,7 @@
                                     <li><a href="http://www.usadellab.org/cms/?page=trimmomatic">Trimmomatic</a>: Bolger, A. M., Lohse, M., &amp; Usadel, B. (2014). Trimmomatic: A flexible trimmer for Illumina Sequence Data. Bioinformatics, btu170. <a href="https://www.ncbi.nlm.nih.gov/pubmed/24695404">PubMed</a>.</li>
                                     </ul>
 
-                                    <h3 id="glossary">Glossary</h3>
+                                    <h3>Glossary</h3>
 
                                     <ul>
                                     <li><strong>GC</strong>: GC content in percent.</li>

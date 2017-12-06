@@ -174,12 +174,12 @@
                             <h2 class="modal-title" id="myModalLabel">ASAP analysis overview</h2>
                           </div>
                           <div class="modal-body">
-                            <h3 id="generalinformation">General information</h3>
+                            <h3>General information</h3>
 
                             <p>On the top of this page project information on <code>Biological background</code>, <code>User account</code>                              and <code>Runtime statistics</code> are displayed. Mouse over the symbols to display their
                               meaning. A general multi analysis comparison of the analysed genomes is visualized as <code>Interactive infographics</code>                              and accessible in the <code>Interactive data table</code>.</p>
 
-                            <h3 id="interactiveinfographics">Interactive infographics</h3>
+                            <h3>Interactive infographics</h3>
 
                             <p>Provides an overview on <code>key data</code> of the analysed genomes. The vertical black lines
                               display the result range of a particular analysis. The range of each analysis can be limited
@@ -188,7 +188,7 @@
                               or adjusted in its range via dragging either top or bottom. To remove the range limitation
                               click on the particular black line. Mouse over a genome graph to display its name.</p>
 
-                            <h3 id="interactivedatatable">Interactive data table</h3>
+                            <h3>Interactive data table</h3>
 
                             <p><code>Individual sorting</code> can be applied via clicking on the respective column header.
                               Use the <code>Search</code> function (top right of the table) to display only genomes that
@@ -196,12 +196,12 @@
                               per page can be chosen on the top left of the table. <code>Blue horizontal bar plots</code>                              are displayed in columns containing numeric values. They visualize the relative relation of
                               this value compared to the according values of the other genomes. The <code>yellow and red colored bar plots</code>                              indicates outliners based on Z-score.</p>
 
-                            <h3 id="downloads">Downloads</h3>
+                            <h3>Downloads</h3>
 
                             <p>The table can be saved as comma separated value (<code>csv</code>) file via click on the csv
                               button (search and sorting are contained in the downloaded file).</p>
 
-                            <h3 id="links">Links</h3>
+                            <h3>Links</h3>
 
                             <ul>
                               <li><code># ABR</code> values of the data table redirect on click to their antibiotic resistance
@@ -227,7 +227,7 @@
                                 taxonomic classification).</li>
                             </ul>
 
-                            <h3 id="glossary">Glossary</h3>
+                            <h3>Glossary</h3>
 
                             <ul>
                               <li><strong># ABRs</strong>: Number of antibiotic resistances found.</li>

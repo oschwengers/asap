@@ -66,18 +66,18 @@
                               Hits with a coverage of at least 80 % and a percent identity of 90 % or higher are taken into account. The corresponding
                               loci are only assigned with their highest scoring hit. </p>
 
-                            <h3 id="interactivedatatable">Interactive data table</h3>
+                            <h3>Interactive data table</h3>
 
                             <p><code>Individual sorting</code> can be applied via clicking on the respective column header. Use the <code>Search</code>  function (top right of the table) to display only genomes that contain the search term in any of their table fields. The
                               <code>number of entries</code> displayed per page can be chosen on the top left of the table. <code>Blue horizontal bar plots</code>  are displayed in columns containing numeric values. They visualize the relative relation of this value compared to the
                               according values of the other genomes. Mouse over on underlined term to display further information on it.</p>
 
-                            <h3 id="downloads">Downloads</h3>
+                            <h3>Downloads</h3>
 
                             <p>The table can be saved as comma separated value (<code>csv</code>) file via click on the csv button (search and sorting are
                               contained in the downloaded file).</p>
 
-                            <h3 id="links">Links</h3>
+                            <h3>Links</h3>
 
                             <ul>
                               <li><code>Details</code> on the virulence factors of a particular genome can be accessed via click on the magnifying glass
@@ -87,7 +87,7 @@
                                 and refined dataset for big data analysis-10 years on. Nucleic Acids Res. 44(Database issue):D694-D697. <a href="https://www.ncbi.nlm.nih.gov/pubmed/26578559">PubMed</a>.</li>
                             </ul>
 
-                            <h3 id="glossary">Glossary</h3>
+                            <h3>Glossary</h3>
 
                             <ul>
                               <li><strong>Genome</strong>: Name of the processed genome.</li>

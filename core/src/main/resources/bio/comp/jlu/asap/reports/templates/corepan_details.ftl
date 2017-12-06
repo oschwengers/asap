@@ -90,34 +90,34 @@
                             <h2 class="modal-title" id="myModalLabel">ASAP core and pan genome detail</h2>
                           </div>
                           <div class="modal-body">
-                            <h3 id="interactivedonutchart">Interactive donut chart</h3>
+                            <h3>Interactive donut chart</h3>
 
                             <p>The percentage distribution of Core, Accessory and Singletons genes is displayed.</p>
 
-                            <h3 id="interactivedatatables">Interactive data tables</h3>
+                            <h3>Interactive data tables</h3>
 
                             <p><code>Individual sorting</code> can be applied via clicking on the respective column header.
                               Use the <code>Search</code> function (top right of the table) to display only genomes that
                               contain the search term in any of their table fields. The <code>number of entries</code> displayed
                               per page can be chosen on the top left of the table.</p>
 
-                            <h5 id="accessorygenome">Accessory Genome</h5>
+                            <h5>Accessory Genome</h5>
 
                             <p>In this table loci of this particular genome that are present in at least one other analysed
                               genome can be compared. <code>Blue horizontal bar plots</code> are displayed in the Abundance
                               column. They visualize the relative relation of this value compared to the according values
                               of the other loci.</p>
 
-                            <h5 id="singletons">Singletons</h5>
+                            <h5>Singletons</h5>
 
                             <p>In this table loci that have only been found in this particular genome can be observed.</p>
 
-                            <h3 id="downloads">Downloads</h3>
+                            <h3>Downloads</h3>
 
                             <p>The table can be saved as comma separated value (<code>csv</code>) file via click on the csv
                               button (search and sorting are contained in the downloaded file).</p>
 
-                            <h3 id="glossary">Glossary</h3>
+                            <h3>Glossary</h3>
 
                             <ul>
                               <li><strong>Abundance</strong>: Number of locus occurrences in this analysis.</li>

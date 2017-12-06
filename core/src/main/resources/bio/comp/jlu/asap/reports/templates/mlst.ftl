@@ -66,22 +66,22 @@
                               of alleles determines a unique sequence type. ASA³P uses a proprietary implementation based on <code>BLASTn</code>                  and the public database <code>PubMLST</code>. If a genome contains exactly one reference loci set the classification
                               was successful. Otherwise, the most similar reference is shown in case there were sufficient matches.</p>
 
-                            <h3 id="interactivedonutchart">Interactive donut chart</h3>
+                            <h3>Interactive donut chart</h3>
 
                             <p>The distribution of the different Sequence Types, Clonal Clusters and Lineages are displayed.</p>
 
-                            <h3 id="interactivedatatable">Interactive data table</h3>
+                            <h3>Interactive data table</h3>
 
                             <p><code>Individual sorting</code> can be applied via clicking on the respective column header. Use the <code>Search</code>                  function (top right of the table) to display only genomes that contain the search term in any of their
                               table fields. The <code>number of entries</code> displayed per page can be chosen on the top left of the
                               table. In green the found classification elements are displayed.</p>
 
-                            <h3 id="downloads">Downloads</h3>
+                            <h3>Downloads</h3>
 
                             <p>The table can be saved as comma separated value (<code>csv</code>) file via click on the csv button (search
                               and sorting are contained in the downloaded file).</p>
 
-                            <h3 id="links">Links</h3>
+                            <h3>Links</h3>
 
                             <ul>
                               <li><a href="https://pubmlst.org/general.shtml">MLST</a>; R. Urwin &amp; M.C. Maiden, 2003, Multi-locus sequence
@@ -90,7 +90,7 @@
                               <li><a href="https://pubmlst.org/">PubMLST</a>; Database.</li>
                             </ul>
 
-                            <h3 id="glossary">Glossary</h3>
+                            <h3>Glossary</h3>
 
                             <ul>
                               <li><strong>Alleles</strong>: Contiguous nucleotide sequence 350 to 600 base pairs in length of a housekeeping
