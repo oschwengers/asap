@@ -443,15 +443,15 @@ config.references.each( { ref ->
     log.debug( 'calc ANI...' )
     def alignmentSum = dnaFragementMatches.findAll( { ((it.alignmentLength-it.noNonIdentities)/it.alignmentLength) > 0.9 } )
         .collect( { it.alignmentLength } )
-        .sum()
-    def genomeLength = dnaFragments.collect( { it.length } ).sum()
-    def conservedDNA = alignmentSum/genomeLength
+        .sum() ?: 0
+    def genomeLength = dnaFragments.collect( { it.length } ).sum() ?: 0
+    def conservedDNA = genomeLength > 0 ? alignmentSum/genomeLength : 0
     log.info( "conserved DNA: ${ conservedDNA*100 } %" )
 
     // calc average nucleotide identity
     def aniMatches = dnaFragementMatches.findAll( { (((it.length-it.noNonIdentities)/it.length) > 0.3 )  &&  ( (it.alignmentLength/it.length) >= 0.7) } )
     def niSum = aniMatches.collect( { 1 - (it.noNonIdentities/(it.alignmentLength != 1020 ? it.alignmentLength : 1020)) } ).sum() ?: 0
-    def ani = niSum / aniMatches.size()
+    def ani = aniMatches.size() > 0 ? niSum/aniMatches.size() : 0
     log.info( "ANI: ${ani*100} %" )
 
     info.ani.all << [
