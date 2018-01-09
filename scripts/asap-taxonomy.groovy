@@ -26,7 +26,7 @@ final def env = System.getenv()
 ASAP_HOME = env.ASAP_HOME
 ASAP_DB   = env.ASAP_DB
 
-MASH     = "${ASAP_HOME}/share/mash"
+MASH     = "${ASAP_HOME}/share/mash/mash"
 NUCMER   = "${ASAP_HOME}/share/mummer/nucmer"
 BLASTN   = "${ASAP_HOME}/share/blast/bin/blastn"
 CMSEARCH = "${ASAP_HOME}/share/infernal/cmsearch"
