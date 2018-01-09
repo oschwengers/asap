@@ -25,7 +25,7 @@ final def env = System.getenv()
 ASAP_HOME = env.ASAP_HOME
 ASAP_DB   = env.ASAP_DB
 
-SAMTOOLS = "${ASAP_HOME}/share/samtools/bin/samtools"
+SAMTOOLS = "${ASAP_HOME}/share/samtools/samtools"
 BOWTIE2  = "${ASAP_HOME}/share/bowtie2/bowtie2"
 PBALIGN  = "${ASAP_HOME}/share/smrtlink/smrtcmds/bin/pbalign"
 
@@ -188,6 +188,7 @@ if( ft == FileType.READS_PAIRED_END  ||  ft == FileType.READS_SINGLE  ||  ft == 
 
     pb = new ProcessBuilder( SAMTOOLS,
         'index',
+        '-@', NUM_THREADS,
         genomeMappingsPath.toString() )
         .redirectErrorStream( true )
         .redirectOutput( ProcessBuilder.Redirect.INHERIT )

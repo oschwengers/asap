@@ -24,7 +24,7 @@ class ReferenceProcessings extends Step {
     public static final String STEP_ABBR = 'referenceProcessings'
 
 
-    private static String SAMTOOLS = "${ASAP_HOME}/share/samtools/bin/samtools"
+    private static String SAMTOOLS = "${ASAP_HOME}/share/samtools/samtools"
 
     private Path referencesPath
 
