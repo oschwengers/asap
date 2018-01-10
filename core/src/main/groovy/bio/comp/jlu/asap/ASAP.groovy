@@ -65,6 +65,11 @@ if( !Files.isWritable( rawProjectPath )  ||  !Files.isExecutable( rawProjectPath
 Path projectPath = rawProjectPath.toRealPath()
 
 
+//set project path for logging output
+System.setProperty( 'PROJECT_PATH', projectPath.toString() )
+log = LoggerFactory.getLogger( getClass().getName() )
+
+
 // clear project folder
 if( opts.n ) {
     [
@@ -85,10 +90,8 @@ if( opts.n ) {
         PROJECT_PATH_PHYLOGENY
     ].each( {
         Path folderPath = projectPath.resolve( it )
-        if( !folderPath.deleteDir()  ) {
-            println( "Couldn't delete directory! dir=${folderPath}" )
-            System.exit( 1 )
-        }
+        if( !folderPath.deleteDir()  )
+            Misc.exit( log, "Couldn't delete directory! dir=${folderPath}", null )
     } )
     [
         'asap.log',
@@ -102,16 +105,10 @@ if( opts.n ) {
             Files.delete( filePath )
         } catch( NoSuchFileException nsfe ) {
         } catch( IOException | SecurityException ex ) {
-            println( "Couldn't delete file! dir=${filePath}" )
-            System.exit( 1 )
+            Misc.exit( log, "couldn't delete file! dir=${filePath}", ex )
         }
     } )
 }
-
-
-//set project path for logging output
-System.setProperty( 'PROJECT_PATH', projectPath.toString() )
-log = LoggerFactory.getLogger( getClass().getName() )
 
 
 log.info( "version: ${ASAP_VERSION}" )
@@ -130,10 +127,8 @@ log.info( "file.encoding: ${props['file.encoding']}" )
 // convert spreadsheet config into JSON config
 ConfigWriterThread.convertConfig( log, projectPath )
 Path configPath = projectPath.resolve( 'config.json' )
-if( !Files.exists( configPath ) ) {
-    println( 'Error: config.json file does not exist!' )
-    System.exit(1)
-}
+if( !Files.exists( configPath ) )
+    Misc.exit( log, 'config.json file does not exist!', null )
 
 
 // parse config.json
@@ -161,10 +156,8 @@ if( opts.c ) { // only check config and data files
 
 } else if( opts.r ) { // (re)create reports
 
-    if( !Files.exists( projectPath.resolve( 'state.finished' ) ) ) {
-        println( 'Error: couldn\'t detect a former pipeline run! (no state.finished)' )
-        System.exit( 1 )
-    }
+    if( !Files.exists( projectPath.resolve( 'state.finished' ) ) )
+        Misc.exit( log, 'couldn\'t detect a former pipeline run! (no state.finished)', null )
 
     def configWriterThread = new ConfigWriterThread( config )
         configWriterThread.start() // start config writer thread
@@ -204,8 +197,7 @@ if( opts.c ) { // only check config and data files
             log.info( "custom slot size: ${slotSize}" )
         }
         catch( Exception ex ) {
-            println( 'Error: wrong slot parameter!' )
-            System.exit( 1 )
+            Misc.exit( log, 'Wrong slot parameter!', ex )
         }
     } else {
         slotSize = 50
@@ -221,8 +213,7 @@ if( opts.c ) { // only check config and data files
     if( Files.exists( projectPath.resolve( 'state.finished' ) ) )
         Files.move( projectPath.resolve( 'state.finished' ), projectPath.resolve( 'state.running' ) )
     else if( Files.exists( projectPath.resolve( 'state.running' ) ) ) {
-        println( 'Error: state.running file indicates an already running instance!' )
-        System.exit( 1 )
+        Misc.exit( log, 'state.running file indicates an already running instance!', null )
     } else
         Files.createFile( projectPath.resolve( 'state.running' ) )
 
@@ -260,10 +251,8 @@ if( opts.c ) { // only check config and data files
     // wait for init steps
     initSteps.each( {
         it.waitFor()
-        if( it.getStatus() == FAILED ) {
-            println( "Error: init step (${it.getStepName()}) failed!" )
-            System.exit( 1 )
-        }
+        if( it.getStatus() == FAILED )
+            Misc.exit( log, "init step (${it.getStepName()}) failed!", null )
     } )
 
 
@@ -277,9 +266,7 @@ if( opts.c ) { // only check config and data files
         }
         futures.each( { it.get() } )
     } catch( Throwable ex ) {
-        log.error( "error in thread pool!", ex )
-        println( 'Error: something horrable happened internally!' )
-        System.exit( 1 )
+        Misc.exit( log, "error in internal thread pool!", ex )
     }
 
 
@@ -327,30 +314,22 @@ def checkConfig( def config, Path projectPath ) {
     log.trace( 'check config file...' )
 
     log.trace( 'check user info' )
-    if( !config.user  ||  !config.user.name  ||  !config.user.surname  || !config.user.email ) {
-        println( 'Error: config contains no / wrong user information!' )
-        System.exit( 1 )
-    }
+    if( !config.user  ||  !config.user.name  ||  !config.user.surname  || !config.user.email )
+        Misc.exit( log, 'config contains no / wrong user information!', null )
 
-    if( !(config.user.email ==~ /[\w-_\.]+@(?:[\w+-]+\.)+[a-z]{2,4}/) ) {
-        println( 'Error: wrong user email!' )
-        System.exit( 1 )
-    }
+    if( !(config.user.email ==~ /[\w-_\.]+@(?:[\w+-]+\.)+[a-z]{2,4}/) )
+        Misc.exit( log, 'wrong user email!', null )
 
     config.user.name = config.user.name.trim()
     config.user.surname = config.user.surname.trim()
     config.user.email = config.user.email.trim()
 
     log.trace( 'check project info' )
-    if( !config.project  ||  !config.project.name  ||  !config.project.description  ||  !config.project.genus  ||  !config.project.path ) {
-        println( 'Error: config contains no / wrong project information!' )
-        System.exit( 1 )
-    }
+    if( !config.project  ||  !config.project.name  ||  !config.project.description  ||  !config.project.genus  ||  !config.project.path )
+        Misc.exit( log, 'config contains no / wrong project information!', null )
 
-    if( !(config.project.genus.trim() ==~ /[a-zA-Z]{5,20}/) ) {
-        println( 'Error: wrong genus!' )
-        System.exit( 1 )
-    }
+    if( !(config.project.genus.trim() ==~ /[a-zA-Z]{5,20}/) )
+        Misc.exit( log, 'wrong genus!', null )
 
     config.project.name = config.project.name.trim()
     config.project.description = config.project.description.trim()
@@ -360,48 +339,36 @@ def checkConfig( def config, Path projectPath ) {
     Path dataPath = projectPath.resolve( PROJECT_PATH_DATA )
     log.trace( 'check genomes' )
     if( !config.genomes ) {
-        println( 'Error: config contains no / wrong project information!' )
-        System.exit( 1 )
+        Misc.exit( log, 'config contains no / wrong project information!', null )
     } else {
         def idList = []
         def sampleList = []
         config.genomes.each( { genome ->
-            if( !genome.id  ||  !genome.species  ||  !genome.strain ) {
-                println( "Error: config contains no / wrong genome information!\n(${genome})" )
-                System.exit( 1 )
-            }
+            if( !genome.id  ||  !genome.species  ||  !genome.strain )
+                Misc.exit( log, "config contains no / wrong genome information!\n(${genome})", null )
             String species = genome.species.trim().toLowerCase()
-            if( species != 'sp.'  &&  !(species ==~ /[a-z]{2,50}/) ) {
-                println( "Error: wrong species (${species})!" )
-                System.exit( 1 )
-            }
+            if( species != 'sp.'  &&  !(species ==~ /[a-z]{2,50}/) )
+                Misc.exit( log, "wrong species (${species})!", null )
             genome.species = species
             String strain = genome.strain.trim()
-            if( !(strain ==~ /([\w-\.]){2,50}/) ) {
-                println( "Error: wrong characters in strain (${strain})!" )
-                System.exit( 1 )
-            }
+            if( !(strain ==~ /([\w-\.]){2,50}/) )
+                Misc.exit( log, "wrong characters in strain (${strain})!", null )
             genome.strain = strain
 
             String genomeName = "${config.project.genus}_${genome.species}_${genome.strain}"
-            if( sampleList.contains( genomeName ) ) {
-                println( "Error: duplicated genome name in config! (${genomeName})" )
-                System.exit( 1 )
-            }
+            if( sampleList.contains( genomeName ) )
+                Misc.exit( log, "duplicated genome name in config! (${genomeName})", null )
             sampleList << genomeName
 
-            if( idList.contains( genome.id ) ) {
-                println( "Error: duplicated genome id in config! (${genome.id})" )
-                System.exit( 1 )
-            }
+            if( idList.contains( genome.id ) )
+                Misc.exit( log, "duplicated genome id in config! (${genome.id})", null )
             idList << genome.id
 
             def data = genome.data[0]
 //            genome.data.each( { data ->
-            if( !data.type ) {
-                println( "Error: read file without type information!\n(${genome})" )
-                System.exit( 1 )
-            }
+            if( !data.type )
+                Misc.exit( log, "read file without type information!\n(${genome})", null )
+
             FileType ft = FileType.getEnum( data.type )
             try {
                 if( (ft?.getDataType() == DataType.READS)  ||  (ft == FileType.GENOME) ) {
@@ -420,20 +387,15 @@ def checkConfig( def config, Path projectPath ) {
 //                        } else if( ft == FileType.GENOME ) {
 //
 //                        } else {
-                    if( !(ft in [FileType.CONTIGS, FileType.CONTIGS_ORDERED] ) ) {
-                        log.error( "Error: wrong file type detected! (${ft})" )
-                        println( "Error: wrong file type detected! (${ft})" )
-                        System.exit( 1 )
-                    }
+                    if( !(ft in [FileType.CONTIGS, FileType.CONTIGS_ORDERED] ) )
+                        Misc.exit( log, "wrong file type detected! (${ft})", null )
                     String fileName = data.files[0]
                     if( !Files.isReadable( dataPath.resolve( fileName ) ) ) {// &&  !Files.isReadable( destPath ) ) {
                         throw new IOException( "could not read file ${fileName}" )
                     }
                 }
             } catch( IOException ex ) {
-                log.error( "Error: file does not exist or is not readable! (${data.files})", ex )
-                println( "Error: read file does not exist or is not readable! (${data.files})" )
-                System.exit( 1 )
+                Misc.exit( log, "file does not exist or is not readable! (${data.files})", ex )
             }
 //            } )
         } )
@@ -445,19 +407,15 @@ def checkConfig( def config, Path projectPath ) {
         Path referencePath = projectPath.resolve( PROJECT_PATH_REFERENCES )
         config.references.each( { ref ->
             if( !(ref ==~ /[a-zA-Z0-9\._-]{2,}/) ) {
-                println( "Error: wrong reference file name (${ref})!" )
-                System.exit( 1 )
+                Misc.exit( log, "wrong reference file name (${ref})!", null )
             } else if( !Files.isReadable( dataPath.resolve( ref ) )  &&  !Files.isReadable( referencePath.resolve( ref ) ) ) {
-                println( "Error: reference file does not exist or is not readable! (${ref})" )
-                System.exit( 1 )
+                Misc.exit( log, "reference file does not exist or is not readable! (${ref})", null )
             } else if( !ref.contains( '.' )  ||  FileFormat.getEnum( ref.substring( ref.lastIndexOf( '.' ) + 1 ) ) == null ) {
-                println( "Error: reference file has wrong file suffix! (${ref})" )
-                System.exit( 1 )
+                Misc.exit( log, "reference file has wrong file suffix! (${ref})", null )
             }
         } )
     } else {
-        println( "Error: empty reference list! Please, specify at least 1 reference genome." )
-        System.exit( 1 )
+        Misc.exit( log, "empty reference list! Please, specify at least 1 reference genome.", null )
     }
 
 }
@@ -590,9 +548,7 @@ def setupDirectories( def config, def projectPath ) {
                             Files.copy( dataPath.resolve( data.files[0] ), destPath.resolve( "${genomeName}.gff" ) )
                             Files.createLink( destPath.resolve( "${genomeName}.fasta" ), dataPath.resolve( data.files[1] ) )
                         } else {
-                            log.error( "Error: genome file suffices do not match GFF3/Fasta format! (${data.files})", ex )
-                            println( "Error: genome file suffices do not match GFF3/Fasta format! (${data.files})" )
-                            System.exit( 1 )
+                            Misc.exit( log, "genome file suffices do not match GFF3/Fasta format! (${data.files})", ex )
                         }
                     }
                 }
@@ -602,9 +558,7 @@ def setupDirectories( def config, def projectPath ) {
             Files.createLink( Paths.get( projectPath.toString(), PROJECT_PATH_REFERENCES, ref ), dataPath.resolve( ref ) )
         } )
     } catch( Throwable t ) {
-        log.error( "Error: could not copy data content to corresponding subfolders!", t )
-        println( "Error: could not copy data content to corresponding subfolders!" )
-        System.exit( 1 )
+        Misc.exit( log, "could not copy data content to corresponding subfolders!", t )
     }
 
 }
@@ -723,17 +677,5 @@ def printRuntime( config ) {
         println( 'total runtime:' )
     println( '\tstart: '  + (config.dates.start ?: '-') )
     println( '\tend:   '  + (config.dates.end ?: '-') )
-
-}
-
-
-def exit( String msg, Exception ex ) {
-
-    if( ex )
-        log.error( msg, ex )
-    else
-        log.error( msg )
-    println( "Error: ${msg}" )
-    System.exit( 1 )
 
 }

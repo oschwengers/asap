@@ -7,6 +7,7 @@ import groovy.util.logging.Slf4j
 import bio.comp.jlu.asap.api.FileFormat
 import bio.comp.jlu.asap.api.RunningStates
 import bio.comp.jlu.asap.Step
+import bio.comp.jlu.asap.Misc
 
 import static bio.comp.jlu.asap.ASAPConstants.*
 import static bio.comp.jlu.asap.api.MiscConstants.*
@@ -172,9 +173,7 @@ SeqIO.convert( "${genbankPath}", "${Format.genbank}", "${fastaPath}", "${Format.
                         if( exitCode != 0 )  throw new IllegalStateException( "exitCode = ${exitCode}" )
                         log.info( '----------------------------------------------------------------------------------------------' )
                     } catch( Throwable t ) {
-                        log.error( 'genbank->fasta conversion failed!', t )
-                        println( 'genbank->fasta conversion failed!' )
-                        System.exit( 1 )
+                        Misc.exit( log, 'genbank->fasta conversion failed!', t )
                     }
                     break
 
@@ -196,9 +195,7 @@ SeqIO.convert( "${referencePath}", "${Format.embl}", "${genbankPath}", "${Format
                         if( exitCode != 0 )  throw new IllegalStateException( "exitCode = ${exitCode}" )
                         log.info( '----------------------------------------------------------------------------------------------' )
                     } catch( Throwable t ) {
-                        log.error( 'embl->genbank conversion failed!', t )
-                        println( 'embl->genbank conversion failed!' )
-                        System.exit( 1 )
+                        Misc.exit( log, 'embl->genbank conversion failed!', t )
                     }
                     log.debug( "genbank: ${genbankPath}, fileName: ${fileName}, fasta: ${fastaPath}" )
                     script = /
@@ -217,9 +214,7 @@ SeqIO.convert( "${genbankPath}", "${Format.genbank}", "${fastaPath}", "${Format.
                         if( exitCode != 0 )  throw new IllegalStateException( "exitCode = ${exitCode}" )
                         log.info( '----------------------------------------------------------------------------------------------' )
                     } catch( Throwable t ) {
-                        log.error( 'genbank->fasta conversion failed!', t )
-                        println( 'genbank->fasta conversion failed!' )
-                        System.exit( 1 )
+                        Misc.exit( log, 'genbank->fasta conversion failed!', t )
                     }
                     break
             }
@@ -252,8 +247,7 @@ SeqIO.convert( "${genbankPath}", "${Format.genbank}", "${fastaPath}", "${Format.
                 if( exitCode != 0 )  throw new IllegalStateException( "exitCode = ${exitCode}" )
                 log.info( '----------------------------------------------------------------------------------------------' )
             } catch( Throwable t ) {
-                log.error( 'fasta index creation failed!', t )
-                System.exit( 1 )
+                Misc.exit( log, 'fasta index creation failed!', t )
             }
         } )
 

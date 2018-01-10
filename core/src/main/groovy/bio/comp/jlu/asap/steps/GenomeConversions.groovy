@@ -8,6 +8,7 @@ import bio.comp.jlu.asap.api.FileFormat
 import bio.comp.jlu.asap.api.FileType
 import bio.comp.jlu.asap.api.RunningStates
 import bio.comp.jlu.asap.Step
+import bio.comp.jlu.asap.Misc
 
 import static bio.comp.jlu.asap.ASAPConstants.*
 import static bio.comp.jlu.asap.api.MiscConstants.*
@@ -162,9 +163,7 @@ SeqIO.convert( "${genbankPath}", "${Format.genbank}", "${fastaPath}", "${Format.
                             if( exitCode != 0 )  throw new IllegalStateException( "exitCode = ${exitCode}" )
                             log.info( '----------------------------------------------------------------------------------------------' )
                         } catch( Throwable t ) {
-                            log.error( 'genbank->fasta conversion failed!', t )
-                            println( 'genbank->fasta conversion failed!' )
-                            System.exit( 1 )
+                            Misc.exit( log, 'genbank->fasta conversion failed!', t )
                         }
                         break
 
@@ -187,9 +186,7 @@ SeqIO.convert( "${emblPath}", "${Format.embl}", "${fastaPath}", "${Format.fasta}
                             if( exitCode != 0 )  throw new IllegalStateException( "exitCode = ${exitCode}" )
                             log.info( '----------------------------------------------------------------------------------------------' )
                         } catch( Throwable t ) {
-                            log.error( 'embl->fasta conversion failed!', t )
-                            println( 'embl->fasta conversion failed!' )
-                            System.exit( 1 )
+                            Misc.exit( log, 'embl->fasta conversion failed!', t )
                         }
 
                         // convert embl to Genbank for core/pan genome calculation
@@ -211,9 +208,7 @@ SeqIO.convert( "${emblPath}", "${Format.embl}", "${genbankPath}", "${Format.genb
                             if( exitCode != 0 )  throw new IllegalStateException( "exitCode = ${exitCode}" )
                             log.info( '----------------------------------------------------------------------------------------------' )
                         } catch( Throwable t ) {
-                            log.error( 'embl->genbank conversion failed!', t )
-                            println( 'embl->genbank conversion failed!' )
-                            System.exit( 1 )
+                            Misc.exit( log, 'embl->genbank conversion failed!', t )
                         }
                         break
 

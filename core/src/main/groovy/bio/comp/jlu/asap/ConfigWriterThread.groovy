@@ -102,23 +102,16 @@ class ConfigWriterThread extends Thread {
                 spreadsheetFilePath = tmpConfigFile
         } )
 
-        if( spreadsheetFilePath == null ) { // test for valid spreadsheet config file
-            log.error( 'no valid spreadsheet config file available!' )
-            println( 'Error: no config file available! Please, provide a valid config file using one of the following spreadsheet formats (xls/xlsx/ods).' )
-            System.exit(1)
-        }
+        if( spreadsheetFilePath == null ) // test for valid spreadsheet config file
+            Misc.exit( log, 'no valid spreadsheet config file available!', null )
+
         final TableBookAdapter tba = new ExcelTableBookAdapter()
-        if( !tba.acceptFile( spreadsheetFilePath.toFile() ) ) {
-            log.error( "wrong spreadsheet config file suffix! suffix=${spreadsheetFilePath}" )
-            println( "Error: wrong config file suffix (${spreadsheetFilePath})! Please, provide a valid Excel config file using the Excel '97 format (.xls)." )
-            System.exit(1)
-        }
+        if( !tba.acceptFile( spreadsheetFilePath.toFile() ) )
+            Misc.exit( log, "wrong config file suffix (${spreadsheetFilePath})! Please, provide a valid Excel config file using the Excel '97 format (.xls).", null )
+
         final TableBook tableBook = tba.importTableBook( spreadsheetFilePath.toFile() )
-        if( tableBook.getNoTables() < 2 ) {
-            log.error( "wrong number of tables (${tableBook.getNoTables()})!" )
-            println( "Error: wrong number of tables (${tableBook.getNoTables()})!" )
-            System.exit(1)
-        }
+        if( tableBook.getNoTables() < 2 )
+            Misc.exit( log, "wrong number of tables (${tableBook.getNoTables()})!", null )
 
         final def config = [:]
         final Table projectTable = tableBook.getTable( 0 )
