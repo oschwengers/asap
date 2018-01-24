@@ -1,3 +1,9 @@
+#1.0.3
+## Enhancements
+- Replaced ResFinder by CARD as annotation database
+- Harmonized variable names in cloud property file
+- Fixed NPE in ANI calculation
+
 # v1.0.2
 ## Enhancements
 - Applied many bugfixes and minor improvements
@@ -17,7 +23,6 @@
 - Reviewed QC contamination plots
 - Added comprehensive help sections to report pages
 - Applied many bugfixes and minor improvements to report pages
-- Replaced ResFinder by CARD as annotation database
 
 # v0.9
 ## Features
