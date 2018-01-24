@@ -24,7 +24,7 @@ class AnnotationStep extends GenomeStep {
     private static final String QSUB_SLOTS = '8'
     private static final String PROKKA = "${ASAP_HOME}/share/prokka" // Prokka (http://bioinformatics.net.au/prokka-manual.html)
     private static final String BARNAP = "${ASAP_HOME}/share/barrnap"
-    private static final String PROTEINS = "${ASAP_DB}/sequences/asap-proteins.ffa"
+    private static final String PROTEINS = "${ASAP_DB}/sequences/asap-proteins.faa"
 
     private Path    genomePath
     private Path    contigsPath

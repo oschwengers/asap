@@ -5,7 +5,7 @@
 
     <groupId>bio.comp.jlu.asap</groupId>
     <artifactId>asap</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
     <packaging>jar</packaging>
     <name>ASAP</name>
 

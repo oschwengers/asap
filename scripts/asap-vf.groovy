@@ -26,8 +26,8 @@ final def env = System.getenv()
 ASAP_HOME = env.ASAP_HOME
 ASAP_DB   = env.ASAP_DB
 
-BLASTP = "${ASAP_HOME}/share/blast/bin/blastp"
-VF_DB  = "${ASAP_DB}/sequences/vfdb.ffa"
+BLASTP   = "${ASAP_HOME}/share/blast/bin/blastp"
+VF_DB    = "${ASAP_DB}/sequences/vfdb.faa"
 
 PERC_SEQ_IDENT = '0.9'
 
