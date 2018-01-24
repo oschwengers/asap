@@ -28,7 +28,7 @@ ASAP_DB   = env.ASAP_DB
 
 BLASTP   = "${ASAP_HOME}/share/blast/bin/blastp"
 PRODIGAL = "${ASAP_HOME}/share/prodigal"
-VF_DB    = "${ASAP_DB}/sequences/vfdb.ffa"
+VF_DB    = "${ASAP_DB}/sequences/vfdb.faa"
 
 PERC_SEQ_IDENT = '0.9'
 

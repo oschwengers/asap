@@ -520,7 +520,7 @@
 
               <p>To annotate the created scaffolds the tools <code>Prokka</code> and <code>Barrnap</code> are used. In this
                 annotation the genus specific data bases are generate via <code>RefSeq</code>. To identify acquired antimicrobial
-                resistance genes the <code>ResFinder</code> data base is utilised. The Identification of bacterial virulence
+                resistance genes the <code>CARD</code> data base is utilised. The Identification of bacterial virulence
                 factors is performed with the <code>VFDB</code> data base. This page provides an overview on annotation
                 key data for this analysis.</p>
 
@@ -563,9 +563,9 @@
                   (RefSeq) database at NCBI: current status, taxonomic expansion, and functional annotation." Nucleic
                   acids research (2015): gkv1189. <a href="https://www.ncbi.nlm.nih.gov/pubmed/26553804">PubMed</a>.</li>
 
-                <li><a href="https://cge.cbs.dtu.dk/services/ResFinder/">ResFinder</a>: Identification of acquired antimicrobial
-                  resistance genes. Zankari E, Hasman H, Cosentino S, Vestergaard M, Rasmussen S, Lund O, Aarestrup FM,
-                  Larsen MV. J Antimicrob Chemother. 2012 Jul 10. <a href="https://www.ncbi.nlm.nih.gov/pubmed/22782487">PubMed</a>.</li>
+                <li><a href="https://card.mcmaster.ca/">CARD</a>; Jia et al. 2017. CARD 2017: expansion and model-centric
+                  curation of the Comprehensive Antibiotic Resistance Database. Nucleic Acids Research, 45, D566-573.
+                  <a href="https://www.ncbi.nlm.nih.gov/pubmed/27789705">PubMed</a>.</li>
 
                 <li><a href="http://www.mgc.ac.cn/VFs/main.htm">VFDB</a>: Chen LH, Zheng DD, Liu B, Yang J and Jin Q, 2016.
                   VFDB 2016: hierarchical and refined dataset for big data analysis-10 years on. Nucleic Acids Res. 44(Database

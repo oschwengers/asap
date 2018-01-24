@@ -64,7 +64,7 @@
                               To annotate contigs and scaffolds ASA³P internally uses <code>Prokka</code> and <code>Barrnap</code>. For high quality annotation genus
                               specific information is used. Therefore, ASA³P uses genus specific Blast databases comprising
                               all <code>RefSeq</code> genome annotations related to a certain genus. In order to further increase
-                              annotation quality ASA³P uses a combination of smaller high quality databases such as <code>ResFinder</code>                            for antimicrobial resistance genes and <code>VFDB</code> for virulence factors.</p>
+                              annotation quality ASA³P uses a combination of smaller high quality databases such as <code>CARD</code> for antimicrobial resistance genes and <code>VFDB</code> for virulence factors.</p>
 
                             <h3>Interactive dotplot</h3>
 
@@ -106,9 +106,10 @@
                                 sequence (RefSeq) database at NCBI: current status, taxonomic expansion, and functional annotation."
                                 Nucleic acids research (2015): gkv1189. <a href="https://www.ncbi.nlm.nih.gov/pubmed/26553804">PubMed</a>.</li>
 
-                              <li><a href="https://cge.cbs.dtu.dk/services/ResFinder/">ResFinder</a>: Identification of acquired
-                                antimicrobial resistance genes. Zankari E, Hasman H, Cosentino S, Vestergaard M, Rasmussen
-                                S, Lund O, Aarestrup FM, Larsen MV. J Antimicrob Chemother. 2012 Jul 10. <a href="https://www.ncbi.nlm.nih.gov/pubmed/22782487">PubMed</a>.</li>
+                              <li><a href="https://card.mcmaster.ca/">CARD</a>; Jia et al. 2017. CARD 2017: expansion and model-centric
+                                curation of the Comprehensive Antibiotic Resistance Database. Nucleic Acids Research, 45,
+                                D566-573.
+                                <a href="https://www.ncbi.nlm.nih.gov/pubmed/27789705">PubMed</a>.</li>
 
                               <li><a href="http://www.mgc.ac.cn/VFs/main.htm">VFDB</a>: Chen LH, Zheng DD, Liu B, Yang J and
                                 Jin Q, 2016. VFDB 2016: hierarchical and refined dataset for big data analysis-10 years on.
