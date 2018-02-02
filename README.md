@@ -6,6 +6,7 @@
 - [Availability](#availability)
 - [Input & Output](#input-output)
 - [FAQ](#faq)
+- [License](#license)
 - [Bugs](#bugs)
 
 
@@ -233,6 +234,17 @@ A manuscript is currently in preparation. Stay tuned!
 
 * __Can I install ASA³P by myself?__
 Yes you can! Nevertheless, we highly encourage everyone to use either the **Docker** container or the **OpenStack** images. As there are too many combinations of linux distributions and tool/database versions we cannot give any support for this.
+
+
+## License
+ASA³P itself is published and distributed under GPL3 license. In contradiction, some of its dependencies bundled within the ASA³P directory (asap.tar.gz file) are published 
+under different licenses, e.g. GPL2, BSD, MIT, LGPL, etc. A file (README.md) within the ASA³P directory contains a list of all dependencies and licenses.
+
+**Please notice**
+that some bundled dependecies are published under a **free-for-academic** or **free-for-non-commercial** usage license model. 
+To our best knowledge this is true for at least the following databases:
+- CARD: free for academic usage
+- PubMLST: proprietary but free to use
 
 
 ## Bugs
