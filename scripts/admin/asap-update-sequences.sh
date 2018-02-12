@@ -10,6 +10,7 @@ $ASAP_HOME/bin/groovy $ASAP_HOME/scripts/admin/asap-extract-vf-proteins.groovy V
 
 cat card.faa vfdb.faa > $ASAP_DB/sequences/asap-proteins.faa
 cp vfdb.faa $ASAP_DB/sequences/
+cp vfdb-categories.tsv $ASAP_DB/sequences/
 
 $ASAP_HOME/share/blast/bin/makeblastdb -dbtype prot -in $ASAP_DB/sequences/vfdb.faa -title 'VFDB'
 

@@ -119,7 +119,7 @@
                                         <td class="text-center">${item.locus}</td>
                                         <td class="text-center">${item.gene}</td>
                                         <td class="text-center">${item.product}</td>
-                                        <td class="text-center">${item.category}</td>
+                                        <td class="text-center">${item.catName} (${item.catId})</td>
                                         <td class="text-center">${item.coverage?round}</td>
                                         <td class="text-center">${item.pIdent?round}</td>
                                     </tr>
