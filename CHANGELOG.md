@@ -1,4 +1,9 @@
-#1.0.3
+# v1.0.4
+##Enhancements
+- Updated NCBI tbl2asn
+- Fixed VF reports bug introduced by CARD/ResFinder replacement 
+
+# v1.0.3
 ## Enhancements
 - Replaced ResFinder by CARD as annotation database
 - Harmonized variable names in cloud property file
