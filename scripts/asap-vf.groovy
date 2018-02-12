@@ -29,6 +29,7 @@ ASAP_DB   = env.ASAP_DB
 BLASTP   = "${ASAP_HOME}/share/blast/bin/blastp"
 PRODIGAL = "${ASAP_HOME}/share/prodigal"
 VF_DB    = "${ASAP_DB}/sequences/vfdb.faa"
+VF_CATEGORIES    = "${ASAP_DB}/sequences/vfdb-categories.tsv"
 
 PERC_SEQ_IDENT = '0.9'
 
@@ -138,6 +139,14 @@ def info = [
 ]
 
 
+def vfdbCategories = [:]
+Paths.get( VF_CATEGORIES ).eachLine( {
+    def cols = it.split( '\t' )
+    vfdbCategories[ cols[0] ] = [
+        id: cols[1],
+        name: cols[2]
+    ]
+} )
 
 
 /********************
@@ -240,26 +249,15 @@ stdOut.eachLine( { line ->
         coverage: (cols[2] as double) / 100,
         pIdent: (cols[3] as double) / 100,
         eValue: cols[4],
-        bitScore: cols[5]
+        bitScore: cols[5],
+        gene: titleCols[1],
+        product: titleCols[2]
     ]
-    String rawDesc
-    if( titleCols.size() > 1 ) {
-        hit.ec   = titleCols[0]
-        hit.gene = titleCols[1]
-        rawDesc  = titleCols[2]
-    } else {
-        hit.ec   = ''
-        hit.gene = ''
-        rawDesc  = cols[6]
-    }
     if( hit.coverage >= 0.8  &&  hit.pIdent >= 0.9 ) {
 
-        def m = (rawDesc =~ p)
-        if( m ) {
-            hit.product = m[0][1]
-            hit.category = m[0][2]
-        } else
-            hit.product = titleCols[2]
+        def category = vfdbCategories[ hit.dbId ]
+        hit.catId = category.id
+        hit.catName = category.name
 
         def altHit = blastHits[ hit.locus ]
         if( !altHit )

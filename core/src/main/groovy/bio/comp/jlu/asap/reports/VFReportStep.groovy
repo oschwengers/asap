@@ -82,7 +82,7 @@ class VFReportStep extends ReportStep {
                 stat.genomeName = genomeName
 
                 // aggregations
-                stat.noDistinctCategories = stat.vf*.category.unique().size()
+                stat.noDistinctCategories = stat.vf*.catId.unique().size()
                 stat.noVFs = stat.vf.size()
 
                 // transformation
