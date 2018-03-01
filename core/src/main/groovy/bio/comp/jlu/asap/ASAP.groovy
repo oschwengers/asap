@@ -183,8 +183,8 @@ if( opts.c ) { // only check config and data files
     int slotSize // set / estimate suitable slot size
     boolean localMode = false
     if( opts.l ) {
-        // use twice the estimated max per step CPU usage (8) due to parallel task execution
-        slotSize = Runtime.getRuntime().availableProcessors() / (2*8)
+        // use the estimated max per step CPU usage (8) due to parallel task execution
+        slotSize = Runtime.getRuntime().availableProcessors() / 8
         localMode = true
         if( slotSize < 1 )
             slotSize = 1
