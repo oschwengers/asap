@@ -98,7 +98,7 @@
                             <goal>unpack-dependencies</goal>
                         </goals>
                         <configuration>
-                            <excludeScope>system</excludeScope>
+                            <includeScope>compile</includeScope>
                             <outputDirectory>${project.build.directory}/classes</outputDirectory>
                         </configuration>
                     </execution>
