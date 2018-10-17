@@ -28,7 +28,7 @@ ASAP_DB   = env.ASAP_DB
 
 BLASTP   = "${ASAP_HOME}/share/blast/bin/blastp"
 PRODIGAL = "${ASAP_HOME}/share/prodigal"
-VF_DB    = "${ASAP_DB}/sequences/vfdb.faa"
+VF_DB    = "${ASAP_DB}/sequences/vfdb"
 VF_CATEGORIES    = "${ASAP_DB}/sequences/vfdb-categories.tsv"
 
 PERC_SEQ_IDENT = '0.9'
@@ -168,7 +168,7 @@ fhInput  = open("${genbankPath}", "r")
 fhOutput = open("${aaSequencePath}", "w")
 
 for seq_record in SeqIO.parse(fhInput, "genbank") :
-    print "extract GenBank record %s" % seq_record.id
+    print ("extract GenBank record %s" % seq_record.id)
     for seq_feature in seq_record.features :
         if seq_feature.type=="CDS" :
             assert len(seq_feature.qualifiers['translation'])==1

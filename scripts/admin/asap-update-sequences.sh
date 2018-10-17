@@ -7,13 +7,11 @@ $ASAP_HOME/bin/groovy $ASAP_HOME/scripts/admin/asap-extract-card-proteins.groovy
 
 curl -o VFDB_setA_pro.fas.gz http://www.mgc.ac.cn/VFs/Down/VFDB_setA_pro.fas.gz
 gunzip VFDB_setA_pro.fas.gz
-$ASAP_HOME/bin/groovy $ASAP_HOME/scripts/admin/asap-extract-vf-proteins.groovy VFDB_setA_pro.fas > vfdb.faa
+$ASAP_HOME/bin/groovy $ASAP_HOME/scripts/admin/asap-extract-vf-proteins.groovy VFDB_setA_pro.fas > vfdb
+$ASAP_HOME/share/blast/bin/makeblastdb -dbtype prot -in vfdb -title 'VFDB'
 
-cat card.faa vfdb.faa > $ASAP_DB/sequences/asap-proteins.faa
-cp vfdb.faa $ASAP_DB/sequences/
-cp vfdb-categories.tsv $ASAP_DB/sequences/
+cat card.faa vfdb > $ASAP_DB/sequences/asap-proteins.faa
 
-$ASAP_HOME/share/blast/bin/makeblastdb -dbtype prot -in $ASAP_DB/sequences/vfdb.faa -title 'VFDB'
-
-rm -r card* vfdb.faa VFDB_setA_pro.fas
+cp vfdb.* vfdb-categories.tsv $ASAP_DB/sequences/
+rm -r card* vfdb* VFDB_setA_pro.fas
 
