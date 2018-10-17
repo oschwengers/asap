@@ -14,6 +14,8 @@ public final class Paths {
 
     // data
     public final static String PROJECT_PATH_DATA = "data";
+    // sequences
+    public final static String PROJECT_PATH_SEQUENCES = "sequences";
     // filters
     public final static String PROJECT_PATH_FILTERS = "filters";
     // references

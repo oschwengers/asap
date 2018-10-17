@@ -33,8 +33,8 @@ FASTQ_SCREEN        = "${ASAP_HOME}/share/fastq_screen"
 BAX2BAM             = "${ASAP_HOME}/share/smrtlink/smrtcmds/bin/bax2bam"
 BAM2FASTQ           = "${ASAP_HOME}/share/smrtlink/smrtcmds/bin/bam2fastq"
 PBINDEX             = "${ASAP_HOME}/share/smrtlink/smrtcmds/bin/pbindex"
-ILLUMINA_ADAPTER_PE = "${ASAP_DB}/sequences/adapters/TruSeq3-PE-2.fa"
-ILLUMINA_ADAPTER_SE = "${ASAP_DB}/sequences/adapters/TruSeq3-SE.fa"
+ILLUMINA_ADAPTER_SE = "${ASAP_DB}/sequences/adapters-illumina-se.fa"
+ILLUMINA_ADAPTER_PE = "${ASAP_DB}/sequences/adapters-illumina-pe.fa"
 FILTER_PHIX         = "${ASAP_DB}/sequences/phiX.fasta"
 NUM_THREADS = '8'
 

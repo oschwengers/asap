@@ -27,7 +27,7 @@ ASAP_HOME = env.ASAP_HOME
 ASAP_DB   = env.ASAP_DB
 
 MEDUSA = "${ASAP_HOME}/share/medusa"
-MUMMER      = "${ASAP_HOME}/share/mummer"
+MUMMER = "${ASAP_HOME}/share/mummer"
 
 LINKER      = 'NNNNNNNNNNCTAGCTAGCTAGCNNNNNNNNNN'
 LINE_LENGTH = 70
@@ -182,7 +182,7 @@ ProcessBuilder pb = new ProcessBuilder( 'java', '-jar', "${MEDUSA}/medusa.jar".t
     '-f', referencesTmpPath.toString(), // reference
     '-i', assemblyPath.toString(), // assembled alignments
     '-o', scaffoldsPath.toString(), // new name
-    '-random', '1000', // random rounds to find the best scaffolds
+    '-random', '100', // random rounds to find the best scaffolds
     '-scriptPath', Paths.get( MEDUSA ).resolve( 'medusa_scripts' ).toString() )// random rounds to find the best scaffolds
     .redirectErrorStream( true )
     .redirectOutput( ProcessBuilder.Redirect.INHERIT )
@@ -264,6 +264,10 @@ linkedScaffoldsPath.text = sbPseudoGenome.toString()
 // copy scaffolds and pseudo genome files to genome scaffold dir
 Files.copy( scaffoldsPath, genomeScaffoldsDirPath.resolve( "${genomeName}.fasta" ) )
 Files.copy( linkedScaffoldsPath, genomeScaffoldsDirPath.resolve( "${genomeName}-pseudo.fasta" ) )
+
+
+// copy scaffolds to sequence dir for characterization steps
+Files.copy( scaffoldsPath, Paths.get( projectPath.toString(), PROJECT_PATH_SEQUENCES, "${genomeName}.fasta" ) )
 
 
 // calc statistics

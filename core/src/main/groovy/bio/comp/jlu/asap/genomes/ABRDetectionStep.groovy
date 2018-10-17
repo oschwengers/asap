@@ -9,9 +9,9 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
 import bio.comp.jlu.asap.api.FileType
+import bio.comp.jlu.asap.api.GenomeSteps
 
 import static bio.comp.jlu.asap.ASAPConstants.*
-import static bio.comp.jlu.asap.api.GenomeSteps.*
 import static bio.comp.jlu.asap.api.Paths.*
 import static bio.comp.jlu.asap.api.RunningStates.*
 
@@ -25,12 +25,14 @@ class ABRDetectionStep extends GenomeStep {
 
     private static final String ABR_SCRIPT_PATH = "${ASAP_HOME}/scripts/asap-abr.groovy"
 
+    private static final GenomeSteps STEP_DEPENDENCY = GenomeSteps.SCAFFOLDING
+
     private Path   abrPath = projectPath.resolve( PROJECT_PATH_ABR )
 
 
     ABRDetectionStep( def config, def genome, boolean localMode ) {
 
-        super( ABR.getAbbreviation(), config, genome, localMode )
+        super( GenomeSteps.ABR.getAbbreviation(), config, genome, localMode )
 
         setName( "ABRDetection-Step-Thread-${genome.id}" )
 
@@ -40,7 +42,7 @@ class ABRDetectionStep extends GenomeStep {
     @Override
     boolean isSelected() {
 
-        return genome?.stepselection.contains( ABR.getCharCode() )
+        return genome?.stepselection.contains( GenomeSteps.ABR.getCharCode() )
 
     }
 
@@ -49,7 +51,7 @@ class ABRDetectionStep extends GenomeStep {
     boolean check() {
 
         log.trace( "check: genome.id=${genome.id}" )
-        if( genome?.stepselection.contains( SCAFFOLDING.getCharCode() ) ) {
+        if( genome?.stepselection.contains( STEP_DEPENDENCY.getCharCode() ) ) {
             long waitingTime = System.currentTimeMillis()
             while( shouldWait() ) {
                 if( System.currentTimeMillis() - waitingTime > MAX_STEP_WAITING_PERIOD ) {
@@ -58,13 +60,13 @@ class ABRDetectionStep extends GenomeStep {
                 }
                 try {
                     sleep( 1000 * 60 )
-                    log.trace( "${ABR.getName()} step slept for 1 min" )
+                    log.trace( "${GenomeSteps.ABR.getName()} step slept for 1 min" )
                 }
                 catch( Throwable t ) { log.error( 'Error: could not sleep!', t ) }
             }
 
             // check necessary scaffolding analysis status
-            return hasStepFinished( SCAFFOLDING )
+            return hasStepFinished( STEP_DEPENDENCY )
 
         } else
             return true
@@ -74,7 +76,7 @@ class ABRDetectionStep extends GenomeStep {
 
     private boolean shouldWait() {
 
-        def status = genome.steps[ SCAFFOLDING.getAbbreviation() ]?.status
+        def status = genome.steps[ STEP_DEPENDENCY.getAbbreviation() ]?.status
         log.trace( "scaffolding step status=${status}" )
         return (status != FINISHED.toString()
             &&  status != SKIPPED.toString()

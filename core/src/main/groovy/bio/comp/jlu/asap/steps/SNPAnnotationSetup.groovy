@@ -4,7 +4,7 @@ package bio.comp.jlu.asap.steps
 
 import java.nio.file.*
 import groovy.util.logging.Slf4j
-import bio.comp.jlu.asap.api.ReferenceType
+import bio.comp.jlu.asap.api.FileFormat
 import bio.comp.jlu.asap.api.RunningStates
 import bio.comp.jlu.asap.Step
 
@@ -114,7 +114,7 @@ class SNPAnnotationSetup extends Step {
         log.trace( 'check' )
 
         // if reference genome is provided as fasta we have no annotation to setup
-        if( ReferenceType.FASTA == ReferenceType.getEnum( config.references[0] ) )
+        if( FileFormat.FASTA == FileFormat.getEnum( config.references[0] ) )
             return false
 
         // wait for mapping step

@@ -10,9 +10,9 @@ import java.nio.file.Path
 import java.nio.file.Paths
 import bio.comp.jlu.asap.api.FileType
 import bio.comp.jlu.asap.api.DataType
+import bio.comp.jlu.asap.api.GenomeSteps
 
 import static bio.comp.jlu.asap.ASAPConstants.*
-import static bio.comp.jlu.asap.api.GenomeSteps.*
 import static bio.comp.jlu.asap.api.Paths.*
 import static bio.comp.jlu.asap.api.RunningStates.*
 
@@ -26,6 +26,8 @@ class AssemblyStep extends GenomeStep {
 
     private static final String ASSEMBLY_SCRIPT_PATH = "${ASAP_HOME}/scripts/asap-assembly.groovy"
 
+    private static final GenomeSteps STEP_DEPENDENCY = GenomeSteps.QC
+
     private static final String QSUB_SLOTS = '8'
     private static final String QSUB_FREE_MEM = '2' // 16 Gig Memory divided by 8 PE instances -> 2
 
@@ -34,7 +36,7 @@ class AssemblyStep extends GenomeStep {
 
     AssemblyStep( def config, def genome, boolean localMode ) {
 
-        super( ASSEMBLY.getAbbreviation(), config, genome, localMode )
+        super( GenomeSteps.ASSEMBLY.getAbbreviation(), config, genome, localMode )
 
         setName( "Assembly-Step-Thread-${genome.id}" )
 
@@ -44,7 +46,7 @@ class AssemblyStep extends GenomeStep {
     @Override
     boolean isSelected() {
 
-        return genome.stepselection.contains( ASSEMBLY.getCharCode() )
+        return genome.stepselection.contains( GenomeSteps.ASSEMBLY.getCharCode() )
 
     }
 
@@ -61,20 +63,20 @@ class AssemblyStep extends GenomeStep {
             }
             try {
                 sleep( 1000 * 60 )
-                log.trace( "${ASSEMBLY.getName()} step slept for 1 min" )
+                log.trace( "${GenomeSteps.ASSEMBLY.getName()} step slept for 1 min" )
             }
             catch( Throwable t ) { log.error( 'Error: could not sleep!', t ) }
         }
 
         // check necessary qc analysis status
-        return hasStepFinished( QC )
+        return hasStepFinished( STEP_DEPENDENCY )
 
     }
 
 
     private boolean shouldWait() {
 
-        def status = genome.steps[ QC.getAbbreviation() ]?.status
+        def status = genome.steps[ STEP_DEPENDENCY.getAbbreviation() ]?.status
         log.trace( "qc step status=${status}" )
         return (status != FINISHED.toString()
             &&  status != SKIPPED.toString()

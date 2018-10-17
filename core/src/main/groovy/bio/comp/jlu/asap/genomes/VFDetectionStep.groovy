@@ -9,9 +9,9 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
 import bio.comp.jlu.asap.api.FileType
+import bio.comp.jlu.asap.api.GenomeSteps
 
 import static bio.comp.jlu.asap.ASAPConstants.*
-import static bio.comp.jlu.asap.api.GenomeSteps.*
 import static bio.comp.jlu.asap.api.Paths.*
 import static bio.comp.jlu.asap.api.RunningStates.*
 
@@ -25,12 +25,14 @@ class VFDetectionStep extends GenomeStep {
 
     private static final String VF_SCRIPT_PATH = "${ASAP_HOME}/scripts/asap-vf.groovy"
 
+    private static final GenomeSteps STEP_DEPENDENCY = GenomeSteps.ANNOTATION
+
     private Path   vfPath = projectPath.resolve( PROJECT_PATH_VF )
 
 
     VFDetectionStep( def config, def genome, boolean localMode ) {
 
-        super( VF.getAbbreviation(), config, genome, localMode )
+        super( GenomeSteps.VF.getAbbreviation(), config, genome, localMode )
 
         setName( "VFDetection-Step-Thread-${genome.id}" )
 
@@ -40,7 +42,7 @@ class VFDetectionStep extends GenomeStep {
     @Override
     boolean isSelected() {
 
-        return genome?.stepselection.contains( VF.getCharCode() )
+        return genome?.stepselection.contains( GenomeSteps.VF.getCharCode() )
 
     }
 
@@ -49,7 +51,7 @@ class VFDetectionStep extends GenomeStep {
     boolean check() {
 
         log.trace( "check: genome.id=${genome.id}" )
-        if( genome?.stepselection.contains( ANNOTATION.getCharCode() ) ) {
+        if( genome?.stepselection.contains( STEP_DEPENDENCY.getCharCode() ) ) {
             // wait for assembly step
             long waitingTime = System.currentTimeMillis()
             while( shouldWait() ) {
@@ -59,13 +61,13 @@ class VFDetectionStep extends GenomeStep {
                 }
                 try {
                     sleep( 1000 * 60 )
-                    log.trace( "${VF.getName()} step slept for 1 min" )
+                    log.trace( "${GenomeSteps.VF.getName()} step slept for 1 min" )
                 }
                 catch( Throwable t ) { log.error( 'Error: could not sleep!', t ) }
             }
 
             // check necessary qc analysis status
-            return hasStepFinished( ANNOTATION )
+            return hasStepFinished( STEP_DEPENDENCY )
 
         } else
             return true
@@ -75,7 +77,7 @@ class VFDetectionStep extends GenomeStep {
 
     private boolean shouldWait() {
 
-        def status = genome.steps[ ANNOTATION.getAbbreviation() ]?.status
+        def status = genome.steps[ STEP_DEPENDENCY.getAbbreviation() ]?.status
         log.trace( "scaffolding step status=${status}" )
         return (status != FINISHED.toString()
             &&  status != SKIPPED.toString()

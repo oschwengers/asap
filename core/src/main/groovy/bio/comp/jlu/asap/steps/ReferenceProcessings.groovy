@@ -4,9 +4,10 @@ package bio.comp.jlu.asap.steps
 
 import java.nio.file.*
 import groovy.util.logging.Slf4j
-import bio.comp.jlu.asap.api.ReferenceType
+import bio.comp.jlu.asap.api.FileFormat
 import bio.comp.jlu.asap.api.RunningStates
 import bio.comp.jlu.asap.Step
+import bio.comp.jlu.asap.Misc
 
 import static bio.comp.jlu.asap.ASAPConstants.*
 import static bio.comp.jlu.asap.api.MiscConstants.*
@@ -24,7 +25,7 @@ class ReferenceProcessings extends Step {
     public static final String STEP_ABBR = 'referenceProcessings'
 
 
-    private static String SAMTOOLS = "${ASAP_HOME}/share/samtools/bin/samtools"
+    private static String SAMTOOLS = "${ASAP_HOME}/share/samtools/samtools"
 
     private Path referencesPath
 
@@ -145,14 +146,14 @@ class ReferenceProcessings extends Step {
             Path fastaPath   = referencesPath.resolve( "${fileName}.fasta" )
             Path genbankPath = referencesPath.resolve( "${fileName}.gbk" )
 
-            switch( ReferenceType.getEnum( ref ) ) {
+            switch( FileFormat.getEnum( ref ) ) {
 
-                case ReferenceType.FASTA:
+                case FileFormat.FASTA:
                     log.debug( "move ${referencePath} -> ${fastaPath}" )
                     Files.move( referencePath, fastaPath, StandardCopyOption.REPLACE_EXISTING )
                     break
 
-                case ReferenceType.GENBANK:
+                case FileFormat.GENBANK:
                     // rename genbank file suffix to ".gbk"
                     Files.move( referencePath, genbankPath )
                     log.debug( "genbank: ${genbankPath}, fileName: ${fileName}, fasta: ${fastaPath}" )
@@ -163,18 +164,20 @@ SeqIO.convert( "${genbankPath}", "${Format.genbank}", "${fastaPath}", "${Format.
                     try { // start gbk -> fasta conversion process
                         ProcessBuilder pb = new ProcessBuilder( '/usr/bin/env', 'python',
                             '-c', script )
+                            .redirectErrorStream( true )
+                            .redirectOutput( ProcessBuilder.Redirect.INHERIT )
+                            .directory( referencesPath.toFile() )
                         log.info( "exec: ${pb.command()}" )
                         log.info( '----------------------------------------------------------------------------------------------' )
                         int exitCode = pb.start().waitFor()
                         if( exitCode != 0 )  throw new IllegalStateException( "exitCode = ${exitCode}" )
                         log.info( '----------------------------------------------------------------------------------------------' )
                     } catch( Throwable t ) {
-                        log.error( 'genbank->fasta conversion failed!', t )
-                        System.exit( 1 )
+                        Misc.exit( log, 'genbank->fasta conversion failed!', t )
                     }
                     break
 
-                case ReferenceType.EMBL:
+                case FileFormat.EMBL:
                     log.debug( "embl: ${referencePath}, fileName: ${fileName}, genbank: ${genbankPath}" )
                     String script = /
 from Bio import SeqIO
@@ -183,14 +186,16 @@ SeqIO.convert( "${referencePath}", "${Format.embl}", "${genbankPath}", "${Format
                     try { // start embl -> gbk conversion process
                         ProcessBuilder pb = new ProcessBuilder( '/usr/bin/env', 'python',
                             '-c', script )
+                            .redirectErrorStream( true )
+                            .redirectOutput( ProcessBuilder.Redirect.INHERIT )
+                            .directory( referencesPath.toFile() )
                         log.info( "exec: ${pb.command()}" )
                         log.info( '----------------------------------------------------------------------------------------------' )
                         int exitCode = pb.start().waitFor()
                         if( exitCode != 0 )  throw new IllegalStateException( "exitCode = ${exitCode}" )
                         log.info( '----------------------------------------------------------------------------------------------' )
                     } catch( Throwable t ) {
-                        log.error( 'embl->genbank conversion failed!', t )
-                        System.exit( 1 )
+                        Misc.exit( log, 'embl->genbank conversion failed!', t )
                     }
                     log.debug( "genbank: ${genbankPath}, fileName: ${fileName}, fasta: ${fastaPath}" )
                     script = /
@@ -200,14 +205,16 @@ SeqIO.convert( "${genbankPath}", "${Format.genbank}", "${fastaPath}", "${Format.
                     try { // start gbk -> fasta conversion process
                         ProcessBuilder pb = new ProcessBuilder( '/usr/bin/env', 'python',
                             '-c', script )
+                            .redirectErrorStream( true )
+                            .redirectOutput( ProcessBuilder.Redirect.INHERIT )
+                            .directory( referencesPath.toFile() )
                         log.info( "exec: ${pb.command()}" )
                         log.info( '----------------------------------------------------------------------------------------------' )
                         int exitCode = pb.start().waitFor()
                         if( exitCode != 0 )  throw new IllegalStateException( "exitCode = ${exitCode}" )
                         log.info( '----------------------------------------------------------------------------------------------' )
                     } catch( Throwable t ) {
-                        log.error( 'genbank->fasta conversion failed!', t )
-                        System.exit( 1 )
+                        Misc.exit( log, 'genbank->fasta conversion failed!', t )
                     }
                     break
             }
@@ -240,8 +247,7 @@ SeqIO.convert( "${genbankPath}", "${Format.genbank}", "${fastaPath}", "${Format.
                 if( exitCode != 0 )  throw new IllegalStateException( "exitCode = ${exitCode}" )
                 log.info( '----------------------------------------------------------------------------------------------' )
             } catch( Throwable t ) {
-                log.error( 'fasta index creation failed!', t )
-                System.exit( 1 )
+                Misc.exit( log, 'fasta index creation failed!', t )
             }
         } )
 

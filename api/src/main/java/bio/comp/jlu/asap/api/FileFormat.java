@@ -7,21 +7,21 @@ import java.util.Collections;
 import java.util.List;
 
 
-
 /**
  *
  * @author Oliver Schwengers <oliver.schwengers@computational.bio.uni-giessen.de
  */
-public enum ReferenceType {
+public enum FileFormat {
 
-    FASTA( "fasta", new String[]{ "fa", "fas", "fasta" } ),
+    FASTA( "fasta", new String[]{ "fa", "fas", "fsa", "fna", "fasta" } ),
     GENBANK( "genbank", new String[]{ "gb", "gbk", "gbff", "genbank" } ),
+    GFF( "gff", new String[]{ "gff", "gff3" } ),
     EMBL( "embl", new String[]{ "el", "ebl", "embl" } );
 
     private final String type;
     private final String[] suffices;
 
-    ReferenceType( String type, String[] suffices ) {
+    FileFormat( String type, String[] suffices ) {
 
         this.type  = type;
         this.suffices = suffices;
@@ -51,14 +51,14 @@ public enum ReferenceType {
     }
 
 
-    public static ReferenceType getEnum( String str ) {
+    public static FileFormat getEnum( String str ) {
 
         str = str.toLowerCase();
         if( str.contains( "." ) ) {
             str = str.substring( str.lastIndexOf( '.' ) + 1 );
         }
 
-        for( ReferenceType rt : ReferenceType.values() ) {
+        for( FileFormat rt : FileFormat.values() ) {
             if( rt.getSuffices().contains( str ) )
                 return rt;
         }

@@ -1,3 +1,4 @@
+#!/bin/bash
 
 curl -o card-data.tar.bz2 https://card.mcmaster.ca/latest/data
 mkdir card-data

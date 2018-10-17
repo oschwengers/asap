@@ -77,11 +77,9 @@ class IndexReportStep extends ReportStep {
             Path infoJsonPath = Paths.get( projectPath.toString(), PROJECT_PATH_TAXONOMY, "${genomeName}.json" )
             if( Files.exists( infoJsonPath ) ) {
                 def taxStats = (new JsonSlurper()).parseText( infoJsonPath.text )
-                stat.kmer = taxStats.kmer.lineages.size() > 0 ? taxStats.kmer.classification.classification : '-'
-                stat.kmerScore = taxStats.kmer.lineages.size() > 0 ? taxStats.kmer.classification.freq / taxStats.kmer.hits : -1
+                stat.kmer = taxStats.kmer.classification.classification ?: '-'
             } else {
                 stat.kmer = '-'
-                stat.kmerScore = -1
             }
 
             // parse assembly results

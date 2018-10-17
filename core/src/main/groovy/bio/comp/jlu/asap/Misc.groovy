@@ -91,4 +91,17 @@ public final class Misc {
 
     }
 
+
+    public static void exit( def log, String msg, Exception ex ) {
+
+        if( ex )
+            log.error( msg, ex )
+        else
+            log.error( msg )
+
+        println( "Error: ${msg}" )
+        System.exit( 1 )
+
+    }
+
 }

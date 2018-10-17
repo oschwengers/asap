@@ -1,3 +1,8 @@
+# v1.1
+## Enhancements
+- Replaced Kraken based kmer classification by Mash GenBank lookup
+- Added option to skip comparative analyses
+- Applied many bugfixes and minor improvements to report pages
 # v1.0.4
 ##Enhancements
 - Updated NCBI tbl2asn
@@ -30,6 +35,7 @@
 - Reviewed QC contamination plots
 - Added comprehensive help sections to report pages
 - Applied many bugfixes and minor improvements to report pages
+- Replaced ResFinder by CARD as annotation database
 
 # v0.9
 ## Features

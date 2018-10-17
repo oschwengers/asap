@@ -9,9 +9,9 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
 import bio.comp.jlu.asap.api.FileType
+import bio.comp.jlu.asap.api.GenomeSteps
 
 import static bio.comp.jlu.asap.ASAPConstants.*
-import static bio.comp.jlu.asap.api.GenomeSteps.*
 import static bio.comp.jlu.asap.api.Paths.*
 import static bio.comp.jlu.asap.api.RunningStates.*
 
@@ -24,6 +24,9 @@ import static bio.comp.jlu.asap.api.RunningStates.*
 class MLSTStep extends GenomeStep {
 
     private static final String MLST_SCRIPT_PATH = "${ASAP_HOME}/scripts/asap-mlst.groovy"
+
+    private static final GenomeSteps STEP_DEPENDENCY = GenomeSteps.SCAFFOLDING
+
     private static final String QSUB_FREE_MEM = '2'
 
     private Path   mlstPath = projectPath.resolve( PROJECT_PATH_MLST )
@@ -31,7 +34,7 @@ class MLSTStep extends GenomeStep {
 
     MLSTStep( def config, def genome, boolean localMode ) {
 
-        super( MLST.getAbbreviation(), config, genome, localMode )
+        super( GenomeSteps.MLST.getAbbreviation(), config, genome, localMode )
 
         setName( "MLST-Step-Thread-${genome.id}" )
 
@@ -41,7 +44,7 @@ class MLSTStep extends GenomeStep {
     @Override
     boolean isSelected() {
 
-        return genome?.stepselection.contains( MLST.getCharCode() )
+        return genome?.stepselection.contains( GenomeSteps.MLST.getCharCode() )
 
     }
 
@@ -50,7 +53,7 @@ class MLSTStep extends GenomeStep {
     boolean check() {
 
         log.trace( "check: genome.id=${genome.id}" )
-        if( genome?.stepselection.contains( SCAFFOLDING.getCharCode() ) ) {
+        if( genome?.stepselection.contains( STEP_DEPENDENCY.getCharCode() ) ) {
             // wait for assembly step
             long waitingTime = System.currentTimeMillis()
             while( shouldWait() ) {
@@ -60,13 +63,13 @@ class MLSTStep extends GenomeStep {
                 }
                 try {
                     sleep( 1000 * 60 )
-                    log.trace( "${MLST.getName()} step slept for 1 min" )
+                    log.trace( "${GenomeSteps.MLST.getName()} step slept for 1 min" )
                 }
                 catch( Throwable t ) { log.error( 'Error: could not sleep!', t ) }
             }
 
             // check necessary qc analysis status
-            return hasStepFinished( SCAFFOLDING )
+            return hasStepFinished( STEP_DEPENDENCY )
 
         } else
             return true
@@ -76,7 +79,7 @@ class MLSTStep extends GenomeStep {
 
     private boolean shouldWait() {
 
-        def status = genome.steps[ SCAFFOLDING.getAbbreviation() ]?.status
+        def status = genome.steps[ STEP_DEPENDENCY.getAbbreviation() ]?.status
         log.trace( "scaffolding step status=${status}" )
         return (status != FINISHED.toString()
             &&  status != SKIPPED.toString()

@@ -26,17 +26,21 @@ final def env = System.getenv()
 ASAP_HOME = env.ASAP_HOME
 ASAP_DB   = env.ASAP_DB
 
-KRAKEN   = "${ASAP_HOME}/share/kraken"
+MASH     = "${ASAP_HOME}/share/mash/mash"
 NUCMER   = "${ASAP_HOME}/share/mummer/nucmer"
 BLASTN   = "${ASAP_HOME}/share/blast/bin/blastn"
 CMSEARCH = "${ASAP_HOME}/share/infernal/cmsearch"
 
-KRAKEN_DB = "${ASAP_DB}/kraken"
-RDP_DB    = "${ASAP_DB}/rdp/rdp-bacteria.fasta"
+MASH_DB  = "${ASAP_DB}/mash/refseq-genomes-complete.msh"
+ASSEMBLY_TAX_MAPPING  = "${ASAP_DB}/mash/assembly-tax-mapping.tsv"
+NCBI_TAXONOMY_DB = "${ASAP_DB}/taxonomy/ncbi-bacteria-taxonomies.tsv"
+
+RDP_DB   = "${ASAP_DB}/rdp/rdp-bacteria.fasta"
 RFAM_CM_SSU_RRNA = "${ASAP_DB}/RF00177.cm"
 
 
 NUM_THREADS = 5
+MASH_DIST_THRESHOLD = 0.01d
 
 
 
@@ -121,8 +125,18 @@ final Path taxPath = projectPath.resolve( PROJECT_PATH_TAXONOMY )
 Files.createFile( taxPath.resolve( "${genomeName}.running" ) ) // create state.running
 
 
-// scaffolds path
-final Path scaffoldsGenomePath = Paths.get( projectPath.toString(), PROJECT_PATH_SCAFFOLDS, genomeName, "${genomeName}.fasta" )
+// sequence path
+final Path genomeSequencePath
+Path scaffoldsPath = Paths.get( projectPath.toString(), PROJECT_PATH_SCAFFOLDS, genomeName, "${genomeName}.fasta" )
+Path sequencePath  = Paths.get( projectPath.toString(), PROJECT_PATH_SEQUENCES, "${genomeName}.fasta" )
+if( Files.isReadable( scaffoldsPath ) ) {
+    genomeSequencePath = scaffoldsPath
+    log.info( "sequence file (scaffolds): ${genomeSequencePath}" )
+} else if( Files.isReadable( sequencePath ) ) {
+    genomeSequencePath = sequencePath
+    log.info( "sequence file: ${genomeSequencePath}" )
+} else
+    terminate( "no sequence file! gid=${genomeId}, tmp-dir=${tmpPath}", genomeName, taxPath, tmpPath )
 
 
 // create local tmp directory
@@ -167,44 +181,101 @@ def info = [
  *** kmer (kraken) **
 ********************/
 
-log.info( 'start kmer species classification via Kraken' )
-ProcessBuilder pb = new ProcessBuilder( 'sh', '-c',
-"${KRAKEN}/kraken --fasta-input ${scaffoldsGenomePath} --threads ${NUM_THREADS} \
-| ${KRAKEN}/kraken-translate \
-> tax.txt" )
-    .redirectErrorStream( true )
-    .redirectOutput( ProcessBuilder.Redirect.INHERIT )
+log.info( 'start kmer species classification via mash' )
+ProcessBuilder pb = new ProcessBuilder( MASH,
+    'dist',
+    '-p', Integer.toString( NUM_THREADS ),
+    MASH_DB,
+    genomeSequencePath.toString() )
     .directory( tmpPath.toFile() )
-
-def pbEnv = pb.environment() // set path variables
-pbEnv.put( 'KRAKEN_DEFAULT_DB', KRAKEN_DB )
-
 log.info( "exec: ${pb.command()}" )
 log.info( '----------------------------------------------------------------------------------------------' )
-if( pb.start().waitFor() != 0 ) terminate( 'could not exec kraken | kraken-translate > tax.txt!', genomeName, taxPath, tmpPath )
+def proc = pb.start()
+def stdOut = new StringBuilder()
+def stdErr = new StringBuilder()
+proc.consumeProcessOutput( stdOut, stdErr )
+if( proc.waitFor() != 0 ) terminate( "could not exec mash! stderr=${stdErr}", genomeName, taxPath, tmpPath )
 log.info( '----------------------------------------------------------------------------------------------' )
 
 
-def taxSet = new HashMap<String,Integer>()
-int hits = 0
-tmpPath.resolve( 'tax.txt' ).eachLine( { line ->
-    hits++
-    String tax = line.split( '\t' )[1]
-    Integer noTax = taxSet.get( tax )
-    if( noTax == null ) taxSet.put( tax, 1 )
-    else                taxSet.put( tax, noTax+1 )
+def taxList = []
+stdOut.eachLine( { line ->
+    def cols = line.split( '\t' )
+    def tax = [
+        assemblyId: cols[0],
+        dist: cols[2] as double,
+        noShared: cols[4].split('/')[0] as int
+    ]
+    if( tax.dist <= MASH_DIST_THRESHOLD ) {
+    log.debug( "mash hit: assembly=${tax.assemblyId}, dist=${tax.dist}, # shared=${tax.noShared}" )
+        taxList << tax
+    }
 } )
-def taxList = taxSet.collect { k,v -> [ lineage: k, freq: v ] }
-taxList.sort( { -it.freq } )
-info.kmer.hits = hits
-info.kmer.classification = taxList[0]
-taxList.each( {
-    it.lineage -= 'root;cellular organisms;'
-    it.lineage = it.lineage.split( ';' )
-    it.classification = it.lineage[ it.lineage.size()-1 ]
-    info.kmer.lineages << it
-} )
+taxList.sort( { it.dist } )
+log.debug( "# tax hits: ${taxList.size()}" )
 
+if( taxList.size() > 100 )
+    taxList = taxList[ 0..99 ]
+
+// parse assembly id -> tax id mapping file and enrich Mash hits
+assemblyTaxMap = [:]
+Paths.get( ASSEMBLY_TAX_MAPPING ).eachLine( { line ->
+    def cols = line.split( '\t' )
+    assemblyTaxMap[ (cols[0]) ] = [
+        assemblyId: cols[0],
+        taxId: cols[1] as int,
+        orgName: cols[2]
+    ]
+} )
+log.debug( "# assembly-tax mappings: ${assemblyTaxMap.size()}" )
+
+
+// parse NCBI Taxonomy db and enrich Mash hits
+ncbiTaxonomies = [:]
+Paths.get( NCBI_TAXONOMY_DB ).eachLine( { line ->
+    def cols = line.split( '\t' )
+    int taxId = cols[0] as int
+    ncbiTaxonomies[ (taxId) ] = [
+        taxId: taxId,
+        orgName: cols[1],
+        lineage: cols[2].split( ';' ).toList(),
+    ]
+} )
+log.debug( "# NCBI tax: ${ncbiTaxonomies.size()}" )
+
+
+taxList.each( {
+    def taxId = assemblyTaxMap[ (it.assemblyId) ]
+    assert taxId != null
+    it << taxId
+
+    def taxonomy = ncbiTaxonomies[ (it.taxId) ]
+    assert taxonomy != null
+    it << taxonomy
+
+    if( it.orgName != it.lineage.last() )
+        it.lineage << it.orgName
+
+    it.classification = it.orgName
+
+    it.remove( 'assemblyId' )
+    it.remove( 'dist' )
+    it.remove( 'noShared' )
+    it.remove( 'orgName' )
+
+} )
+def taxSet = []
+taxList.collect( {it.taxId} ).toSet().each( { taxId ->
+    def taxGroup = taxList.findAll( { it.taxId == taxId } )
+    def tax = taxGroup[0]
+    tax.freq = taxGroup.size()
+    taxSet << tax
+} )
+taxSet.sort( {-it.freq} )
+
+info.kmer.classification = taxSet[0]
+info.kmer.lineages = taxSet
+info.kmer.hits = taxSet.collect( {it.freq} ).sum()
 
 
 
@@ -221,7 +292,7 @@ pb = new ProcessBuilder( CMSEARCH,
     '--cpu', Integer.toString( NUM_THREADS ),
     '--tblout', cmOutPath.toString(),
     RFAM_CM_SSU_RRNA,
-    scaffoldsGenomePath.toString() )
+    genomeSequencePath.toString() )
     .directory( tmpPath.toFile() )
 log.info( "exec: ${pb.command()}" )
 log.info( '----------------------------------------------------------------------------------------------' )
@@ -250,9 +321,9 @@ cmOutPath.eachLine( { line ->
 } )
 
 String ribSequence = null
-def m = scaffoldsGenomePath.text =~ /(?m)^>(.+)$\r?\n([ATGCNatgcn\r\n]+)$/ //include Windows line breaks (\r\n) as user provided scaffolds might be written on Windows systems
+def m = genomeSequencePath.text =~ /(?m)^>(.+)$\r?\n([ATGCNatgcn\r\n]+)$/ //include Windows line breaks (\r\n) as user provided scaffolds might be written on Windows systems
 m.each( { match ->
-    String name = match[1].trim()
+    String name = match[1].split(' ')[0].trim()
     String contig = match[2].replaceAll( '[^ATGCNatgcn]', '' )
     if( name == ssu.contig ) {
         ribSequence = contig.substring( ssu.start - 1, ssu.end )
@@ -276,9 +347,9 @@ pb = new ProcessBuilder( BLASTN,
     .directory( tmpPath.toFile() )
 log.info( "exec: ${pb.command()}" )
 log.info( '----------------------------------------------------------------------------------------------' )
-def proc = pb.start()
-def stdOut = new StringBuilder()
-def stdErr = new StringBuilder()
+proc = pb.start()
+stdOut = new StringBuilder()
+stdErr = new StringBuilder()
 proc.consumeProcessOutput( stdOut, stdErr )
 if( proc.waitFor() != 0 ){
     log.error( stdErr.toString() )
@@ -385,7 +456,7 @@ config.references.each( { ref ->
     Path dnaFragmentsPath = tmpPath.resolve( 'dna-fragments.fasta' )
     Files.deleteIfExists( dnaFragmentsPath )
     Files.createFile( dnaFragmentsPath )
-    m = scaffoldsGenomePath.text =~ /(?m)^>.+$\r?\n([ATGCNatgcn\r\n]+)$/
+    m = genomeSequencePath.text =~ /(?m)^>.+$\r?\n([ATGCNatgcn\r\n]+)$/
     m.each( { match ->
         String sequence = match[1].replaceAll( '\n', '' )
         while( sequence.length() > 1020 ) {
@@ -451,7 +522,7 @@ config.references.each( { ref ->
     // calc average nucleotide identity
     def aniMatches = dnaFragementMatches.findAll( { (((it.length-it.noNonIdentities)/it.length) > 0.3 )  &&  ( (it.alignmentLength/it.length) >= 0.7) } )
     def niSum = aniMatches.collect( { 1 - (it.noNonIdentities/(it.alignmentLength != 1020 ? it.alignmentLength : 1020)) } ).sum() ?: 0
-    def ani = aniMatches.size() > 0 ? niSum/aniMatches.size() : 0
+    def ani = aniMatches.size() > 0 ? niSum / aniMatches.size() : 0
     log.info( "ANI: ${ani*100} %" )
 
     info.ani.all << [

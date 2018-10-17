@@ -5,9 +5,9 @@ package bio.comp.jlu.asap.genomes
 import groovy.io.FileType
 import groovy.util.logging.Slf4j
 import java.nio.file.*
+import bio.comp.jlu.asap.api.GenomeSteps
 
 import static bio.comp.jlu.asap.ASAPConstants.*
-import static bio.comp.jlu.asap.api.GenomeSteps.*
 import static bio.comp.jlu.asap.api.RunningStates.*
 import static bio.comp.jlu.asap.api.Paths.*
 
@@ -20,6 +20,9 @@ import static bio.comp.jlu.asap.api.Paths.*
 class MappingStep extends GenomeStep {
 
     private static final String MAPPING_SCRIPT_PATH = "${ASAP_HOME}/scripts/asap-mapping.groovy"
+
+    private static final GenomeSteps STEP_DEPENDENCY = GenomeSteps.QC
+
     private static final String QSUB_SLOTS = '8'
 
     private final Path mappingsPath
@@ -27,7 +30,7 @@ class MappingStep extends GenomeStep {
 
     MappingStep( def config, def genome, boolean localMode ) {
 
-        super( MAPPING.getAbbreviation(), config, genome, localMode )
+        super( GenomeSteps.MAPPING.getAbbreviation(), config, genome, localMode )
 
         setName( "Mapping-Step-Thread-${genome.id}" )
 
@@ -40,7 +43,7 @@ class MappingStep extends GenomeStep {
     @Override
     boolean isSelected() {
 
-        return genome.stepselection.contains( MAPPING.getCharCode() )
+        return genome.stepselection.contains( GenomeSteps.MAPPING.getCharCode() )
 
     }
 
@@ -57,20 +60,20 @@ class MappingStep extends GenomeStep {
             }
             try {
                 sleep( 1000 * 60 )
-                log.trace( "${MAPPING.getName()} step slept for 1 min" )
+                log.trace( "${GenomeSteps.MAPPING.getName()} step slept for 1 min" )
             }
             catch( Throwable t ) { log.error( 'Error: could not sleep!', t ) }
         }
 
         // check necessary qc analysis status
-        return hasStepFinished( QC )
+        return hasStepFinished( STEP_DEPENDENCY )
 
     }
 
 
     private boolean shouldWait() {
 
-        def status = genome.steps[ QC.getAbbreviation() ]?.status
+        def status = genome.steps[ STEP_DEPENDENCY.getAbbreviation() ]?.status
         log.trace( "qc step status=${status}" )
         return (status != FINISHED.toString()
             &&  status != SKIPPED.toString()

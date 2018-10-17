@@ -20,8 +20,8 @@ RUN pip install biopython \
     numpy
 RUN mkdir /var/scratch/
 
-ENV ASAP_HOME=/asap/
-ENV ASAP_DB=/asap/db/
+ENV ASAP_HOME=/asap
+ENV ASAP_DB=/asap/db
 
 CMD [ "java", "-jar", "/asap/asap.jar", "--dir", "/data/", "--local" ]
 

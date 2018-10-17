@@ -6,9 +6,9 @@ import groovy.io.FileType
 import groovy.util.logging.Slf4j
 import java.io.IOException
 import java.nio.file.*
+import bio.comp.jlu.asap.api.GenomeSteps
 
 import static bio.comp.jlu.asap.ASAPConstants.*
-import static bio.comp.jlu.asap.api.GenomeSteps.*
 import static bio.comp.jlu.asap.api.RunningStates.*
 import static bio.comp.jlu.asap.api.Paths.*
 
@@ -22,12 +22,14 @@ class SNPDetectionStep extends GenomeStep {
 
     private static final String SNP_DETECTION_SCRIPT_PATH = "${ASAP_HOME}/scripts/asap-snp.groovy"
 
+    private static final GenomeSteps STEP_DEPENDENCY = GenomeSteps.MAPPING
+
     private final Path snpDetectionPath
 
 
     SNPDetectionStep( def config, def genome, boolean localMode ) {
 
-        super( SNP_DETECTION.getAbbreviation(), config, genome, localMode )
+        super( GenomeSteps.SNP_DETECTION.getAbbreviation(), config, genome, localMode )
 
         setName( "SNPDetection-Step-Thread-${genome.id}" )
 
@@ -40,7 +42,7 @@ class SNPDetectionStep extends GenomeStep {
     @Override
     boolean isSelected() {
 
-        return genome?.stepselection.contains( SNP_DETECTION.getCharCode() )
+        return genome?.stepselection.contains( GenomeSteps.SNP_DETECTION.getCharCode() )
 
     }
 
@@ -57,20 +59,20 @@ class SNPDetectionStep extends GenomeStep {
             }
             try {
                 sleep( 1000 * 60 )
-                log.trace( "${SNP_DETECTION.getName()} step slept for 1 min" )
+                log.trace( "${GenomeSteps.SNP_DETECTION.getName()} step slept for 1 min" )
             }
             catch( Throwable t ) { log.error( 'Error: could not sleep!', t ) }
         }
 
         // check necessary mapping analysis status
-        return hasStepFinished( MAPPING )
+        return hasStepFinished( STEP_DEPENDENCY )
 
     }
 
 
     private boolean shouldWait() {
 
-        def status = genome.steps[ MAPPING.getAbbreviation() ]?.status
+        def status = genome.steps[ STEP_DEPENDENCY.getAbbreviation() ]?.status
         log.trace( "SNP detection step status=${status}" )
         return (status != FINISHED.toString()
             &&  status != SKIPPED.toString()

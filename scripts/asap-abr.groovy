@@ -111,8 +111,19 @@ log.info( "genome-name: ${genomeName}")
 final Path abrPath = projectPath.resolve( PROJECT_PATH_ABR )
 Files.createFile( abrPath.resolve( "${genomeName}.running" ) ) // create state.running
 
-// polished genome path
-final Path scaffoldsGenomePath = Paths.get( projectPath.toString(), PROJECT_PATH_SCAFFOLDS, genomeName, "${genomeName}.fasta" )
+
+// sequence path
+final Path genomeSequencePath
+Path scaffoldsPath = Paths.get( projectPath.toString(), PROJECT_PATH_SCAFFOLDS, genomeName, "${genomeName}.fasta" )
+Path sequencePath  = Paths.get( projectPath.toString(), PROJECT_PATH_SEQUENCES, "${genomeName}.fasta" )
+if( Files.isReadable( scaffoldsPath ) ) {
+    genomeSequencePath = scaffoldsPath
+    log.info( "sequence file (scaffolds): ${genomeSequencePath}" )
+} else if( Files.isReadable( sequencePath ) ) {
+    genomeSequencePath = sequencePath
+    log.info( "sequence file: ${genomeSequencePath}" )
+} else
+    terminate( "no sequence file! gid=${genomeId}, tmp-dir=${tmpPath}", genomeName, taxPath, tmpPath )
 
 // create local tmp directory
 final Path tmpPath = Paths.get( '/', 'var', 'scratch', "tmp-${System.currentTimeMillis()}-${Math.round(Math.random()*1000)}" )
@@ -159,7 +170,7 @@ ProcessBuilder pb = new ProcessBuilder( 'python', "${CARD}/rgi.py".toString(),
     '--clean_database', 'NO', // do not clean database files
     '--loose_criteria', 'NO', // exlude loose hits (only report strict and perfect hits)
     '--verbose', 'ON', // exlude loose hits (only report strict and perfect hits)
-    '--input_sequence', scaffoldsGenomePath.toString(),
+    '--input_sequence', genomeSequencePath.toString(),
     '--output_file', "${genomeName}-card".toString() )
     .redirectErrorStream( true )
     .redirectOutput( ProcessBuilder.Redirect.INHERIT )

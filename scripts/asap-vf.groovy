@@ -27,6 +27,7 @@ ASAP_HOME = env.ASAP_HOME
 ASAP_DB   = env.ASAP_DB
 
 BLASTP   = "${ASAP_HOME}/share/blast/bin/blastp"
+PRODIGAL = "${ASAP_HOME}/share/prodigal"
 VF_DB    = "${ASAP_DB}/sequences/vfdb.faa"
 VF_CATEGORIES    = "${ASAP_DB}/sequences/vfdb-categories.tsv"
 
@@ -112,8 +113,6 @@ log.info( "genome-name: ${genomeName}")
 final Path vfPath = projectPath.resolve( 'vf' )
 Files.createFile( vfPath.resolve( "${genomeName}.running" ) ) // create state.running
 
-// polished genome path
-final Path annotationGenomePath = Paths.get( projectPath.toString(), PROJECT_PATH_ANNOTATIONS, genomeName, "${genomeName}.faa" )
 
 // create local tmp directory
 final Path tmpPath = Paths.get( '/', 'var', 'scratch', "tmp-${System.currentTimeMillis()}-${Math.round(Math.random()*1000)}" )
@@ -154,10 +153,76 @@ Paths.get( VF_CATEGORIES ).eachLine( {
  *** Script Logic ***
 ********************/
 
+// check (and create) a valid protein sequence fasta file (.faa)
+final aaSequencePath
+Path aaAnnotationPath = Paths.get( projectPath.toString(), PROJECT_PATH_ANNOTATIONS, genomeName, "${genomeName}.faa" )
+Path genbankPath      = Paths.get( projectPath.toString(), PROJECT_PATH_ANNOTATIONS, genomeName, "${genomeName}.gbk" )
+Path sequencePath     = Paths.get( projectPath.toString(), PROJECT_PATH_SEQUENCES, "${genomeName}.fasta" )
+if( Files.isReadable( aaAnnotationPath ) ) { // genome was annotated by ASA³P
+    aaSequencePath = aaAnnotationPath
+} else if( Files.isReadable( genbankPath ) ) { // user provided (converted) genbank file -> extract aa sequences
+    aaSequencePath = tmpPath.resolve( "${genomeName}.faa" )
+    String script = /
+from Bio import SeqIO
+fhInput  = open("${genbankPath}", "r")
+fhOutput = open("${aaSequencePath}", "w")
+
+for seq_record in SeqIO.parse(fhInput, "genbank") :
+    print "extract GenBank record %s" % seq_record.id
+    for seq_feature in seq_record.features :
+        if seq_feature.type=="CDS" :
+            assert len(seq_feature.qualifiers['translation'])==1
+            fhOutput.write(">%s %s\n%s\n" % (
+                   seq_feature.qualifiers['locus_tag'][0],
+                   seq_feature.qualifiers['product'][0],
+                   seq_feature.qualifiers['translation'][0]))
+
+fhOutput.close()
+fhInput.close()
+/
+    try { // start ebl -> fasta conversion process
+        ProcessBuilder pb = new ProcessBuilder( '/usr/bin/env', 'python',
+            '-c', script )
+            .redirectErrorStream( true )
+            .redirectOutput( ProcessBuilder.Redirect.INHERIT )
+            .directory( tmpPath.toFile() )
+        log.info( "exec: ${pb.command()}" )
+        log.info( '----------------------------------------------------------------------------------------------' )
+        int exitCode = pb.start().waitFor()
+        if( exitCode != 0 )  throw new IllegalStateException( "exitCode = ${exitCode}" )
+        log.info( '----------------------------------------------------------------------------------------------' )
+    } catch( Throwable t ) {
+        log.error( 'genbank->fasta conversion failed!', t )
+        println( 'genbank->fasta conversion failed!' )
+        System.exit( 1 )
+    }
+} else if( Files.isReadable( sequencePath ) ) { // user provided (converted) gff file -> run prodigal, write aa sequences
+    aaSequencePath = tmpPath.resolve( "${genomeName}.faa" )
+    try { // start prodigal process
+        ProcessBuilder pb = new ProcessBuilder( PRODIGAL,
+            '-i', sequencePath.toString(),
+            '-a', aaSequencePath.toString() )
+            .redirectErrorStream( true )
+            .redirectOutput( ProcessBuilder.Redirect.INHERIT )
+            .directory( tmpPath.toFile() )
+        log.info( "exec: ${pb.command()}" )
+        log.info( '----------------------------------------------------------------------------------------------' )
+        int exitCode = pb.start().waitFor()
+        if( exitCode != 0 )  throw new IllegalStateException( "exitCode = ${exitCode}" )
+        log.info( '----------------------------------------------------------------------------------------------' )
+    } catch( Throwable t ) {
+        log.error( 'prodigal AA sequence extraction failed!', t )
+        println( 'prodigal AA sequence extraction failed!' )
+        System.exit( 1 )
+    }
+} else {
+    terminate( 'neither GenBank nor Fasta file found!', genomeName, vfPath, tmpPath )
+}
+
 
 // process
 ProcessBuilder pb = new ProcessBuilder( BLASTP,
-    '-query', annotationGenomePath.toString(),
+    '-query', aaSequencePath.toString(),
     '-db', VF_DB,
     '-num_threads', '1',
     '-culling_limit', '2',
