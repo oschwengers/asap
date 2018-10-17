@@ -28,9 +28,10 @@ ASAP_DB   = env.ASAP_DB
 SAMTOOLS = "${ASAP_HOME}/share/samtools/bin/samtools"
 BOWTIE2  = "${ASAP_HOME}/share/bowtie2/bowtie2"
 PBALIGN  = "${ASAP_HOME}/share/smrtlink/smrtcmds/bin/pbalign"
+MINIMAP2 = "${ASAP_HOME}/share/minimap2"
 
-SAMTOOLS_SORT_MEM     = '16G' // max-ram usage until tmp-file is created during sorting (optimum 4G for avg. files)
-NUM_THREADS = '8'
+SAMTOOLS_SORT_MEM = '16G' // max-ram usage until tmp-file is created during sorting (optimum 4G for avg. files)
+NUM_THREADS       = '8'
 
 
 /*********************
@@ -150,7 +151,7 @@ genome.data.each( {
     if( ft  &&  ft.getDataType() == DataType.READS ) {
         if( !reads ) reads = it
         else {
-            if( ft == FileType.READS_PAIRED_END )
+            if( ft == FileType.READS_ILLUMINA_PAIRED_END )
                 reads = it
         }
     }
@@ -168,10 +169,10 @@ Path readsDirPath = Paths.get( projectPath.toString(), PROJECT_PATH_READS_QC, ge
 Path referenceFilePath = Paths.get( projectPath.toString(), PROJECT_PATH_REFERENCES, config.references[0] )
 String fileName = referenceFilePath.fileName.toString().substring( 0, referenceFilePath.fileName.toString().lastIndexOf( '.' ) )
 FileType ft = FileType.getEnum( reads.type )
-if( ft == FileType.READS_PAIRED_END  ||  ft == FileType.READS_SINGLE  ||  ft == FileType.READS_SANGER ) {
+if( ft == FileType.READS_ILLUMINA_PAIRED_END  ||  ft == FileType.READS_ILLUMINA_SINGLE  ||  ft == FileType.READS_SANGER ) {
 
     String mappingReadsParameter
-    if( ft == FileType.READS_PAIRED_END )
+    if( ft == FileType.READS_ILLUMINA_PAIRED_END )
         mappingReadsParameter = "-1 ${readsDirPath.resolve( reads.files[0] )} -2 ${readsDirPath.resolve( reads.files[1] )}"
     else
         mappingReadsParameter = "-U ${readsDirPath.resolve( reads.files[0] )}"
@@ -245,13 +246,68 @@ if( ft == FileType.READS_PAIRED_END  ||  ft == FileType.READS_SINGLE  ||  ft == 
     // create, parse and store unique/multi mapping stats
     Path mappingsStatsPath = mappingsPath.resolve( "${genomeName}.pbalign.log" )
     pb = new ProcessBuilder( 'sh', '-c',
-        "${SAMTOOLS} view -@ ${NUM_THREADS} ${genomeMappingsPath.toString()} | cut -f1 | sort | uniq -c | tr -s ' ' | cut -d ' ' -f2 | uniq -c > ${mappingsStatsPath.toString()}" )
+        "${SAMTOOLS} view -@ ${NUM_THREADS} ${genomeMappingsPath.toString()} | cut -f1 | sort | uniq -c | tr -s ' ' | cut -d ' ' -f2 | sort -n | uniq -c > ${mappingsStatsPath.toString()}" )
         .redirectErrorStream( true )
         .redirectOutput( ProcessBuilder.Redirect.INHERIT )
         .directory( mappingsPath.toFile() )
     log.info( "exec: ${pb.command()}" )
     log.info( '----------------------------------------------------------------------------------------------' )
-    if( pb.start().waitFor() != 0 ) terminate( 'could not exec samtools view|cut|sort|uniq|tr|cut|uniq!', mappingsPath, genomeName )
+    if( pb.start().waitFor() != 0 ) terminate( 'could not exec samtools view|cut|sort|uniq|tr|cut|sort|uniq!', mappingsPath, genomeName )
+    log.info( '----------------------------------------------------------------------------------------------' )
+
+    int noUniqMappings  = 0
+    int noMultiMappings = 0
+    mappingsStatsPath.text.eachLine( { line ->
+        def cols = line.replaceAll( '\\s+', ' ' ).split( ' ' )
+        int count = cols[1] as int
+        int frequency = cols[2] as int
+        if( frequency == 1 )
+            noUniqMappings = count
+        else
+            noMultiMappings += count
+    } )
+
+    // extract number of total reads from QC stats
+    Path qcGenomeStatsPath = Paths.get( projectPath.toString(), PROJECT_PATH_READS_QC, genomeName, 'info.json' )
+    def qcStats = (new JsonSlurper()).parseText( qcGenomeStatsPath.text )
+
+    def stat = [
+        reads: qcStats.qcReadsAvg.noReads,
+        unique: noUniqMappings,
+        multiple: noMultiMappings,
+        unmapped: qcStats.qcReadsAvg.noReads - noUniqMappings - noMultiMappings
+    ]
+    stat.ratio = (stat.reads - stat.unmapped) / stat.reads
+    info << stat
+
+
+} else if( ft == FileType.READS_NANOPORE ) {
+
+    ProcessBuilder pb = new ProcessBuilder( MINIMAP2,
+        '-a',
+        '-t', NUM_THREADS,
+        '-x', 'map-ont',
+        "${projectPath}/references/${fileName}.fasta".toString(), // reference file
+        readsDirPath.resolve( reads.files[0] ).toString() )
+        .redirectErrorStream( false )
+        .redirectOutput( ProcessBuilder.Redirect.to( genomeMappingsPath.toFile() ) )
+        .directory( tmpPath.toFile() )
+    log.info( "exec: ${pb.command()}" )
+    log.info( '----------------------------------------------------------------------------------------------' )
+    exitCode = pb.start().waitFor()
+    if( exitCode != 0 ) terminate( "abnormal minimap2 exit code! exitCode!=${exitCode}", genomeContigsPath, tmpPath )
+    log.info( '----------------------------------------------------------------------------------------------' )
+
+    // create, parse and store unique/multi mapping stats
+    Path mappingsStatsPath = mappingsPath.resolve( "${genomeName}.minimap2.log" )
+    pb = new ProcessBuilder( 'sh', '-c',
+        "${SAMTOOLS} view -@ ${NUM_THREADS} ${genomeMappingsPath.toString()} | cut -f1 | sort | uniq -c | tr -s ' ' | cut -d ' ' -f2 | sort -n | uniq -c > ${mappingsStatsPath.toString()}" )
+        .redirectErrorStream( true )
+        .redirectOutput( ProcessBuilder.Redirect.INHERIT )
+        .directory( mappingsPath.toFile() )
+    log.info( "exec: ${pb.command()}" )
+    log.info( '----------------------------------------------------------------------------------------------' )
+    if( pb.start().waitFor() != 0 ) terminate( 'could not exec samtools view|cut|sort|uniq|tr|cut|sort|uniq!', mappingsPath, genomeName )
     log.info( '----------------------------------------------------------------------------------------------' )
 
     int noUniqMappings  = 0

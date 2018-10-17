@@ -28,12 +28,23 @@ final def env = System.getenv()
 ASAP_HOME = env.ASAP_HOME
 ASAP_DB   = env.ASAP_DB
 
-SPADES   = "${ASAP_HOME}/share/spades/bin/spades.py"
-SMRTLINK = "${ASAP_HOME}/share/smrtlink"
-DATASET  = "${SMRTLINK}/smrtcmds/bin/dataset"
-HGAP4    = "${SMRTLINK}/smrtcmds/bin/pbsmrtpipe"
+SPADES        = "${ASAP_HOME}/share/spades/bin/spades.py"
+SMRTLINK      = "${ASAP_HOME}/share/smrtlink"
+DATASET       = "${SMRTLINK}/smrtcmds/bin/dataset"
+BAM2FASTQ     = "${SMRTLINK}/smrtcmds/bin/bam2fastq"
+HGAP4         = "${SMRTLINK}/smrtcmds/bin/pbsmrtpipe"
+UNICYCLER     = "${ASAP_HOME}/share/unicycler"
+RACON         = "${ASAP_HOME}/share/racon"
+MAKEBLASTDB   = "${ASAP_HOME}/share/blast/bin/makeblastdb"
+TBLASTN       = "${ASAP_HOME}/share/blast/bin/tblastn"
+SAMTOOLS      = "${ASAP_HOME}/share/samtools/bin/samtools"
+BOWTIE2       = "${ASAP_HOME}/share/bowtie2/bowtie2"
+BOWTIE2_BUILD = "${ASAP_HOME}/share/bowtie2/bowtie2-build"
+PILON         = "${ASAP_HOME}/share/pilon.jar"
+MINIMAP2      = "${ASAP_HOME}/share/minimap2"
 
-
+SAMTOOLS_SORT_MEM = '16G' // max-ram usage until tmp-file is created during sorting (optimum 4G for avg. files)
+NUM_THREADS       = '8'
 
 
 /*********************
@@ -162,7 +173,7 @@ genome.data.each( { datum ->
                 log.info( "copy: ${srcFile} -> ${destFile}" )
                 Files.copy( srcFile, destFile )
             } catch( Exception ex ) {
-                terminate( "Failed to copy file! src=${srcFile}, dest=${destFile}", ex, genomeContigsPath, tmpPath )
+                terminate( "Failed to copy file!", ex, genomeContigsPath, tmpPath )
             }
         } else {
             datum.files.each( { file ->
@@ -196,36 +207,50 @@ def info = [
 
 
 /** Determine which assembler to use
-  *  only pacbio reads in .h5 files -> HGap
-  *  only pacbio reads in .h5 & .fastq files -> Falcon
-  *  else (hybrid) -> SPAdes
+  *  - only Illumina reads -> SPAdes
+  *  - only PacBio reads -> HGap
+  *  - only ONT reads -> Unicycler
+  *  - ONT/PacBio + Illumina reads -> Unicycler
 **/
 def fileTypes = genome.data*.type
 log.info( "provided file types: ${fileTypes}" )
-if( FileType.READS_PAIRED_END.toString() in fileTypes  ||  FileType.READS_SINGLE.toString() in fileTypes  ||  FileType.READS_SANGER.toString() in fileTypes ) {
+if( (FileType.READS_NANOPORE.toString() in fileTypes)  &&  (FileType.READS_ILLUMINA_PAIRED_END.toString() in fileTypes)) {
 
-    // only short read or hybrid assembly -> use SPAdes
+    // ONT + Illumina reads -> Unicycler
+    log.info( 'detected ONT & Illumina PE reads -> run Unicycler' )
+    runUnicycler( config, genome, genomeContigsPath, tmpPath, info )
+
+} else if( ((FileType.READS_PACBIO_RSII.toString() in fileTypes)  ||  (FileType.READS_PACBIO_SEQUEL.toString() in fileTypes))  &&  (FileType.READS_ILLUMINA_PAIRED_END.toString() in fileTypes)) {
+
+    // PacBio + Illumina reads -> Unicycler
+    log.info( 'detected PacBio & Illumina PE reads -> run Unicycler' )
+    runUnicycler( config, genome, genomeContigsPath, tmpPath, info )
+
+} else if( FileType.READS_NANOPORE.toString() in fileTypes ) {
+
+    // ONT only reads -> Unicycler
+    log.info( 'detected ONT reads -> run Unicycler' )
+    runUnicycler( config, genome, genomeContigsPath, tmpPath, info )
+
+} else if( (FileType.READS_PACBIO_RSII.toString() in fileTypes)  ||  (FileType.READS_PACBIO_SEQUEL.toString() in fileTypes) ) {
+
+    // all reads in bax.h5 or bam file format -> use HGap
+    log.info( 'detected PacBio reads -> run HGap' )
+    runHGap( config, genome, genomeContigsPath, tmpPath, info )
+
+} else if( FileType.READS_ILLUMINA_PAIRED_END.toString() in fileTypes  ||  FileType.READS_ILLUMINA_SINGLE.toString() in fileTypes  ||  FileType.READS_SANGER.toString() in fileTypes ) {
+
+    // only short reads -> SPAdes
+    log.info( 'detected Illumina PE reads -> run SPAdes' )
     runSpades( config, genome, genomeContigsPath, tmpPath, info )
 
 } else {
 
-    // contains only long reads
-    boolean readsPacBioOnly = genome.data.findAll( { FileType.getEnum( it.type ) != FileType.READS_PACBIO_RSII  &&  FileType.getEnum( it.type ) != FileType.READS_PACBIO_SEQUEL } ).isEmpty()
-    if( readsPacBioOnly ) {
+    /**
+     * What else ?
+     */
+    terminate( "wrong sequencing file constallation. Use either only PacBio/ONT/Illumina reads or long with short reads!", genomeContigsPath, tmpPath )
 
-        // all reads in bax.h5 or bam file format -> use HGap
-        runHGap( config, genome, genomeContigsPath, tmpPath, info )
-
-    } else {
-
-        /** some reads in .fastq format -> terminate
-         * As we currently don't know how to easily calculate a coverage
-         * from a Falcon assembly we decided to skip this feature as it is
-         * a very special case anyways which has not occured so far.
-         */
-        terminate( "wrong sequencing file constallation. Use either only H5 files or hybrid setup with short read sequencing!", genomeContigsPath, tmpPath )
-
-    }
 }
 
 
@@ -249,6 +274,148 @@ Files.move( genomeContigsPath.resolve( 'state.running' ), genomeContigsPath.reso
  *** Script Methods ***
 **********************/
 
+private void runUnicycler( def config, def genome, Path genomeContigsPath, Path tmpPath, def info ) {
+
+    try {
+
+        final Path longReadsPath
+        FileType ft = FileType.getEnum( genome.data[0].type )
+        if( ft == FileType.READS_PACBIO_SEQUEL  ||  ft == FileType.READS_PACBIO_RSII ) {
+            // convert PacBio bam to fastq
+            pb = new ProcessBuilder( BAM2FASTQ,
+                '-o', "${genomeName}",
+                '-u',
+                tmpPath.resolve( "${genomeName}.subreads.bam" ).toString() )
+            .directory( tmpPath.toFile() )
+            log.info( "exec: ${pb.command()}" )
+            log.info( '----------------------------------------------------------------------------------------------' )
+            if( pb.start().waitFor() != 0 ) terminate( 'could not exec bam2fastq!', genomeQCReadsPath, tmpPath )
+            log.info( '----------------------------------------------------------------------------------------------' )
+            longReadsPath = tmpPath.resolve( "${genomeName}.fastq" )
+        } else {
+            longReadsPath = tmpPath.resolve( genome.data[0].files[0] )
+        }
+
+
+        // run Unicycler
+        ProcessBuilder pb = new ProcessBuilder( UNICYCLER.toString(),
+            '--threads', NUM_THREADS,
+            '--mode', 'normal',
+            '--keep', '0',
+            '--min_fasta_length', '150',
+            '--racon_path', RACON.toString(),
+            '--makeblastdb_path', MAKEBLASTDB.toString(),
+            '--tblastn_path', TBLASTN.toString(),
+            '--bowtie2_path', BOWTIE2.toString(),
+            '--bowtie2_build_path', BOWTIE2_BUILD.toString(),
+            '--samtools_path', SAMTOOLS.toString(),
+            '--pilon_path', PILON.toString(),
+            '--out', tmpPath.toString(),
+            '--long', longReadsPath.toString() )
+            .redirectErrorStream( true )
+            .redirectOutput( ProcessBuilder.Redirect.INHERIT )
+            .directory( tmpPath.toFile() )
+
+
+        def cmd = pb.command()
+        if( genome.data.size() == 2 ) { // multiple reads -> hybrid assembly
+            cmd << '--spades_path'
+                cmd << SPADES.toString()
+            cmd << '--short1'
+                cmd << tmpPath.resolve( genome.data[1].files[0] ).toString()
+            cmd << '--short2'
+                cmd << tmpPath.resolve( genome.data[1].files[1] ).toString()
+        }
+
+
+        log.info( "exec: ${pb.command()}" )
+        log.info( '----------------------------------------------------------------------------------------------' )
+        int exitCode = pb.start().waitFor()
+        log.info( '----------------------------------------------------------------------------------------------' )
+        if( exitCode != 0 ) terminate( "abnormal Unicycler exit code! exitCode!=${exitCode}", genomeContigsPath, tmpPath )
+
+
+        // calc preFilter assembly stats
+        Path rawAssemblyPath = tmpPath.resolve( 'assembly.fasta' )
+        def preFilterStatistics = calcAssemblyStatistics( rawAssemblyPath )
+
+
+        // 1. create mapping (minimap2) for subsequent samtools depth call
+        // 2. sort mapped reads
+        // 3. compute depth per position
+        def contigDepths = [:]
+        pb = new ProcessBuilder( 'sh', '-c',
+            "${MINIMAP2} -a -Q -t ${NUM_THREADS} -x map-ont ${rawAssemblyPath} ${longReadsPath} | \
+            ${SAMTOOLS} sort --threads ${NUM_THREADS} -m ${SAMTOOLS_SORT_MEM} -O BAM | \
+            ${SAMTOOLS} depth -" )
+            .directory( tmpPath.toFile() )
+        log.info( "exec: ${pb.command()}" )
+        log.info( '----------------------------------------------------------------------------------------------' )
+        Process ps = pb.start()
+        ps.in.eachLine( {
+            String[] content = it.split( '\t' )
+            String contigName = content[0]
+            int depth = content[2] as int
+            if( contigDepths[ contigName ] )
+                contigDepths[ contigName ] += depth
+            else
+                contigDepths[ contigName ] = depth
+        } )
+        log.info( '----------------------------------------------------------------------------------------------' )
+
+        // calc contig coverage based on summed contig depths and contig length
+        log.debug( "assembly info: ${info}" )
+        log.debug( "contig depths: ${contigDepths}" )
+        log.debug( 'calc contig coverage:' )
+        contigDepths.each( { key, val ->
+            log.trace( "\tkey=${key}, val=${val}")
+            def contig = preFilterStatistics.contigs.find( {
+                log.trace( "\t\tcontigs=${it}" )
+                it.name == key
+            } )
+            assert contig != null
+            contig.coverage = val / contig.length
+            log.debug( "\tname=${key}, depth-sum=${val}, length=${contig.length}, coverage=${contig.coverage}" )
+        } )
+
+        // calc N50/N90 Coverage
+        def n50Contigs = preFilterStatistics.contigs.findAll( { it.length >= preFilterStatistics.n50 } )
+        preFilterStatistics.n50Coverage = n50Contigs.collect( {it.coverage * it.length} ).sum() / n50Contigs.collect( {it.length} ).sum()
+        log.debug( "pre-filter-N50=${preFilterStatistics.n50Coverage}" )
+        def n90Contigs = preFilterStatistics.contigs.findAll( { it.length >= preFilterStatistics.n90 } )
+        preFilterStatistics.n90Coverage = n50Contigs.collect( {it.coverage * it.length} ).sum() / n90Contigs.collect( {it.length} ).sum()
+
+        // filter contigs due to GC content, length and coverage
+        filterContigs( config, genome, rawAssemblyPath, genomeContigsPath, preFilterStatistics, info )
+        Path assemblyPath = genomeContigsPath.resolve( "${config.project.genus}_${genome.species}_${genome.strain}.fasta" )
+        info << calcAssemblyStatistics( assemblyPath )
+
+        // calc contig coverage based on summed contig depths and contig length
+        log.debug( 'calc contig coverage:' )
+        contigDepths.each( { key, val ->
+            log.trace( "\tkey=${key}, val=${val}")
+            def contig = info.contigs.find( {
+                log.trace( "\t\tcontigs=${it}" )
+                it.name == key
+            } )
+            assert contig != null
+            contig.coverage = val / contig.length
+            log.debug( "\tname=${key}, depth-sum=${val}, length=${contig.length}, coverage=${contig.coverage}" )
+        } )
+        // calc N50/N90 Coverage based on filtered contigs
+        n50Contigs = info.contigs.findAll( { it.length >= info.n50 } )
+        info.n50Coverage = n50Contigs.collect( {it.coverage * it.length} ).sum() / n50Contigs.collect( {it.length} ).sum()
+        log.debug( "post-filter-N50=${info.n50Coverage}" )
+        n90Contigs = info.contigs.findAll( { it.length >= info.n90 } )
+        info.n90Coverage = n50Contigs.collect( {it.coverage * it.length} ).sum() / n90Contigs.collect( {it.length} ).sum()
+
+    } catch( Throwable t ) {
+        terminate( "Unicycler assembly failed! gid=${genome.id}", t, genomeContigsPath, tmpPath )
+    }
+
+
+}
+
 
 private void runSpades( def config, def genome, Path genomeContigsPath, Path tmpPath, def info ) {
 
@@ -256,7 +423,7 @@ private void runSpades( def config, def genome, Path genomeContigsPath, Path tmp
 
         // run SPAdes
         ProcessBuilder pb = new ProcessBuilder( SPADES,
-            '--threads', '8',
+            '--threads', NUM_THREADS,
             '--memory', '16',
             '--careful',
             '--disable-gzip-output',
@@ -270,19 +437,19 @@ private void runSpades( def config, def genome, Path genomeContigsPath, Path tmp
         int readLibNr = 1
         genome.data.each( { datum ->
                 switch( FileType.getEnum( datum.type ) ) {
-                    case FileType.READS_SINGLE:
+                    case FileType.READS_ILLUMINA_SINGLE:
                         cmd << "--s${readLibNr}".toString()
                         cmd << datum.files[0]
                         readLibNr++
                         break
-                    case FileType.READS_PAIRED_END:
+                    case FileType.READS_ILLUMINA_PAIRED_END:
                         cmd << "--pe${readLibNr}-1".toString()
                         cmd << datum.files[0]
                         cmd << "--pe${readLibNr}-2".toString()
                         cmd << datum.files[1]
                         readLibNr++
                         break
-                    case FileType.READS_MATE_PAIRS:
+                    case FileType.READS_ILLUMINA_MATE_PAIRS:
                         cmd << "--mp${readLibNr}-1".toString()
                         cmd << datum.files[0]
                         cmd << "--mp${readLibNr}-2".toString()
@@ -485,22 +652,23 @@ private def calcAssemblyStatistics( Path contigsPath ) {
     ]
 
     def totalNGaps = []
-    String sequence = ''
+    StringBuilder sb = new StringBuilder( 10_000_000 )
 
     def m = contigsPath.text =~ /(?m)^>(.+)$\n([ATGCNatgcn\n]+)$/
     m.each( { match ->
             String contig = match[2].replaceAll( '[^ATGCNatgcn]', '' )
-            sequence += contig
+            sb.append( contig )
             def contigInfo = [
-                name: match[1],
+                name: match[1].split(' ')[0],
                 length: contig.length(),
-                gc:   (contig =~ /[GCgc]/).count / (contig =~ /[ATGCatgc]/).count,
+//                gc:   (contig =~ /[GCgc]/).count / (contig =~ /[ATGCatgc]/).count,
                 noAs: (contig =~ /[Aa]/).count,
                 noTs: (contig =~ /[Tt]/).count,
                 noGs: (contig =~ /[Gg]/).count,
                 noCs: (contig =~ /[Cc]/).count,
                 noNs: (contig =~ /[Nn]/).count
             ]
+            contigInfo.gc = ( contigInfo.noGs + contigInfo.noCs ) / (contigInfo.length - contigInfo.noNs)
 
             def nGaps = []
             def noMultiNs = (contig =~ /[Nn]+/)
@@ -521,6 +689,7 @@ private def calcAssemblyStatistics( Path contigsPath ) {
             }
             stats.contigs << contigInfo
     } )
+    String sequence = sb.toString()
 
     stats.length = sequence.length()
     stats.noContigs = stats.contigs.size()
@@ -606,7 +775,7 @@ private void filterContigs( def config, def genome, Path rawAssemblyPath, Path g
     log.info( "filter-N50-coverage=${0.1*preFilterStatistics.n50Coverage}" )
     def m = rawAssemblyPath.text =~ /(?m)^>(.+)$\n([ATGCNatgcn\n]+)$/
     m.each( { match ->
-            String name = match[1]
+            String name = match[1].split(' ')[0]
             String sequence = match[2]
             def contigInfo = preFilterStatistics.contigs.find( { it.name == name } )
             if( contigInfo.gc < 0.15  ||  contigInfo.gc > 0.85
@@ -646,10 +815,13 @@ private void terminate( String msg, Path genomePath, Path tmpPath ) {
 
 private void terminate( String msg, Throwable t, Path genomePath, Path tmpPath ) {
 
-    if( t ) log.error( msg, t )
-    else    log.error( msg )
+    if( t )
+        log.error( msg, t )
+    else {
+        log.error( msg )
+        tmpPath.deleteDir() // cleanup tmp dir
+    }
     Files.move( genomePath.resolve( 'state.running' ), genomePath.resolve( 'state.failed' ) ) // set state-file to failed
-    //tmpPath.deleteDir() // cleanup tmp dir
     log.debug( "removed tmp-dir: ${tmpPath}" )
     System.exit( 1 )
 

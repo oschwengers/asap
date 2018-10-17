@@ -8,10 +8,12 @@ package bio.comp.jlu.asap.api;
  */
 public enum FileType {
 
-    READS_PAIRED_END( "paired-end", DataType.READS ),
-    READS_MATE_PAIRS( "mate-pairs", DataType.READS ),
-    READS_HQ_MATE_PAIRS( "hq-mate-pairs", DataType.READS ),
-    READS_SINGLE( "single", DataType.READS ),
+    READS_ILLUMINA_PAIRED_END( "paired-end", DataType.READS ),
+    READS_ILLUMINA_MATE_PAIRS( "mate-pairs", DataType.READS ),
+    READS_ILLUMINA_HQ_MATE_PAIRS( "hq-mate-pairs", DataType.READS ),
+    READS_ILLUMINA_SINGLE( "single", DataType.READS ),
+    READS_NANOPORE( "nanopore", DataType.READS ),
+    READS_NANOPORE_PAIRED_END( "nanopore-pe", DataType.READS ),
     READS_PACBIO_RSII( "pacbio-rs2", DataType.READS ),
     READS_PACBIO_SEQUEL( "pacbio-sequel", DataType.READS ),
     READS_SANGER( "sanger", DataType.READS ),

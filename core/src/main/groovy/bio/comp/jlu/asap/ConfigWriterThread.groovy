@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat
 import groovy.json.JsonOutput
 import groovy.util.logging.Slf4j
 import org.slf4j.Logger
+import bio.comp.jlu.asap.api.FileType
 import bio.comp.jlu.asap.api.MiscConstants
 
 import static java.nio.file.StandardCopyOption.*
@@ -181,13 +182,37 @@ class ConfigWriterThread extends Thread {
                 type: genomeTable.getCellContent( rowIdx, ConfigTemplate.COLUMN_ID_INPUT ),
                 files: []
             ]
-            String file1 = genomeTable.getCellContent( rowIdx, ConfigTemplate.COLUMN_ID_FILE_1 );
-            if( file1  &&  !file1.isEmpty() ) datum.files << file1
-            String file2 = genomeTable.getCellContent( rowIdx, ConfigTemplate.COLUMN_ID_FILE_2 );
-            if( file2  &&  !file2.isEmpty() ) datum.files << file2
-            String file3 = genomeTable.getCellContent( rowIdx, ConfigTemplate.COLUMN_ID_FILE_3 );
-            if( file3  &&  !file3.isEmpty() ) datum.files << file3
-            genome.data << datum
+
+            FileType ft = FileType.getEnum( datum.type )
+            if( ft == FileType.READS_NANOPORE_PAIRED_END ) {
+                datum.type = FileType.READS_NANOPORE.toString()
+                String file1 = genomeTable.getCellContent( rowIdx, ConfigTemplate.COLUMN_ID_FILE_1 );
+                if( file1  &&  !file1.isEmpty() )
+                    datum.files << file1
+                genome.data << datum
+                datum = [
+                    type: FileType.READS_ILLUMINA_PAIRED_END.toString(),
+                    files: []
+                ]
+                String file2 = genomeTable.getCellContent( rowIdx, ConfigTemplate.COLUMN_ID_FILE_2 );
+                if( file2  &&  !file2.isEmpty() )
+                    datum.files << file2
+                String file3 = genomeTable.getCellContent( rowIdx, ConfigTemplate.COLUMN_ID_FILE_3 );
+                if( file3  &&  !file3.isEmpty() )
+                    datum.files << file3
+                genome.data << datum
+            } else {
+                String file1 = genomeTable.getCellContent( rowIdx, ConfigTemplate.COLUMN_ID_FILE_1 );
+                if( file1  &&  !file1.isEmpty() )
+                    datum.files << file1
+                String file2 = genomeTable.getCellContent( rowIdx, ConfigTemplate.COLUMN_ID_FILE_2 );
+                if( file2  &&  !file2.isEmpty() )
+                    datum.files << file2
+                String file3 = genomeTable.getCellContent( rowIdx, ConfigTemplate.COLUMN_ID_FILE_3 );
+                if( file3  &&  !file3.isEmpty() )
+                    datum.files << file3
+                genome.data << datum
+            }
 
             config.genomes << genome
             rowIdx++
