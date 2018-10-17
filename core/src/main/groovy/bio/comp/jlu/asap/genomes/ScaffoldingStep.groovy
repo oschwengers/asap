@@ -152,7 +152,7 @@ class ScaffoldingStep extends GenomeStep {
 
         // check exit code
         if( exitCode != 0 )
-            throw new IllegalStateException( "abnormal ${SCAFFOLDING.getName()} exit code! exitCode=${exitCode}" )
+            throw new IllegalStateException( "abnormal ${GenomeSteps.SCAFFOLDING.getName()} exit code! exitCode=${exitCode}" )
 
 
         // check state.failed / state.finished with exponential backoff
@@ -163,13 +163,13 @@ class ScaffoldingStep extends GenomeStep {
             } catch( InterruptedException ie ) {}
             log.debug( "genome.id=${genome.id}: exp backoff=${sec} s" )
             if( Files.exists( genomePath.resolve( 'state.failed' ) ) )
-                throw new IllegalStateException( "abnormal ${SCAFFOLDING.getName()} state: failed" )
+                throw new IllegalStateException( "abnormal ${GenomeSteps.SCAFFOLDING.getName()} state: failed" )
             else if( Files.exists( genomePath.resolve( 'state.finished' ) ) )
                 break
             sec <<= 1
         }
         if( sec >= (1<<EXP_BACKOFF_EXP)  &&  !Files.exists( genomePath.resolve( 'state.finished' ) ) )
-            throw new IllegalStateException( "abnormal ${SCAFFOLDING.getName()} state: !finished, timeout=${sec} s" )
+            throw new IllegalStateException( "abnormal ${GenomeSteps.SCAFFOLDING.getName()} state: !finished, timeout=${sec} s" )
 
     }
 

@@ -153,7 +153,7 @@ class AssemblyStep extends GenomeStep {
 
         // check exit code
         if( exitCode != 0 )
-            throw new IllegalStateException( "abnormal ${ASSEMBLY.getName()} exit code! exitCode=${exitCode}" )
+            throw new IllegalStateException( "abnormal ${GenomeSteps.ASSEMBLY.getName()} exit code! exitCode=${exitCode}" )
 
 
         // check state.failed / state.finished with exponential backoff
@@ -164,13 +164,13 @@ class AssemblyStep extends GenomeStep {
             } catch( InterruptedException ie ) {}
             log.debug( "genome.id=${genome.id}: exp backoff=${sec} s" )
             if( Files.exists( genomePath.resolve( 'state.failed' ) ) )
-                throw new IllegalStateException( "abnormal ${ASSEMBLY.getName()} state: failed" )
+                throw new IllegalStateException( "abnormal ${GenomeSteps.ASSEMBLY.getName()} state: failed" )
             else if( Files.exists( genomePath.resolve( 'state.finished' ) ) )
                 break
             sec <<= 1
         }
         if( sec >= (1<<EXP_BACKOFF_EXP)  &&  !Files.exists( genomePath.resolve( 'state.finished' ) ) )
-            throw new IllegalStateException( "abnormal ${ASSEMBLY.getName()} state: !finished, timeout=${sec} s" )
+            throw new IllegalStateException( "abnormal ${GenomeSteps.ASSEMBLY.getName()} state: !finished, timeout=${sec} s" )
 
     }
 

@@ -133,7 +133,7 @@ class SNPDetectionStep extends GenomeStep {
 
         // check exit code
         if( exitCode != 0 )
-            throw new IllegalStateException( "abnormal ${SNP_DETECTION.getName()} exit code! exitCode=${exitCode}" );
+            throw new IllegalStateException( "abnormal ${GenomeSteps.SNP_DETECTION.getName()} exit code! exitCode=${exitCode}" );
 
 
         // check state.failed / state.finished with exponential backoff
@@ -150,7 +150,7 @@ class SNPDetectionStep extends GenomeStep {
             sec <<= 1
         }
         if( sec >= (1<<EXP_BACKOFF_EXP)  &&  !Files.exists( snpDetectionPath.resolve( "${genomeName}.finished" ) ) )
-            throw new IllegalStateException( "abnormal ${SNP_DETECTION.getName()} state: !finished, timeout=${sec} s" )
+            throw new IllegalStateException( "abnormal ${GenomeSteps.SNP_DETECTION.getName()} state: !finished, timeout=${sec} s" )
 
     }
 

@@ -135,7 +135,7 @@ class MappingStep extends GenomeStep {
 
         // check exit code
         if( exitCode != 0 )
-            throw new IllegalStateException( "abnormal ${MAPPING.getName()} exit code! exitCode=${exitCode}" );
+            throw new IllegalStateException( "abnormal ${GenomeSteps.MAPPING.getName()} exit code! exitCode=${exitCode}" );
 
 
         // check state.failed / state.finished with exponential backoff
@@ -146,13 +146,13 @@ class MappingStep extends GenomeStep {
             } catch( InterruptedException ie ) {}
             log.debug( "genome.id=${genome.id}: exp backoff=${sec} s" )
             if( Files.exists( mappingsPath.resolve( "${genomeName}.failed" ) ) )
-                throw new IllegalStateException( "abnormal ${MAPPING.getName()} state: failed" )
+                throw new IllegalStateException( "abnormal ${GenomeSteps.MAPPING.getName()} state: failed" )
             else if( Files.exists( mappingsPath.resolve( "${genomeName}.finished" ) ) )
                 break
             sec <<= 1
         }
         if( sec >= (1<<EXP_BACKOFF_EXP)  &&  !Files.exists( mappingsPath.resolve( "${genomeName}.finished" ) ) )
-            throw new IllegalStateException( "abnormal ${MAPPING.getName()} state: !finished, timeout=${sec} s" )
+            throw new IllegalStateException( "abnormal ${GenomeSteps.MAPPING.getName()} state: !finished, timeout=${sec} s" )
 
     }
 

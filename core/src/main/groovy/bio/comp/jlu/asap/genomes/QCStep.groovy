@@ -8,9 +8,9 @@ import groovy.util.logging.Slf4j
 import groovy.io.FileType
 import bio.comp.jlu.asap.api.FileType
 import bio.comp.jlu.asap.api.DataType
+import bio.comp.jlu.asap.api.GenomeSteps
 
 import static bio.comp.jlu.asap.ASAPConstants.*
-import static bio.comp.jlu.asap.api.GenomeSteps.*
 import static bio.comp.jlu.asap.api.Paths.*
 import static bio.comp.jlu.asap.api.RunningStates.*
 
@@ -31,7 +31,7 @@ class QCStep extends GenomeStep {
 
     QCStep( def config, def genome, boolean localMode ) {
 
-        super( QC.getAbbreviation(), config, genome, localMode )
+        super( GenomeSteps.QC.getAbbreviation(), config, genome, localMode )
 
         setName( "QC-Step-Thread-${genome.id}" )
 
@@ -41,7 +41,7 @@ class QCStep extends GenomeStep {
     @Override
     boolean isSelected() {
 
-        return genome?.stepselection.contains( QC.getCharCode() )
+        return genome?.stepselection.contains( GenomeSteps.QC.getCharCode() )
 
     }
 
@@ -130,7 +130,7 @@ class QCStep extends GenomeStep {
 
         // check exit code
         if( exitCode != 0 )
-            throw new IllegalStateException( "abnormal ${QC.getName()} exit code! exitCode=${exitCode}" );
+            throw new IllegalStateException( "abnormal ${GenomeSteps.QC.getName()} exit code! exitCode=${exitCode}" );
 
 
         // check state.failed / state.finished with exponential backoff
@@ -141,13 +141,13 @@ class QCStep extends GenomeStep {
             } catch( InterruptedException ie ) {}
             log.debug( "genome.id=${genome.id}: exp backoff=${sec} s" )
             if( Files.exists( genomePath.resolve( 'state.failed' ) ) )
-                throw new IllegalStateException( "abnormal ${QC.getName()} state: failed" )
+                throw new IllegalStateException( "abnormal ${GenomeSteps.QC.getName()} state: failed" )
             else if( Files.exists( genomePath.resolve( 'state.finished' ) ) )
                 break
             sec <<= 1
         }
         if( sec >= (1<<EXP_BACKOFF_EXP)  &&  !Files.exists( genomePath.resolve( 'state.finished' ) ) )
-            throw new IllegalStateException( "abnormal ${QC.getName()} state: !finished, timeout=${sec} s" )
+            throw new IllegalStateException( "abnormal ${GenomeSteps.QC.getName()} state: !finished, timeout=${sec} s" )
 
     }
 
