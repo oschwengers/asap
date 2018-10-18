@@ -502,29 +502,28 @@ def setupDirectories( def config, def projectPath ) {
         Path dataPath = projectPath.resolve( PROJECT_PATH_DATA )
         config.genomes.each( { genome ->
             String genomeName = "${config.project.genus}_${genome.species}_${genome.strain}"
-            def data = genome.data[0]
-//            genome.data.each( { read ->
-                FileType ft = FileType.getEnum( data.type )
+            genome.data.each( { datum ->
+                FileType ft = FileType.getEnum( datum.type )
                 if( ft?.getDataType() == DataType.READS ) {
                     Path destPath = Paths.get( projectPath.toString(), PROJECT_PATH_READS_RAW, genomeName )
                     if( !Files.exists( destPath ) ) Files.createDirectory( destPath )
-                    data.files.each( { Files.createLink( destPath.resolve( it ), dataPath.resolve( it ) ) } )
+                    datum.files.each( { Files.createLink( destPath.resolve( it ), dataPath.resolve( it ) ) } )
                 } else if( ft == FileType.CONTIGS ) {
                     Path destPath = Paths.get( projectPath.toString(), PROJECT_PATH_ASSEMBLIES, genomeName )
                     if( !Files.exists( destPath ) ) Files.createDirectory( destPath )
-                    Files.createLink( destPath.resolve( "${genomeName}.fasta" ), dataPath.resolve( data.files[0] ) )
+                    Files.createLink( destPath.resolve( "${genomeName}.fasta" ), dataPath.resolve( datum.files[0] ) )
                 } else if( ft == FileType.CONTIGS_ORDERED ) {
                     Path destPath = Paths.get( projectPath.toString(), PROJECT_PATH_SCAFFOLDS, genomeName )
                     if( !Files.exists( destPath ) ) Files.createDirectory( destPath )
-                    Files.createLink( destPath.resolve( "${genomeName}.fasta" ), dataPath.resolve( data.files[0] ) )
+                    Files.createLink( destPath.resolve( "${genomeName}.fasta" ), dataPath.resolve( datum.files[0] ) )
                     // link scaffold file to sequence directory for genome characterization steps
                     destPath = projectPath.resolve( PROJECT_PATH_SEQUENCES )
-                    Files.createLink( destPath.resolve( "${genomeName}.fasta" ), dataPath.resolve( data.files[0] ) )
+                    Files.createLink( destPath.resolve( "${genomeName}.fasta" ), dataPath.resolve( datum.files[0] ) )
                 } else if( ft == FileType.GENOME ) {
                     Path destPath = Paths.get( projectPath.toString(), PROJECT_PATH_ANNOTATIONS, genomeName )
                     if( !Files.exists( destPath ) ) Files.createDirectory( destPath )
-                    FileFormat ff = FileFormat.getEnum( data.files[0] )
-                    if( data.files.size() == 1 ) { // either GenBank or GFF3 (both including sequence information)
+                    FileFormat ff = FileFormat.getEnum( datum.files[0] )
+                    if( datum.files.size() == 1 ) { // either GenBank or GFF3 (both including sequence information)
                         String fileSuffix = null
                         if( ff == FileFormat.GENBANK )
                             fileSuffix = 'gbk'
@@ -533,26 +532,26 @@ def setupDirectories( def config, def projectPath ) {
                         else if( ff == FileFormat.GFF )
                             fileSuffix = 'gff'
                         assert fileSuffix != null
-                        Files.createLink( destPath.resolve( "${genomeName}.${fileSuffix}" ), dataPath.resolve( data.files[0] ) )
-                    } else if( data.files.size() == 2 ) { // check if its GFF3 + Fasta
+                        Files.createLink( destPath.resolve( "${genomeName}.${fileSuffix}" ), dataPath.resolve( datum.files[0] ) )
+                    } else if( datum.files.size() == 2 ) { // check if its GFF3 + Fasta
                         /** As Roary expects GFF files containing the sequence information
                          *  we have to make a proper copy in order to later on join
                          *  sequence and annotation during the GenomeConversion step.
                         /*  This way, the raw data stays unmodified.
                         */
-                        FileFormat ff2 = FileFormat.getEnum( data.files[1] )
+                        FileFormat ff2 = FileFormat.getEnum( datum.files[1] )
                         if( (ff == FileFormat.FASTA)  &&  (ff2 == FileFormat.GFF) ) {
-                            Files.createLink( destPath.resolve( "${genomeName}.fasta" ), dataPath.resolve( data.files[0] ) )
-                            Files.copy( dataPath.resolve( data.files[1] ), destPath.resolve( "${genomeName}.gff" ) )
+                            Files.createLink( destPath.resolve( "${genomeName}.fasta" ), dataPath.resolve( datum.files[0] ) )
+                            Files.copy( dataPath.resolve( datum.files[1] ), destPath.resolve( "${genomeName}.gff" ) )
                         } else if( (ff == FileFormat.GFF)  &&  (ff2 == FileFormat.FASTA) ) {
-                            Files.copy( dataPath.resolve( data.files[0] ), destPath.resolve( "${genomeName}.gff" ) )
-                            Files.createLink( destPath.resolve( "${genomeName}.fasta" ), dataPath.resolve( data.files[1] ) )
+                            Files.copy( dataPath.resolve( datum.files[0] ), destPath.resolve( "${genomeName}.gff" ) )
+                            Files.createLink( destPath.resolve( "${genomeName}.fasta" ), dataPath.resolve( datum.files[1] ) )
                         } else {
-                            Misc.exit( log, "genome file suffices do not match GFF3/Fasta format! (${data.files})", ex )
+                            Misc.exit( log, "genome file suffices do not match GFF3/Fasta format! (${datum.files})", ex )
                         }
                     }
                 }
-//            } )
+            } )
         } )
         config.references.each( { ref ->
             Files.createLink( Paths.get( projectPath.toString(), PROJECT_PATH_REFERENCES, ref ), dataPath.resolve( ref ) )
