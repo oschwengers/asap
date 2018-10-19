@@ -26,21 +26,17 @@ final def env = System.getenv()
 ASAP_HOME = env.ASAP_HOME
 ASAP_DB   = env.ASAP_DB
 
-MASH     = "${ASAP_HOME}/share/mash/mash"
+KRAKEN   = "${ASAP_HOME}/share/kraken"
 NUCMER   = "${ASAP_HOME}/share/mummer/nucmer"
 BLASTN   = "${ASAP_HOME}/share/blast/bin/blastn"
 CMSEARCH = "${ASAP_HOME}/share/infernal/cmsearch"
 
-MASH_DB  = "${ASAP_DB}/mash/refseq-genomes-complete.msh"
-ASSEMBLY_TAX_MAPPING  = "${ASAP_DB}/mash/assembly-tax-mapping.tsv"
-NCBI_TAXONOMY_DB = "${ASAP_DB}/taxonomy/ncbi-bacteria-taxonomies.tsv"
-
+KRAKEN_DB = "${ASAP_DB}/kraken"
 RDP_DB   = "${ASAP_DB}/rdp/rdp-bacteria.fasta"
 RFAM_CM_SSU_RRNA = "${ASAP_DB}/RF00177.cm"
 
 
-NUM_THREADS = 5
-MASH_DIST_THRESHOLD = 0.01d
+NUM_THREADS = 4
 
 
 
@@ -181,101 +177,44 @@ def info = [
  *** kmer (kraken) **
 ********************/
 
-log.info( 'start kmer species classification via mash' )
-ProcessBuilder pb = new ProcessBuilder( MASH,
-    'dist',
-    '-p', Integer.toString( NUM_THREADS ),
-    MASH_DB,
-    genomeSequencePath.toString() )
+log.info( 'start kmer species classification via Kraken' )
+ProcessBuilder pb = new ProcessBuilder( 'sh', '-c',
+"${KRAKEN}/kraken --fasta-input ${genomeSequencePath} --threads ${NUM_THREADS} \
+| ${KRAKEN}/kraken-translate \
+> tax.txt" )
+    .redirectErrorStream( true )
+    .redirectOutput( ProcessBuilder.Redirect.INHERIT )
     .directory( tmpPath.toFile() )
+
+def pbEnv = pb.environment() // set path variables
+pbEnv.put( 'KRAKEN_DEFAULT_DB', KRAKEN_DB )
+
 log.info( "exec: ${pb.command()}" )
 log.info( '----------------------------------------------------------------------------------------------' )
-def proc = pb.start()
-def stdOut = new StringBuilder()
-def stdErr = new StringBuilder()
-proc.consumeProcessOutput( stdOut, stdErr )
-if( proc.waitFor() != 0 ) terminate( "could not exec mash! stderr=${stdErr}", genomeName, taxPath, tmpPath )
+if( pb.start().waitFor() != 0 ) terminate( 'could not exec kraken | kraken-translate > tax.txt!', genomeName, taxPath, tmpPath )
 log.info( '----------------------------------------------------------------------------------------------' )
 
 
-def taxList = []
-stdOut.eachLine( { line ->
-    def cols = line.split( '\t' )
-    def tax = [
-        assemblyId: cols[0],
-        dist: cols[2] as double,
-        noShared: cols[4].split('/')[0] as int
-    ]
-    if( tax.dist <= MASH_DIST_THRESHOLD ) {
-    log.debug( "mash hit: assembly=${tax.assemblyId}, dist=${tax.dist}, # shared=${tax.noShared}" )
-        taxList << tax
-    }
+def taxSet = new HashMap<String,Integer>()
+int hits = 0
+tmpPath.resolve( 'tax.txt' ).eachLine( { line ->
+    hits++
+    String tax = line.split( '\t' )[1]
+    Integer noTax = taxSet.get( tax )
+    if( noTax == null ) taxSet.put( tax, 1 )
+    else                taxSet.put( tax, noTax+1 )
 } )
-taxList.sort( { it.dist } )
-log.debug( "# tax hits: ${taxList.size()}" )
-
-if( taxList.size() > 100 )
-    taxList = taxList[ 0..99 ]
-
-// parse assembly id -> tax id mapping file and enrich Mash hits
-assemblyTaxMap = [:]
-Paths.get( ASSEMBLY_TAX_MAPPING ).eachLine( { line ->
-    def cols = line.split( '\t' )
-    assemblyTaxMap[ (cols[0]) ] = [
-        assemblyId: cols[0],
-        taxId: cols[1] as int,
-        orgName: cols[2]
-    ]
-} )
-log.debug( "# assembly-tax mappings: ${assemblyTaxMap.size()}" )
-
-
-// parse NCBI Taxonomy db and enrich Mash hits
-ncbiTaxonomies = [:]
-Paths.get( NCBI_TAXONOMY_DB ).eachLine( { line ->
-    def cols = line.split( '\t' )
-    int taxId = cols[0] as int
-    ncbiTaxonomies[ (taxId) ] = [
-        taxId: taxId,
-        orgName: cols[1],
-        lineage: cols[2].split( ';' ).toList(),
-    ]
-} )
-log.debug( "# NCBI tax: ${ncbiTaxonomies.size()}" )
-
-
+def taxList = taxSet.collect { k,v -> [ lineage: k, freq: v ] }
+taxList.sort( { -it.freq } )
+info.kmer.hits = hits
+info.kmer.classification = taxList[0]
 taxList.each( {
-    def taxId = assemblyTaxMap[ (it.assemblyId) ]
-    assert taxId != null
-    it << taxId
-
-    def taxonomy = ncbiTaxonomies[ (it.taxId) ]
-    assert taxonomy != null
-    it << taxonomy
-
-    if( it.orgName != it.lineage.last() )
-        it.lineage << it.orgName
-
-    it.classification = it.orgName
-
-    it.remove( 'assemblyId' )
-    it.remove( 'dist' )
-    it.remove( 'noShared' )
-    it.remove( 'orgName' )
-
+    it.lineage -= 'root;cellular organisms;'
+    it.lineage = it.lineage.split( ';' )
+    it.classification = it.lineage[ it.lineage.size()-1 ]
+    info.kmer.lineages << it
 } )
-def taxSet = []
-taxList.collect( {it.taxId} ).toSet().each( { taxId ->
-    def taxGroup = taxList.findAll( { it.taxId == taxId } )
-    def tax = taxGroup[0]
-    tax.freq = taxGroup.size()
-    taxSet << tax
-} )
-taxSet.sort( {-it.freq} )
 
-info.kmer.classification = taxSet[0]
-info.kmer.lineages = taxSet
-info.kmer.hits = taxSet.collect( {it.freq} ).sum()
 
 
 

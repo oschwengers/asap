@@ -178,7 +178,7 @@
                 <#if kmer.classification?has_content>
                     <div id="kmerRow" class="row">
                         <div class="col">
-                            <h2><small>Kmer Classifications</small></h2>
+                            <h2><small>Kmer Contig Classifications</small></h2>
                             <div id="kmerChart"></div>
                             <script type="text/javascript">
                                 google.charts.load( "current", {packages:["sankey"]} );
@@ -214,8 +214,8 @@
                                 <thead>
                                     <tr>
                                         <th class="text-center">Classification</th>
-                                        <th class="text-center">Frequency [#]</th>
-                                        <th class="text-center">Frequency [%]</abbr></th>
+                                        <th class="text-center">Contigs [#]</th>
+                                        <th class="text-center">Contigs [%]</abbr></th>
                                         <th class="text-center">Lineage</th>
                                     </tr>
                                 </thead>
