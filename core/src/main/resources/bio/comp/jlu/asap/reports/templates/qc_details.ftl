@@ -371,31 +371,6 @@
                         </div>
                     </div>
 
-
-                    <!-- kmer profile figures -->
-                    <div id="kp" class="row voffset">
-                        <div class="col-md-12">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <h3 class="panel-title">Kmer Profiles</h3>
-                                </div>
-                                <div class="panel-body">
-                                <#list qcReads as read>
-                                    <div class="row">
-                                        <div class="col-md-5">
-                                            <img class="img-responsive thumbnail" src="${genomeName}/raw/${read.fileName}/kmer_profiles.png" data-toggle="tooltip" title="Raw: kmer profile: ${read.file}">
-                                        </div>
-                                        <div class="col-md-5 col-md-offset-1">
-                                            <img class="img-responsive thumbnail" src="${genomeName}/qc/${read.fileName}/kmer_profiles.png" data-toggle="tooltip" title="QC: kmer profile: ${read.file}">
-                                        </div>
-                                    </div>
-                                </#list>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-
                 </div>
             </div>
         </div>

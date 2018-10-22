@@ -209,7 +209,8 @@ genome.data.each( { datum ->
                 info.rawReads << runFastQC( tmpPath.resolve( "${genomeName}.subreads.bam" ), tmpPath, genomeRawReadsPath )
             } else { // PacBio Sequel
 
-                info.rawReads << runFastQC( genomeRawReadsPath.resolve( datum.files[0] ), tmpPath, genomeRawReadsPath )
+                Files.createSymbolicLink( tmpPath.resolve( "${genomeName}.subreads.bam" ), genomeRawReadsPath.resolve( datum.files[0] ) )
+                info.rawReads << runFastQC( tmpPath.resolve( "${genomeName}.subreads.bam" ), tmpPath, genomeRawReadsPath )
 
             }
 
