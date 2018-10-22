@@ -430,6 +430,7 @@
                             <table id="annotationTable" class="table table-hover table-condensed">
                                 <thead>
                                     <tr>
+                                        <th>Contig</th>
                                         <th>Locus</th>
                                         <th class="text-center">Type</th>
                                         <th class="text-center">Start</th>
@@ -444,6 +445,7 @@
                                 <tbody>
                                     <#list features as f>
                                     <tr>
+                                        <td>${f.contig}</td>
                                         <td>${f.locusTag}</td>
                                         <td class="text-center">${f.type}</td>
                                         <td class="text-center">${f.start}</td>
