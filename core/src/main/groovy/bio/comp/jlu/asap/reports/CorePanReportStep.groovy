@@ -57,10 +57,13 @@ class CorePanReportStep extends ReportStep {
         // Perform any init logic here
         Files.createDirectory( corePanReportsPath )
 
-        // hard link download files
-        Files.createLink( corePanReportsPath.resolve( 'core.fasta' ), corePanPath.resolve( 'core.fasta' ) )
-        Files.createLink( corePanReportsPath.resolve( 'pan.fasta' ), corePanPath.resolve( 'pan.fasta' ) )
-        Files.createLink( corePanReportsPath.resolve( 'pan-matrix.tsv' ), corePanPath.resolve( 'pan-matrix.tsv' ) )
+        def corePanStep = config.analyses[ CORE_PAN.getAbbreviation() ]
+        if( corePanStep?.status == FINISHED.toString() ) {
+            // hard link download files
+            Files.createLink( corePanReportsPath.resolve( 'core.fasta' ), corePanPath.resolve( 'core.fasta' ) )
+            Files.createLink( corePanReportsPath.resolve( 'pan.fasta' ), corePanPath.resolve( 'pan.fasta' ) )
+            Files.createLink( corePanReportsPath.resolve( 'pan-matrix.tsv' ), corePanPath.resolve( 'pan-matrix.tsv' ) )
+        }
 
     }
 
