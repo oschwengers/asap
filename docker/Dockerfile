@@ -1,6 +1,6 @@
 FROM ubuntu:16.04
 
-LABEL version="1.0.0"
+LABEL version="1.1.0"
 LABEL maintainer="andreas.hoek@bio.uni-giessen.de"
 LABEL maintainer="oliver.schwengers@computational.bio.uni-giessen.de"
 
@@ -12,7 +12,7 @@ RUN apt-get -y update && apt-get -y install \
     libdigest-md5-perl \
     bioperl \
     libtbb2 \
-    openjdk-8-jdk \
+    openjdk-8-jre \
     python-pip \
     roary
 RUN pip install biopython \
