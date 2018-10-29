@@ -61,9 +61,9 @@
                           </div>
                           <div class="modal-body">
                             <p>
-                              The reads that pass the quality control are assembled. For long read assemblies the tool <code>HGap4</code> is used. Assemblies of hybrid
-                              and short reads are performed with the tool <code>SPAdes</code>. This page provides an overview
-                              on assembly key data of all genomes in this analysis.</p>
+                              Reads which pass the quality control steps get subsequenlty assembled. PacBio reads get assembled by <code>HGap4</code>.
+                              Assemblies of short reads are performed with <code>SPAdes</code>. Nanopore or Illumina+Nanopore hybrid assemblies
+                              are performed via Unicycler. This page provides an overview on assembly key data of all genomes in this analysis.</p>
 
                             <h3>Interactive dotplot</h3>
 
@@ -83,13 +83,14 @@
 
                             <h3>Downloads</h3>
 
-                            <p>The table can be saved as comma separated value (<code>csv</code>) file via click on the csv
-                              button (search and sorting are contained in the downloaded file). To download the <code>fasta</code>                              file of a particular genome assembly click on fasta in the data table.</p>
+                            <p>The table can be saved as a comma separated value (<code>csv</code>) file via a click on the csv
+                              button (search and sorting are contained in the downloaded file). To download the <code>fasta</code>
+                              file of a particular genome assembly click on "fasta" in the data table.</p>
 
                             <h3>Links</h3>
 
                             <ul>
-                              <li><code>Details</code> on the assembly of a particular genome can be accessed via click on the
+                              <li>Assembly <code>Details</code> of a particular genome can be accessed via a click on the
                                 magnifying glass in the overview table.</li>
 
                               <li><a href="https://github.com/PacificBiosciences/Bioinformatics-Training/wiki/HGAP#overview">HGap</a>:
@@ -98,9 +99,14 @@
 
                               <li><a href="http://cab.spbu.ru/software/spades/">SPAdes</a>: Bankevich A., Nurk S., Antipov D.,
                                 Gurevich A., Dvorkin M., Kulikov A. S., Lesin V., Nikolenko S., Pham S., Prjibelski A., Pyshkin
-                                A., Sirotkin A., Vyahhi N., Tesler G., Alekseyev M. A., Pevzner P. A. SPAdes: A New Genome
-                                Assembly Algorithm and Its Applications to Single-Cell Sequencing. Journal of Computational
-                                Biology, 2012. <a href="https://www.ncbi.nlm.nih.gov/pubmed/22506599">PubMed</a>.</li>
+                                A., Sirotkin A., Vyahhi N., Tesler G., Alekseyev M. A., Pevzner P. A. "SPAdes: A New Genome
+                                Assembly Algorithm and Its Applications to Single-Cell Sequencing." Journal of Computational
+                                Biology (2012) <a href="https://www.ncbi.nlm.nih.gov/pubmed/22506599">PubMed</a>.</li>
+
+                              <li><a href="https://github.com/rrwick/Unicycler">Unicycler</a>:
+                                Wick RR, Judd LM, Gorrie CL, Holt KE
+                                "Unicycler: Resolving bacterial genome assemblies from short and long sequencing reads." PLOS Computational Biology 13(6) (2017): e1005595.
+                                <a href="https://www.ncbi.nlm.nih.gov/pubmed/28594827">PubMed</a></li>
                             </ul>
 
                             <h3>Glossary</h3>
