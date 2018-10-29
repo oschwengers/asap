@@ -131,7 +131,7 @@
                         <div class="modal-content">
                           <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <h2 class="modal-title" id="myModalLabel">ASAP assembly detail</h2>
+                            <h2 class="modal-title" id="myModalLabel">ASA&#179;P assembly detail</h2>
                           </div>
                           <div class="modal-body">
                             <h3>Histograms of contig specifications</h3>
@@ -167,7 +167,7 @@
 
                             <p>The contigs and scaffolds used in this assembly as well as the ones discarded (not used for assembly)
                               can be downloaded as <code>fasta</code> on the right below the histograms. The table can be
-                              saved as comma separated value (<code>csv</code>) file via click on the csv button (search
+                              saved as a comma separated value (<code>csv</code>) file via a click on the csv button (search
                               and sorting are contained in the downloaded file).</p>
 
                             <h3>Glossary</h3>

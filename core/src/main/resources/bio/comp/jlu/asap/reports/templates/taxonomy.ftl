@@ -79,11 +79,11 @@
                         <div class="modal-content">
                           <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <h2 class="modal-title" id="myModalLabel">ASAP taxonomy overview</h2>
+                            <h2 class="modal-title" id="myModalLabel">ASA&#179;P taxonomy overview</h2>
                           </div>
                           <div class="modal-body">
                             <p>
-                              For the taxonomic classification of bacterial isolates ASA³P uses three distinct methods:</p>
+                              For the taxonomic classification of bacterial isolates ASA&#179;P uses three distinct methods:</p>
 
                             <ul>
                               <li>Kmer profiles</li>
@@ -93,7 +93,7 @@
                               <li>Comparison of average nucleotide identities (<code>ANI</code>)</li>
                             </ul>
 
-                            <p>The first two are reference free solutions where the last one is reference based approach. Kmer profiles are analyzed via
+                            <p>The first two methods are reference free solutions where the last one is reference based approach. Kmer profiles are analyzed via
                               the <code>Kraken</code> tool and subsequent kmer profile hits are extracted from a custom <code>RefSeq</code> based database.
                               In order to search for 16S homology the pipeline uses <code>Infernal</code> to extract the best scoring 16S sequence and
                               subsequently queries it against the <code>RDP</code> 16S database.</p>
@@ -123,30 +123,41 @@
                             <h3>Links</h3>
 
                             <ul>
-                              <li><a href="https://www.ncbi.nlm.nih.gov/pubmed/17220447">ANI</a>: Goris, Johan, et al. "DNA–DNA hybridization values and
-                                their relationship to whole-genome sequence similarities." International journal of systematic and evolutionary microbiology
-                                57.1 (2007): 81-91. <a href="https://www.ncbi.nlm.nih.gov/pubmed/17220447">PubMed</a>.</li>
+                                <li><code>Details</code> on the taxonomy of a particular genome can be accessed via click on the magnifying glass in the overview table.</li>
 
-                              <li><code>Details</code> on the taxonomy of a particular genome can be accessed via click on the magnifying glass in the overview
-                                table.</li>
+                                <li><code>kmer</code> column value redirects to kmer taxonomic classification in the ncbi Taxonomy Browser.</li>
 
-                              <li><code>kmer</code> column value redirects to kmer taxonomic classification in the ncbi Taxonomy Browser.</li>
+                                <li><code>16S rRNA</code> column value redirects to 16S rRNA taxonomic classification in the ncbi Taxonomy Browser.</li>
 
-                              <li><code>16S rRNA</code> column value redirects to 16S rRNA taxonomic classification in the ncbi Taxonomy Browser.</li>
+                                <li><a href="https://www.ncbi.nlm.nih.gov/pubmed/17220447">ANI</a>: Goris, Johan, et al.
+                                    DNA–DNA hybridization values and their relationship to whole-genome sequence similarities.
+                                    International journal of systematic and evolutionary microbiology, 2007, 57.1:81-91.
+                                    <a href="https://www.ncbi.nlm.nih.gov/pubmed/17220447">PubMed</a>
+                                </li>
 
-                              <li><a href="https://ccb.jhu.edu/software/kraken/">Kraken</a>: Wood DE, Salzberg SL: Kraken: ultrafast metagenomic sequence
-                                classification using exact alignments. Genome Biology 2014, 15:R46. <a href="https://www.ncbi.nlm.nih.gov/pubmed/24580807">PubMed</a>.</li>
+                                <li><a href="https://ccb.jhu.edu/software/kraken/">Kraken</a>: Wood DE, Salzberg SL
+                                    Kraken: ultrafast metagenomic sequence classification using exact alignments.
+                                    Genome Biology, 2014, 15:R46.
+                                    <a href="https://www.ncbi.nlm.nih.gov/pubmed/24580807">PubMed</a>
+                                </li>
 
-                              <li><a href="http://eddylab.org/infernal/">Infernal</a>: E. P. Nawrocki and S. R. Eddy, Infernal 1.1: 100-fold faster RNA homology
-                                searches, Bioinformatics 29:2933-2935 (2013). <a href="https://www.ncbi.nlm.nih.gov/pubmed/24008419">PubMed</a>.</li>
+                                <li><a href="http://eddylab.org/infernal/">Infernal</a>: E. P. Nawrocki and S. R. Eddy
+                                    Infernal 1.1: 100-fold faster RNA homology searches
+                                    Bioinformatics, 2013, 29:2933-2935
+                                    <a href="https://www.ncbi.nlm.nih.gov/pubmed/24008419">PubMed</a>
+                                </li>
 
-                              <li><a href="http://mummer.sourceforge.net/">MUMmer/Nucmer</a>: Open source MUMmer 3.0 is described in "Versatile and open
-                                software for comparing large genomes." S. Kurtz, A. Phillippy, A.L. Delcher, M. Smoot, M. Shumway, C. Antonescu, and
-                                S.L. Salzberg, Genome Biology (2004), 5:R12. <a href="https://www.ncbi.nlm.nih.gov/pubmed/14759262">PubMed</a>.</li>
+                                <li><a href="http://mummer.sourceforge.net/">MUMmer/Nucmer</a>: S. Kurtz, A. Phillippy, A.L. Delcher, M. Smoot, M. Shumway, C. Antonescu, and S.L. Salzberg
+                                    Versatile and open software for comparing large genomes.
+                                    Genome Biology, 2004, 5:R12.
+                                    <a href="https://www.ncbi.nlm.nih.gov/pubmed/14759262">PubMed</a>
+                                </li>
 
-                              <li><a href="https://rdp.cme.msu.edu/">RDP</a>: Cole, J. R., Q. Wang, J. A. Fish, B. Chai, D. M. McGarrell, Y. Sun, C. T. Brown,
-                                A. Porras-Alfaro, C. R. Kuske, and J. M. Tiedje. 2014. Ribosomal Database Project: data and tools for high throughput
-                                rRNA analysis Nucl. Acids Res. 42(Database issue):D633-D642; doi: 10.1093/nar/gkt1244. <a href="https://www.ncbi.nlm.nih.gov/pubmed/24288368">PubMed</a>.</li>
+                                <li><a href="https://rdp.cme.msu.edu/">RDP</a>: Cole, J. R., Q. Wang, J. A. Fish, B. Chai, D. M. McGarrell, Y. Sun, C. T. Brown, A. Porras-Alfaro, C. R. Kuske, and J. M. Tiedje.
+                                    Ribosomal Database Project: data and tools for high throughput rRNA analysis
+                                    Nucl. Acids Res., 2014, 42(Database issue):D633-D642; doi: 10.1093/nar/gkt1244.
+                                    <a href="https://www.ncbi.nlm.nih.gov/pubmed/24288368">PubMed</a>
+                                </li>
                             </ul>
 
                             <h3>Glossary</h3>
@@ -155,13 +166,13 @@
                               <li><strong>16S Classification</strong>: Rfam 16S based taxonomic classification via Infernal.</li>
 
                               <li><strong>ANI [%]</strong>: Percent average nucleotide identity. Based on the ANI publication the sequenced genome is split
-                                into 1020 bp fragments which are compared against the reference (in our approach Nucmer was used instead of blastN).
-                                For the calculation the length of the fragments with less than 30% non identities and an alignment length higher than
-                                70% are summed and divided by the total length of the sequenced genome.</li>
+                                into 1020 bp fragments which are compared against the reference (in this implementation Nucmer was used instead of blastn).
+                                For the calculation the length of the fragments with less than 30 % non identities and an alignment length higher than
+                                70 % are summed and divided by the total length of the sequenced genome.</li>
 
                               <li><strong>Conserved DNA [%]</strong>: Percent conserved DNA. Based on the ANI publication the sequenced genome is split into
-                                1020 bp fragments which are compared against the reference (in our approach Nucmer was used instead of blastN). For the
-                                calculation the length of the fragments that matched with 90% sequence identity or higher are summed and divided by the
+                                1020 bp fragments which are compared against the reference (in our approach Nucmer was used instead of blastn). For the
+                                calculation the length of the fragments that matched with 90 % sequence identity or higher are summed and divided by the
                                 total length of the sequenced genome.</li>
 
                               <li><strong>Genome</strong>: Name of the processed genome.</li>

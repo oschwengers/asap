@@ -70,7 +70,7 @@
                         <div class="modal-content">
                           <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <h2 class="modal-title" id="myModalLabel">ASAP single nucleotide polymorphism detail</h2>
+                            <h2 class="modal-title" id="myModalLabel">ASA&#179;P single nucleotide polymorphism detail</h2>
                           </div>
                           <div class="modal-body">
                             <p>
@@ -108,26 +108,25 @@
                             <h3>Links</h3>
 
                             <ul>
-                              <li><code>Details</code> on the SNPs of a particular genome can be accessed via click on the magnifying
-                                glass in the overview table.</li>
+                                <li><a href="http://www.htslib.org/">SAMtools</a>: Li H., Handsaker B., Wysoker A., Fennell T., Ruan J., Homer N., Marth G., Abecasis G., Durbin R., 1000 Genome Project Data Processing Subgroup
+                                    The Sequence alignment/map (SAM) format and SAMtools.
+                                    Bioinformatics, 2009, 25, 2078-9.
+                                    <a href="https://www.ncbi.nlm.nih.gov/pubmed/19505943">PubMed</a>
+                                </li>
 
-                              <li><a href="http://www.htslib.org/">SAMtools</a>; Li H., Handsaker B., Wysoker A., Fennell T.,
-                                Ruan J., Homer N., Marth G., Abecasis G., Durbin R. and 1000 Genome Project Data Processing
-                                Subgroup (2009) The Sequence alignment/map (SAM) format and SAMtools. Bioinformatics, 25,
-                                2078-9. <a href="https://www.ncbi.nlm.nih.gov/pubmed/19505943">PubMed</a>.</li>
+                                <li><a href="https://github.com/samtools/bcftools">BCFtools</a>: Included in SAMtools.
+                                </li>
 
-                              <li><a href="https://github.com/samtools/bcftools">BCFtools</a>; Included in SAMtools.</li>
+                                <li><a href="http://snpeff.sourceforge.net/SnpSift.html">SnpSift</a>: Cingolani, P., et. al.
+                                    Using Drosophila melanogaster as a model for genotoxic chemical mutational studies with a new program, SnpSift
+                                    Frontiers in Genetics, 2012, 3
+                                    <a href="https://www.ncbi.nlm.nih.gov/pubmed/22435069">PubMed</a>
+                                </li>
 
-                              <li><a href="http://snpeff.sourceforge.net/SnpSift.html">SnpSift</a>; "Using Drosophila melanogaster
-                                as a model for genotoxic chemical mutational studies with a new program, SnpSift", Cingolani,
-                                P., et. al., Frontiers in Genetics, 3, 2012. <a href="https://www.ncbi.nlm.nih.gov/pubmed/22435069">PubMed</a>.</li>
-
-                              <li><a href="http://snpeff.sourceforge.net/">SnpEff</a>; "A program for annotating and predicting
-                                the effects of single nucleotide polymorphisms, SnpEff: SNPs in the genome of Drosophila
-                                melanogaster strain w1118; iso-2; iso-3.", Cingolani P, Platts A, Wang le L, Coon M, Nguyen
-                                T, Wang L, Land SJ, Lu X, Ruden DM. Fly (Austin). 2012 Apr-Jun;6(2):80-92. <a href="https://www.ncbi.nlm.nih.gov/pubmed/22728672">PubMed</a>.</li>
-
-                              <li><a href="https://github.com/samtools/htslib">HTSlib</a>; Included in SAMtools.</li>
+                                <li><a href="http://snpeff.sourceforge.net/">SnpEff</a>: Cingolani P, Platts A, Wang le L, Coon M, Nguyen T, Wang L, Land SJ, Lu X, Ruden DM.
+                                    A program for annotating and predicting the effects of single nucleotide polymorphisms, SnpEff: SNPs in the genome of Drosophila melanogaster strain w1118; iso-2; iso-3.
+                                    Fly (Austin), 2012 Apr-Jun;6(2):80-92. <a href="https://www.ncbi.nlm.nih.gov/pubmed/22728672">PubMed</a>
+                                </li>
                             </ul>
 
                             <h3>Glossary</h3>

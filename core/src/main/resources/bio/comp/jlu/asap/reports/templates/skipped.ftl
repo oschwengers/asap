@@ -41,8 +41,8 @@
                             <h3 class="panel-title">Warning</h3>
                         </div>
                         <div class="panel-body">
-                            <p>Sorry, this step was skiped due to a failed precursor step!<br>
-                                Please, have a look at a failed step which this step depends on.
+                            <p>Sorry, this step was skiped due to unsuitable input files or a failed precursor step!<br>
+                                In case of the latter option, please, have a look at a failed precursor step.
                                 If this error occures constantly, please do not hesitate to contact us!</p>
                             <p><span class="glyphicon glyphicon-th-large" title="step"></span>: &nbsp;&nbsp;${step}</p>
                         </div>

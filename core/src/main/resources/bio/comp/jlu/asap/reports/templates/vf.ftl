@@ -57,12 +57,12 @@
                         <div class="modal-content">
                           <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <h2 class="modal-title" id="myModalLabel">ASAP virulence factors overview</h2>
+                            <h2 class="modal-title" id="myModalLabel">ASA&#179;P virulence factors overview</h2>
                           </div>
                           <div class="modal-body">
                             <p>
-                              As VF have a major impact on whether a bacterial strain is harmless or a severe pathogen ASA³P provides a detection of potential
-                              VFs. Therefore, the pipeline identifies VFs via a <code>BLASTn</code> search against the virulence factor database (<code>VFDB</code>).
+                              As VF have a major impact on whether a bacterial strain is harmless or a severe pathogen ASA&#179;P provides a detection of potential
+                              VFs. Therefore, the pipeline identifies VFs via a <code>blastn</code> search against the virulence factor database (<code>VFDB</code>).
                               Hits with a coverage of at least 80 % and a percent identity of 90 % or higher are taken into account. The corresponding
                               loci are only assigned with their highest scoring hit. </p>
 
@@ -80,11 +80,13 @@
                             <h3>Links</h3>
 
                             <ul>
-                              <li><code>Details</code> on the virulence factors of a particular genome can be accessed via click on the magnifying glass
-                                in the overview table.</li>
+                                <li><code>Details</code> on the virulence factors of a particular genome can be accessed via click on the magnifying glass in the overview table.</li>
 
-                              <li><a href="http://www.mgc.ac.cn/VFs/main.htm">VFDB</a>: Chen LH, Zheng DD, Liu B, Yang J and Jin Q, 2016. VFDB 2016: hierarchical
-                                and refined dataset for big data analysis-10 years on. Nucleic Acids Res. 44(Database issue):D694-D697. <a href="https://www.ncbi.nlm.nih.gov/pubmed/26578559">PubMed</a>.</li>
+                                <li><a href="http://www.mgc.ac.cn/VFs/main.htm">VFDB</a>: Chen LH, Zheng DD, Liu B, Yang J and Jin Q
+                                    VFDB 2016: hierarchical and refined dataset for big data analysis-10 years on.
+                                    Nucleic Acids Res., 2016, 44(Database issue):D694-D697.
+                                    <a href="https://www.ncbi.nlm.nih.gov/pubmed/26578559">PubMed</a>
+                                </li>
                             </ul>
 
                             <h3>Glossary</h3>

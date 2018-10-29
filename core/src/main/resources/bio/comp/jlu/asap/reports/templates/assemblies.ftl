@@ -57,7 +57,7 @@
                         <div class="modal-content">
                           <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <h2 class="modal-title" id="myModalLabel">ASAP assembly overview</h2>
+                            <h2 class="modal-title" id="myModalLabel">ASA&#179;P assembly overview</h2>
                           </div>
                           <div class="modal-body">
                             <p>
@@ -90,23 +90,27 @@
                             <h3>Links</h3>
 
                             <ul>
-                              <li>Assembly <code>Details</code> of a particular genome can be accessed via a click on the
-                                magnifying glass in the overview table.</li>
+                                <li>Assembly <code>Details</code> of a particular genome can be accessed via a click on the
+                                    magnifying glass in the overview table.
+                                </li>
 
-                              <li><a href="https://github.com/PacificBiosciences/Bioinformatics-Training/wiki/HGAP#overview">HGap</a>:
-                                Chin, Chen-Shan, et al. "Nonhybrid, finished microbial genome assemblies from long-read SMRT
-                                sequencing data." Nature methods 10.6 (2013): 563-569. <a href="https://www.ncbi.nlm.nih.gov/pubmed/23644548">PubMed</a>.</li>
+                                <li><a href="https://github.com/PacificBiosciences/Bioinformatics-Training/wiki/HGAP">HGap</a>: Chin, Chen-Shan, et al.
+                                    Nonhybrid, finished microbial genome assemblies from long-read SMRT sequencing data.
+                                    Nature methods, 2013, 10.6:563-569.
+                                    <a href="https://www.ncbi.nlm.nih.gov/pubmed/23644548">PubMed</a>
+                                </li>
 
-                              <li><a href="http://cab.spbu.ru/software/spades/">SPAdes</a>: Bankevich A., Nurk S., Antipov D.,
-                                Gurevich A., Dvorkin M., Kulikov A. S., Lesin V., Nikolenko S., Pham S., Prjibelski A., Pyshkin
-                                A., Sirotkin A., Vyahhi N., Tesler G., Alekseyev M. A., Pevzner P. A. "SPAdes: A New Genome
-                                Assembly Algorithm and Its Applications to Single-Cell Sequencing." Journal of Computational
-                                Biology (2012) <a href="https://www.ncbi.nlm.nih.gov/pubmed/22506599">PubMed</a>.</li>
+                                <li><a href="http://cab.spbu.ru/software/spades/">SPAdes</a>: Bankevich A., Nurk S., Antipov D., Gurevich A., Dvorkin M., Kulikov A. S., Lesin V., Nikolenko S., Pham S., Prjibelski A., Pyshkin A., Sirotkin A., Vyahhi N., Tesler G., Alekseyev M. A., Pevzner P. A.
+                                    SPAdes: A New Genome Assembly Algorithm and Its Applications to Single-Cell Sequencing.
+                                    Journal of Computational Biology, 2012
+                                    <a href="https://www.ncbi.nlm.nih.gov/pubmed/22506599">PubMed</a>
+                                </li>
 
-                              <li><a href="https://github.com/rrwick/Unicycler">Unicycler</a>:
-                                Wick RR, Judd LM, Gorrie CL, Holt KE
-                                "Unicycler: Resolving bacterial genome assemblies from short and long sequencing reads." PLOS Computational Biology 13(6) (2017): e1005595.
-                                <a href="https://www.ncbi.nlm.nih.gov/pubmed/28594827">PubMed</a></li>
+                                <li><a href="https://github.com/rrwick/Unicycler">Unicycler</a>: Wick RR, Judd LM, Gorrie CL, Holt KE
+                                    Unicycler: Resolving bacterial genome assemblies from short and long sequencing reads.
+                                    PLOS Computational Biology, 2017, 13(6):e1005595.
+                                    <a href="https://www.ncbi.nlm.nih.gov/pubmed/28594827">PubMed</a>
+                                </li>
                             </ul>
 
                             <h3>Glossary</h3>

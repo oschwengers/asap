@@ -42,7 +42,7 @@
                         </div>
                         <div class="panel-body">
                             <p>Sorry, this step failed to execute normally!<br>
-                                Please, have a look at a detailed description below.
+                                Please, have a look at a detailed description below as well as the log file ('asap.log').
                                 If this error occures constantly, please do not hesitate to contact us!</p>
                             <p><span class="glyphicon glyphicon-th-large" title="step"></span>: &nbsp;&nbsp;${step}</p>
                             <p><span class="glyphicon glyphicon-info-sign" title="error"></span>: &nbsp;&nbsp;${error!"-"}</p>

@@ -57,14 +57,15 @@
                         <div class="modal-content">
                           <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <h2 class="modal-title" id="myModalLabel">ASAP reference mapping overview</h2>
+                            <h2 class="modal-title" id="myModalLabel">ASA&#179;P reference mapping overview</h2>
                           </div>
                           <div class="modal-body">
                             <p>
                               In order to assess an isolate genome size compared to a reference genome and subsequently enable the calling of single nucleotide
-                              variants sequenced and quality clipped reads are mapped to the reference genome at the first
-                              position in a project. For Illumina and Pacific Bioscience reads ASA³P uses <code>Bowtie 2</code>                            and <code>blasr</code>, respectively. Finally, generated Sequence Alignment/Map (<code>SAM</code>)
-                              files are converted to ordered Binary Alignment/Map (<code>BAM</code>) files via <code>SAMtools</code>.</p>
+                              variants sequenced and quality clipped reads are mapped to the first reference genome as provided in the config sheet.
+                              For Illumina and PacBio reads ASA&#179;P uses <code>Bowtie 2</code> and <code>blasr</code>, respectively.
+                              For Oxford Nanopore reads ASA&#179;P uses <code>MiniMap2</code>. Finally, generated Sequence alignment/map (<code>SAM</code>)
+                              files are converted to ordered binary alignment/map (<code>BAM</code>) files via <code>SAMtools</code>.</p>
 
                             <h3>Interactive data table</h3>
 
@@ -76,21 +77,31 @@
 
                             <h3>Downloads</h3>
 
-                            <p>The table can be saved as comma separated value (<code>csv</code>) file via click on the csv
+                            <p>The table can be saved as a comma separated value (<code>csv</code>) file via a click on the csv
                               button (search and sorting are contained in the downloaded file). To download the <code>bam</code>                              file of a particular genome mapping click on bam in the data table.</p>
 
                             <h3>Links</h3>
 
                             <ul>
-                              <li><a href="http://www.htslib.org/">SAMtools</a>; Li H., Handsaker B., Wysoker A., Fennell T.,
-                                Ruan J., Homer N., Marth G., Abecasis G., Durbin R. and 1000 Genome Project Data Processing
-                                Subgroup (2009) The Sequence alignment/map (SAM) format and SAMtools. Bioinformatics, 25,
-                                2078-9. <a href="https://www.ncbi.nlm.nih.gov/pubmed/19505943">PubMed</a>.</li>
+                                <li><a href="http://www.htslib.org/">SAMtools</a>: Li H., Handsaker B., Wysoker A., Fennell T., Ruan J., Homer N., Marth G., Abecasis G., Durbin R., 1000 Genome Project Data Processing Subgroup
+                                    The Sequence alignment/map (SAM) format and SAMtools.
+                                    Bioinformatics, 2009, 25, 2078-9.
+                                    <a href="https://www.ncbi.nlm.nih.gov/pubmed/19505943">PubMed</a>
+                                </li>
 
-                              <li><a href="http://bowtie-bio.sourceforge.net/bowtie2/index.shtml">Bowtie 2</a>; Langmead B, Salzberg
-                                S. Fast gapped-read alignment with Bowtie 2. Nature Methods. 2012, 9:357-359. <a href="https://www.ncbi.nlm.nih.gov/pubmed/22388286">PubMed</a>.</li>
+                                <li><a href="http://bowtie-bio.sourceforge.net/bowtie2/index.shtml">Bowtie 2</a>: Langmead B, Salzberg S.
+                                    Fast gapped-read alignment with Bowtie 2.
+                                    Nature Methods, 2012, 9:357-359.
+                                    <a href="https://www.ncbi.nlm.nih.gov/pubmed/22388286">PubMed</a>
+                                </li>
 
-                              <li><a href="https://github.com/PacificBiosciences/blasr">blasr</a>; The PacBio® long read aligner.</li>
+                              <li><a href="https://github.com/PacificBiosciences/blasr">blasr</a>: The PacBio® long read aligner.</li>
+
+                              <li><a href="https://github.com/lh3/minimap2">Minimap2</a>: Li H.,
+                                  Minimap2: pairwise alignment for nucleotide sequences.
+                                  Bioinformatics, 2018, 34(18):3094-3100
+                                  <a href="https://www.ncbi.nlm.nih.gov/pubmed/29750242">PubMed</a>
+                              </li>
                             </ul>
 
                             <h3>Glossary</h3>

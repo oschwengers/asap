@@ -5,7 +5,7 @@
 
         <#-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
-        <meta name="description" content="ASAP results for \"${project.name}\" project">
+        <meta name="description" content="ASA³P results for \"${project.name}\" project">
         <meta name="author" content="Oliver Schwengers">
 
         <title>ASA&#179;P: ${project.name}</title>

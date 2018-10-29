@@ -119,7 +119,7 @@
                         <div class="modal-content">
                           <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <h2 class="modal-title" id="myModalLabel">ASAP antibiotic resistances detail</h2>
+                            <h2 class="modal-title" id="myModalLabel">ASA&#179;P antibiotic resistances detail</h2>
                           </div>
                           <div class="modal-body">
                             <h3>Interactive data tables</h3>
@@ -128,9 +128,9 @@
                               Use the <code>Search</code> function (top right of the table) to display only genomes that
                               contain the search term in any of their table fields. The <code>number of entries</code> displayed
                               per page can be chosen on the top left of the table. To display <code>additional model information</code>                              mouse over a model. The 'Seq Identity' is categorised into four groups based on value. Entries
-                              below 80% sequence identity are highlighted in red, blow 95% in yellow, blow 98% in light green
-                              and above in green. To display the <code>aligned sequence</code> mouse over the bit score value.
-                              Mouse over on underlined term to display further information on it.</p>
+                              below 80 % sequence identity are highlighted in red, below 95 % in yellow, below and above 98 % in light green
+                              and green, respectively. To display the <code>aligned sequences</code> mouse over the bit score values.
+                              Mouse over on underlined terms to display further information on it.</p>
 
                             <h5>ABR Genes</h5>
 
@@ -149,11 +149,11 @@
 
                             <h3>Links</h3>
 
-                            <p>Click on a model redirects to this <code>model reference</code> in the CARD database.</p>
+                            <p>Click on a model to redirect to the related <code>model reference</code> in the CARD database.</p>
 
                             <h3>Downloads</h3>
 
-                            <p>The table can be saved as comma separated value (<code>csv</code>) file via click on the csv
+                            <p>The table can be saved as a comma separated value (<code>csv</code>) file via a click on the csv
                               button (search and sorting are contained in the downloaded file).</p>
 
                             <h3>Glossary</h3>

@@ -57,16 +57,16 @@
                         <div class="modal-content">
                           <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <h2 class="modal-title" id="myModalLabel">ASAP scaffolds overview</h2>
+                            <h2 class="modal-title" id="myModalLabel">ASA&#179;P scaffolds overview</h2>
                           </div>
                           <div class="modal-body">
                             <p>
-                              Orders and orientations of assembled contigs are somewhat arbitrary. During a scaffolding step ASA³P tries to map those contigs
-                              onto a set of closely related (user provided) reference genomes in order to rearrange them. With this additional information
+                              Orders and orientations of assembled contigs are somewhat arbitrary. During a scaffolding step ASA&#179;P tries to map those contigs
+                              onto a set of closely related (user provided) reference genomes in order to order and rearrange them. With this additional information
                               scaffolders can fix the order and orientation and merge multiple contigs into scaffolds. As a modern multi-reference scaffolder
-                              ASA³P internally takes advantage of the tool <code>MeDuSa</code>. As joined contigs pose an artificial bridge an artificial
+                              ASA&#179;P internally takes advantage of the tool <code>MeDuSa</code>. As joined contigs pose an artificial bridge an artificial
                               six frame stop codon sequence is used to mark such positions 'NNNNNNNNNNCTAGCTAGCTAGCNNNNNNNNNN'. By using this sequence
-                              to link all scaffolds and contigs ASA³P also provides <code>pseudo genomes</code>. Finally, raw contigs as well as oriented
+                              to link all scaffolds and contigs ASA&#179;P also provides <code>pseudo genomes</code>. Finally, raw contigs as well as oriented
                               and linked scaffolds are mapped onto all provided reference genomes in order to compare the results of this step.</p>
 
                             <h3>Interactive data table</h3>
@@ -77,21 +77,26 @@
 
                             <h3>Downloads</h3>
 
-                            <p>The table can be saved as comma separated value (<code>csv</code>) file via click on the csv button (search and sorting are
+                            <p>The table can be saved as a comma separated value (<code>csv</code>) file via a click on the csv button (search and sorting are
                               contained in the downloaded file). To download a <code>fasta</code> file containing the Scaffolds or the generated <code>Pseudo genome</code>  click on the according name in the data table.</p>
 
                             <h3>Links</h3>
 
                             <ul>
-                              <li><code>Details</code> on the contig layout of a particular genome can be accessed via click on the magnifying glass in the
-                                overview table.</li>
+                                <li><code>Details</code> on the contig layout of a particular genome can be accessed via click on the magnifying glass in the
+                                    overview table.</li>
 
-                              <li><a href="http://combo.dbe.unifi.it/medusa">MeDuSa</a>: E Bosi, B Donati, M Galardini, S Brunetti, MF Sagot, P Lió, P Crescenzi,
-                                R Fani, and M Fondi. MeDuSa: a multi-draft based scaffolder. Bioinformatics (2015): btv171. <a href="https://www.ncbi.nlm.nih.gov/pubmed/25810435">PubMed</a>.</li>
+                                <li><a href="http://combo.dbe.unifi.it/medusa">MeDuSa</a>: E Bosi, B Donati, M Galardini, S Brunetti, MF Sagot, P Lió, P Crescenzi, R Fani, and M Fondi.
+                                    MeDuSa: a multi-draft based scaffolder.
+                                    Bioinformatics, 2015, btv171.
+                                    <a href="https://www.ncbi.nlm.nih.gov/pubmed/25810435">PubMed</a>
+                                </li>
 
-                              <li><a href="http://mummer.sourceforge.net/">MUMmer/Nucmer</a>: Open source MUMmer 3.0 is described in "Versatile and open
-                                software for comparing large genomes." S. Kurtz, A. Phillippy, A.L. Delcher, M. Smoot, M. Shumway, C. Antonescu, and
-                                S.L. Salzberg, Genome Biology (2004), 5:R12. <a href="https://www.ncbi.nlm.nih.gov/pubmed/14759262">PubMed</a>.</li>
+                                <li><a href="http://mummer.sourceforge.net/">MUMmer/Nucmer</a>: S. Kurtz, A. Phillippy, A.L. Delcher, M. Smoot, M. Shumway, C. Antonescu, and S.L. Salzberg
+                                    Versatile and open software for comparing large genomes.
+                                    Genome Biology, 2004, 5:R12.
+                                    <a href="https://www.ncbi.nlm.nih.gov/pubmed/14759262">PubMed</a>
+                                </li>
                             </ul>
 
                             <h3>Glossary</h3>

@@ -166,16 +166,21 @@
                 <li><code>Details</code> on the quality control of a particular genome can be accessed via click on the magnifying
                   glass in the overview table.</li>
 
-                <li><a href="https://www.bioinformatics.babraham.ac.uk/projects/fastqc/">FastQC</a>; Simon Andrews (2010).
-                  FastQC: A quality control tool for high throughput sequence data.</li>
+                  <li><a href="https://www.bioinformatics.babraham.ac.uk/projects/fastqc/">FastQC</a>: Simon Andrews
+                      FastQC: A quality control tool for high throughput sequence data.
+                      2010
+                  </li>
 
-                <li><a href="http://www.bioinformatics.babraham.ac.uk/projects/fastq_screen/">FastQ Screen</a>; Steven Wingett
-                  (2011). FastQ Screen allows you to screen a library of sequences in FastQ format against a set of sequence
-                  databases so you can see if the composition of the library matches with what you expect.</li>
+                  <li><a href="http://www.bioinformatics.babraham.ac.uk/projects/fastq_screen/">FastQ Screen</a>: Steven Wingett
+                      FastQ Screen allows you to screen a library of sequences in FastQ format against a set of sequence databases so you can see if the composition of the library matches with what you expect.
+                      2011
+                  </li>
 
-                <li><a href="http://www.usadellab.org/cms/?page=trimmomatic">Trimmomatic</a>: Bolger, A. M., Lohse, M., &amp;
-                  Usadel, B. (2014). Trimmomatic: A flexible trimmer for Illumina Sequence Data. Bioinformatics, btu170.
-                  <a href="https://www.ncbi.nlm.nih.gov/pubmed/24695404">PubMed</a>.</li>
+                  <li><a href="http://www.usadellab.org/cms/?page=trimmomatic">Trimmomatic</a>: Bolger, A. M., Lohse, M., &amp; Usadel, B.
+                      Trimmomatic: A flexible trimmer for Illumina Sequence Data.
+                      Bioinformatics, 2014, btu170.
+                      <a href="https://www.ncbi.nlm.nih.gov/pubmed/24695404">PubMed</a>
+                  </li>  
               </ul>
 
               <h3 id="glossary-1">Glossary</h3>
@@ -312,14 +317,23 @@
                 <li><code>Details</code> on the assembly of a particular genome can be accessed via click on the magnifying
                   glass in the overview table.</li>
 
-                <li><a href="https://github.com/PacificBiosciences/Bioinformatics-Training/wiki/HGAP#overview">HGap3</a>:
-                  Chin, Chen-Shan, et al. "Nonhybrid, finished microbial genome assemblies from long-read SMRT sequencing
-                  data." Nature methods 10.6 (2013): 563-569. <a href="https://www.ncbi.nlm.nih.gov/pubmed/23644548">PubMed</a>.</li>
+                  <li><a href="https://github.com/PacificBiosciences/Bioinformatics-Training/wiki/HGAP">HGap</a>: Chin, Chen-Shan, et al.
+                      Nonhybrid, finished microbial genome assemblies from long-read SMRT sequencing data.
+                      Nature methods, 2013, 10.6:563-569.
+                      <a href="https://www.ncbi.nlm.nih.gov/pubmed/23644548">PubMed</a>
+                  </li>
 
-                <li><a href="http://cab.spbu.ru/software/spades/">SPAdes</a>: Bankevich A., Nurk S., Antipov D., Gurevich
-                  A., Dvorkin M., Kulikov A. S., Lesin V., Nikolenko S., Pham S., Prjibelski A., Pyshkin A., Sirotkin
-                  A., Vyahhi N., Tesler G., Alekseyev M. A., Pevzner P. A. SPAdes: A New Genome Assembly Algorithm and
-                  Its Applications to Single-Cell Sequencing. Journal of Computational Biology, 2012. <a href="https://www.ncbi.nlm.nih.gov/pubmed/22506599">PubMed</a>.</li>
+                  <li><a href="http://cab.spbu.ru/software/spades/">SPAdes</a>: Bankevich A., Nurk S., Antipov D., Gurevich A., Dvorkin M., Kulikov A. S., Lesin V., Nikolenko S., Pham S., Prjibelski A., Pyshkin A., Sirotkin A., Vyahhi N., Tesler G., Alekseyev M. A., Pevzner P. A.
+                      SPAdes: A New Genome Assembly Algorithm and Its Applications to Single-Cell Sequencing.
+                      Journal of Computational Biology, 2012
+                      <a href="https://www.ncbi.nlm.nih.gov/pubmed/22506599">PubMed</a>
+                  </li>
+
+                  <li><a href="https://github.com/rrwick/Unicycler">Unicycler</a>: Wick RR, Judd LM, Gorrie CL, Holt KE
+                      Unicycler: Resolving bacterial genome assemblies from short and long sequencing reads.
+                      PLOS Computational Biology, 2017, 13(6):e1005595.
+                      <a href="https://www.ncbi.nlm.nih.gov/pubmed/28594827">PubMed</a>
+                  </li>
               </ul>
 
               <h3 id="glossary-3">Glossary</h3>
@@ -441,14 +455,17 @@
                 <li><code>Details</code> on the contig layout of a particular genome can be accessed via click on the magnifying
                   glass in the overview table.</li>
 
-                <li><a href="http://combo.dbe.unifi.it/medusa">MeDuSa</a>: E Bosi, B Donati, M Galardini, S Brunetti, MF
-                  Sagot, P LiÃ³, P Crescenzi, R Fani, and M Fondi. MeDuSa: a multi-draft based scaffolder. Bioinformatics
-                  (2015): btv171. <a href="https://www.ncbi.nlm.nih.gov/pubmed/25810435">PubMed</a>.</li>
+                  <li><a href="http://combo.dbe.unifi.it/medusa">MeDuSa</a>: E Bosi, B Donati, M Galardini, S Brunetti, MF Sagot, P Lió, P Crescenzi, R Fani, and M Fondi.
+                      MeDuSa: a multi-draft based scaffolder.
+                      Bioinformatics, 2015, btv171.
+                      <a href="https://www.ncbi.nlm.nih.gov/pubmed/25810435">PubMed</a>
+                  </li>
 
-                <li><a href="http://mummer.sourceforge.net/">MUMmer/Nucmer</a>: Open source MUMmer 3.0 is described in "Versatile
-                  and open software for comparing large genomes." S. Kurtz, A. Phillippy, A.L. Delcher, M. Smoot, M.
-                  Shumway, C. Antonescu, and S.L. Salzberg, Genome Biology (2004), 5:R12.
-                  <a href="https://www.ncbi.nlm.nih.gov/pubmed/14759262">PubMed</a>.</li>
+                  <li><a href="http://mummer.sourceforge.net/">MUMmer/Nucmer</a>: S. Kurtz, A. Phillippy, A.L. Delcher, M. Smoot, M. Shumway, C. Antonescu, and S.L. Salzberg
+                      Versatile and open software for comparing large genomes.
+                      Genome Biology, 2004, 5:R12.
+                      <a href="https://www.ncbi.nlm.nih.gov/pubmed/14759262">PubMed</a>
+                  </li>
               </ul>
 
               <h3 id="glossary-5">Glossary</h3>
@@ -548,28 +565,39 @@
               <h3 id="links-4">Links</h3>
 
               <ul>
-                <li><a href="http://www.vicbioinformatics.com/software.barrnap.shtml">Barrnap</a>; Barrnap predicts the location
-                  of ribosomal RNA genes in genomes. It supports bacteria (5S,23S,16S), archaea (5S,5.8S,23S,16S), mitochondria
-                  (12S,16S) and eukaryotes (5S,5.8S,28S,18S). <a href="https://github.com/tseemann/barrnap">GitHub</a>.</li>
+                  <li><a href="http://www.vicbioinformatics.com/software.barrnap.shtml">Barrnap</a>: Barrnap predicts
+                      the location of ribosomal RNA genes in genomes. It supports bacteria (5S,23S,16S), archaea
+                      (5S,5.8S,23S,16S), mitochondria (12S,16S) and eukaryotes (5S,5.8S,28S,18S).
+                      <a href="https://github.com/tseemann/barrnap">GitHub</a>
+                  </li>
 
-                <li><code>Details</code> on the annotation of a particular genome can be accessed via click on the magnifying
-                  glass in the overview table.</li>
+                  <li><code>Details</code> on the annotation of a particular genome can be accessed via a click on
+                      the magnifying glass in the overview table.
+                  </li>
 
-                <li><a href="http://www.vicbioinformatics.com/software.prokka.shtml">Prokka</a>: Seemann T. Prokka: rapid
-                  prokaryotic genome annotation. Bioinformatics. 2014 Jul 15;30(14):2068-9. PMID:24642063
-                  <a href="https://www.ncbi.nlm.nih.gov/pubmed/24642063">PubMed</a>.</li>
+                  <li><a href="http://www.vicbioinformatics.com/software.prokka.shtml">Prokka</a>: Seemann T.
+                      Prokka: rapid prokaryotic genome annotation.
+                      Bioinformatics, 2014, 30(14):2068-9. PMID:24642063
+                      <a href="https://www.ncbi.nlm.nih.gov/pubmed/24642063">PubMed</a>
+                  </li>
 
-                <li><a href="https://www.ncbi.nlm.nih.gov/refseq/">RefSeq</a>: O'Leary, Nuala A., et al. "Reference sequence
-                  (RefSeq) database at NCBI: current status, taxonomic expansion, and functional annotation." Nucleic
-                  acids research (2015): gkv1189. <a href="https://www.ncbi.nlm.nih.gov/pubmed/26553804">PubMed</a>.</li>
+                  <li><a href="https://www.ncbi.nlm.nih.gov/refseq/">RefSeq</a>: O'Leary, Nuala A., et al.
+                      Reference sequence (RefSeq) database at NCBI: current status, taxonomic expansion, and functional annotation.
+                      Nucleic acids research, 2015, gkv1189.
+                      <a href="https://www.ncbi.nlm.nih.gov/pubmed/26553804">PubMed</a>
+                  </li>
 
-                <li><a href="https://card.mcmaster.ca/">CARD</a>; Jia et al. 2017. CARD 2017: expansion and model-centric
-                  curation of the Comprehensive Antibiotic Resistance Database. Nucleic Acids Research, 45, D566-573.
-                  <a href="https://www.ncbi.nlm.nih.gov/pubmed/27789705">PubMed</a>.</li>
+                  <li><a href="https://card.mcmaster.ca/">CARD</a>: Jia et al.
+                      CARD 2017: expansion and model-centric curation of the Comprehensive Antibiotic Resistance Database.
+                      Nucleic Acids Research, 2017, 45:D566-573.
+                      <a href="https://www.ncbi.nlm.nih.gov/pubmed/27789705">PubMed</a>
+                  </li>
 
-                <li><a href="http://www.mgc.ac.cn/VFs/main.htm">VFDB</a>: Chen LH, Zheng DD, Liu B, Yang J and Jin Q, 2016.
-                  VFDB 2016: hierarchical and refined dataset for big data analysis-10 years on. Nucleic Acids Res. 44(Database
-                  issue):D694-D697. <a href="https://www.ncbi.nlm.nih.gov/pubmed/26578559">PubMed</a>.</li>
+                  <li><a href="http://www.mgc.ac.cn/VFs/main.htm">VFDB</a>: Chen LH, Zheng DD, Liu B, Yang J and Jin Q
+                      VFDB 2016: hierarchical and refined dataset for big data analysis-10 years on.
+                      Nucleic Acids Res., 2016, 44(Database issue):D694-D697. 
+                      <a href="https://www.ncbi.nlm.nih.gov/pubmed/26578559">PubMed</a>
+                  </li>
               </ul>
 
               <h3 id="glossary-7">Glossary</h3>
@@ -693,34 +721,41 @@
               <h3 id="links-6">Links</h3>
 
               <ul>
-                <li><a href="https://www.ncbi.nlm.nih.gov/pubmed/17220447">ANI</a>: Goris, Johan, et al. "DNAâ€“DNA hybridization
-                  values and their relationship to whole-genome sequence similarities." International journal of systematic
-                  and evolutionary microbiology 57.1 (2007): 81-91. <a href="https://www.ncbi.nlm.nih.gov/pubmed/17220447">PubMed</a>.</li>
+                  <li><code>Details</code> on the taxonomy of a particular genome can be accessed via click on the magnifying glass in the overview table.</li>
 
-                <li><code>Details</code> on the taxonomy of a particular genome can be accessed via click on the magnifying
-                  glass in the overview table.</li>
+                  <li><code>kmer</code> column value redirects to kmer taxonomic classification in the ncbi Taxonomy Browser.</li>
 
-                <li><code>kmer</code> column value redirects to kmer taxonomic classification in the ncbi Taxonomy Browser.
-                </li>
+                  <li><code>16S rRNA</code> column value redirects to 16S rRNA taxonomic classification in the ncbi Taxonomy Browser.</li>
 
-                <li><code>16S rRNA</code> column value redirects to 16S rRNA taxonomic classification in the ncbi Taxonomy
-                  Browser.</li>
+                  <li><a href="https://www.ncbi.nlm.nih.gov/pubmed/17220447">ANI</a>: Goris, Johan, et al.
+                      DNA–DNA hybridization values and their relationship to whole-genome sequence similarities.
+                      International journal of systematic and evolutionary microbiology, 2007, 57.1:81-91.
+                      <a href="https://www.ncbi.nlm.nih.gov/pubmed/17220447">PubMed</a>
+                  </li>
 
-                <li><code>ANI</code> Goris, Johan, et al. "DNAâ€“DNA hybridization values and their relationship to whole-genome
-                  sequence similarities." International journal of systematic and evolutionary microbiology 57.1 (2007):
-                  81-91. <a href="https://www.ncbi.nlm.nih.gov/pubmed/17220447">PubMed</a>.</li>
+                  <li><a href="https://ccb.jhu.edu/software/kraken/">Kraken</a>: Wood DE, Salzberg SL
+                      Kraken: ultrafast metagenomic sequence classification using exact alignments.
+                      Genome Biology, 2014, 15:R46.
+                      <a href="https://www.ncbi.nlm.nih.gov/pubmed/24580807">PubMed</a>
+                  </li>
 
-                <li><a href="https://ccb.jhu.edu/software/kraken/">Kraken</a>: Wood DE, Salzberg SL: Kraken: ultrafast metagenomic
-                  sequence classification using exact alignments. Genome Biology 2014, 15:R46.
-                  <a href="https://www.ncbi.nlm.nih.gov/pubmed/24580807">PubMed</a>.</li>
+                  <li><a href="http://eddylab.org/infernal/">Infernal</a>: E. P. Nawrocki and S. R. Eddy
+                      Infernal 1.1: 100-fold faster RNA homology searches
+                      Bioinformatics, 2013, 29:2933-2935
+                      <a href="https://www.ncbi.nlm.nih.gov/pubmed/24008419">PubMed</a>
+                  </li>
 
-                <li><a href="http://eddylab.org/infernal/">Infernal</a>: E. P. Nawrocki and S. R. Eddy, Infernal 1.1: 100-fold
-                  faster RNA homology searches, Bioinformatics 29:2933-2935 (2013). <a href="https://www.ncbi.nlm.nih.gov/pubmed/24008419">PubMed</a>.</li>
+                  <li><a href="http://mummer.sourceforge.net/">MUMmer/Nucmer</a>: S. Kurtz, A. Phillippy, A.L. Delcher, M. Smoot, M. Shumway, C. Antonescu, and S.L. Salzberg
+                      Versatile and open software for comparing large genomes.
+                      Genome Biology, 2004, 5:R12.
+                      <a href="https://www.ncbi.nlm.nih.gov/pubmed/14759262">PubMed</a>
+                  </li>
 
-                <li><a href="http://mummer.sourceforge.net/">MUMmer/Nucmer</a>: Open source MUMmer 3.0 is described in "Versatile
-                  and open software for comparing large genomes." S. Kurtz, A. Phillippy, A.L. Delcher, M. Smoot, M.
-                  Shumway, C. Antonescu, and S.L. Salzberg, Genome Biology (2004), 5:R12.
-                  <a href="https://www.ncbi.nlm.nih.gov/pubmed/14759262">PubMed</a>.</li>
+                  <li><a href="https://rdp.cme.msu.edu/">RDP</a>: Cole, J. R., Q. Wang, J. A. Fish, B. Chai, D. M. McGarrell, Y. Sun, C. T. Brown, A. Porras-Alfaro, C. R. Kuske, and J. M. Tiedje.
+                      Ribosomal Database Project: data and tools for high throughput rRNA analysis
+                      Nucl. Acids Res., 2014, 42(Database issue):D633-D642; doi: 10.1093/nar/gkt1244.
+                      <a href="https://www.ncbi.nlm.nih.gov/pubmed/24288368">PubMed</a>
+                  </li>
               </ul>
 
               <h3 id="glossary-9">Glossary</h3>
@@ -1073,23 +1108,25 @@
                 <li><code>Details</code> on the SNPs of a particular genome can be accessed via click on the magnifying glass
                   in the overview table.</li>
 
-                <li><a href="http://www.htslib.org/">SAMtools</a>; Li H., Handsaker B., Wysoker A., Fennell T., Ruan J.,
-                  Homer N., Marth G., Abecasis G., Durbin R. and 1000 Genome Project Data Processing Subgroup (2009)
-                  The Sequence alignment/map (SAM) format and SAMtools. Bioinformatics, 25, 2078-9.
-                  <a href="https://www.ncbi.nlm.nih.gov/pubmed/19505943">PubMed</a>.</li>
+                <li><a href="http://www.htslib.org/">SAMtools</a>: Li H., Handsaker B., Wysoker A., Fennell T., Ruan J., Homer N., Marth G., Abecasis G., Durbin R., 1000 Genome Project Data Processing Subgroup
+                    The Sequence alignment/map (SAM) format and SAMtools.
+                    Bioinformatics, 2009, 25, 2078-9.
+                    <a href="https://www.ncbi.nlm.nih.gov/pubmed/19505943">PubMed</a>
+                </li>
 
-                <li><a href="https://github.com/samtools/bcftools">BCFtools</a>; Included in SAMtools.</li>
+                <li><a href="https://github.com/samtools/bcftools">BCFtools</a>: Included in SAMtools.
+                </li>
 
-                <li><a href="http://snpeff.sourceforge.net/SnpSift.html">SnpSift</a>; "Using Drosophila melanogaster as a
-                  model for genotoxic chemical mutational studies with a new program, SnpSift", Cingolani, P., et. al.,
-                  Frontiers in Genetics, 3, 2012. <a href="https://www.ncbi.nlm.nih.gov/pubmed/22435069">PubMed</a>.</li>
+                <li><a href="http://snpeff.sourceforge.net/SnpSift.html">SnpSift</a>: Cingolani, P., et. al.
+                    Using Drosophila melanogaster as a model for genotoxic chemical mutational studies with a new program, SnpSift
+                    Frontiers in Genetics, 2012, 3
+                    <a href="https://www.ncbi.nlm.nih.gov/pubmed/22435069">PubMed</a>
+                </li>
 
-                <li><a href="http://snpeff.sourceforge.net/#">SnpEff</a>; "A program for annotating and predicting the effects
-                  of single nucleotide polymorphisms, SnpEff: SNPs in the genome of Drosophila melanogaster strain w1118;
-                  iso-2; iso-3.", Cingolani P, Platts A, Wang le L, Coon M, Nguyen T, Wang L, Land SJ, Lu X, Ruden DM.
-                  Fly (Austin). 2012 Apr-Jun;6(2):80-92. <a href="https://www.ncbi.nlm.nih.gov/pubmed/22728672">PubMed</a>.</li>
-
-                <li><a href="https://github.com/samtools/htslib">HTSlib</a>; Included in SAMtools.</li>
+                <li><a href="http://snpeff.sourceforge.net/">SnpEff</a>: Cingolani P, Platts A, Wang le L, Coon M, Nguyen T, Wang L, Land SJ, Lu X, Ruden DM.
+                    A program for annotating and predicting the effects of single nucleotide polymorphisms, SnpEff: SNPs in the genome of Drosophila melanogaster strain w1118; iso-2; iso-3.
+                    Fly (Austin), 2012 Apr-Jun;6(2):80-92. <a href="https://www.ncbi.nlm.nih.gov/pubmed/22728672">PubMed</a>
+                </li>
               </ul>
 
               <h3 id="glossary-15">Glossary</h3>
@@ -1305,10 +1342,10 @@
                 <li><code>Details</code> on the core and pan genome distribution of a particular genome can be accessed via
                   click on the magnifying glass in the overview table.</li>
 
-                <li><a href="https://sanger-pathogens.github.io/Roary/">Roary</a>; "Roary: Rapid large-scale prokaryote pan
-                  genome analysis", Andrew J. Page, Carla A. Cummins, Martin Hunt, Vanessa K. Wong, Sandra Reuter, Matthew
-                  T. G. Holden, Maria Fookes, Daniel Falush, Jacqueline A. Keane, Julian Parkhill, Bioinformatics, (2015).
-                  <a href="https://www.ncbi.nlm.nih.gov/pubmed/26198102">PubMed</a>.</li>
+                <li><a href="https://sanger-pathogens.github.io/Roary/">Roary</a>: Andrew J. Page, Carla A. Cummins, Martin Hunt, Vanessa K. Wong, Sandra Reuter, Matthew T. G. Holden, Maria Fookes, Daniel Falush, Jacqueline A. Keane, Julian Parkhill
+                    Roary: Rapid large-scale prokaryote pan genome analysis
+                    Bioinformatics, 2015<a href="https://www.ncbi.nlm.nih.gov/pubmed/26198102">PubMed</a>
+                </li>
               </ul>
 
               <h3 id="glossary-17">Glossary</h3>
@@ -1383,7 +1420,7 @@
                 </li>
               </ul>
 
-              <h1 id="asaptaxonomyoverview">ASAP taxonomy overview</h1>
+              <h1 id="asaptaxonomyoverview">ASA&#179;P taxonomy overview</h1>
 
               <p>For the taxonomic classification the tools <code>Kraken</code> and <code>Infernal</code> together with
                 an own implementation of <code>ANI</code> using <code>Nucmer</code> are used. Kraken and Infernal are
@@ -1416,35 +1453,41 @@
               <h3 id="links-13">Links</h3>
 
               <ul>
-                <li><a href="https://www.ncbi.nlm.nih.gov/pubmed/17220447">ANI</a>: Goris, Johan, et al. "DNAâ€“DNA hybridization
-                  values and their relationship to whole-genome sequence similarities." International journal of systematic
-                  and evolutionary microbiology 57.1 (2007): 81-91. <a href="https://www.ncbi.nlm.nih.gov/pubmed/17220447">PubMed</a>.</li>
+                <li><code>Details</code> on the taxonomy of a particular genome can be accessed via click on the magnifying glass in the overview table.</li>
 
-                <li><code>Details</code> on the taxonomy of a particular genome can be accessed via click on the magnifying
-                  glass in the overview table.</li>
+                <li><code>kmer</code> column value redirects to kmer taxonomic classification in the ncbi Taxonomy Browser.</li>
 
-                <li><code>kmer</code> column value redirects to kmer taxonomic classification in the ncbi Taxonomy Browser.
+                <li><code>16S rRNA</code> column value redirects to 16S rRNA taxonomic classification in the ncbi Taxonomy Browser.</li>
+
+                <li><a href="https://www.ncbi.nlm.nih.gov/pubmed/17220447">ANI</a>: Goris, Johan, et al.
+                    DNA–DNA hybridization values and their relationship to whole-genome sequence similarities.
+                    International journal of systematic and evolutionary microbiology, 2007, 57.1:81-91.
+                    <a href="https://www.ncbi.nlm.nih.gov/pubmed/17220447">PubMed</a>
                 </li>
 
-                <li><code>16S rRNA</code> column value redirects to 16S rRNA taxonomic classification in the ncbi Taxonomy
-                  Browser.</li>
+                <li><a href="https://ccb.jhu.edu/software/kraken/">Kraken</a>: Wood DE, Salzberg SL
+                    Kraken: ultrafast metagenomic sequence classification using exact alignments.
+                    Genome Biology, 2014, 15:R46.
+                    <a href="https://www.ncbi.nlm.nih.gov/pubmed/24580807">PubMed</a>
+                </li>
 
-                <li><code>ANI</code> Goris, Johan, et al. "DNAâ€“DNA hybridization values and their relationship to whole-genome
-                  sequence similarities." International journal of systematic and evolutionary microbiology 57.1 (2007):
-                  81-91. <a href="https://www.ncbi.nlm.nih.gov/pubmed/17220447">PubMed</a>.</li>
+                <li><a href="http://eddylab.org/infernal/">Infernal</a>: E. P. Nawrocki and S. R. Eddy
+                    Infernal 1.1: 100-fold faster RNA homology searches
+                    Bioinformatics, 2013, 29:2933-2935
+                    <a href="https://www.ncbi.nlm.nih.gov/pubmed/24008419">PubMed</a>
+                </li>
 
-                <li><a href="https://ccb.jhu.edu/software/kraken/">Kraken</a>: Wood DE, Salzberg SL: Kraken: ultrafast metagenomic
-                  sequence classification using exact alignments. Genome Biology 2014, 15:R46.
-                  <a href="https://www.ncbi.nlm.nih.gov/pubmed/24580807">PubMed</a>.</li>
+                <li><a href="http://mummer.sourceforge.net/">MUMmer/Nucmer</a>: S. Kurtz, A. Phillippy, A.L. Delcher, M. Smoot, M. Shumway, C. Antonescu, and S.L. Salzberg
+                    Versatile and open software for comparing large genomes.
+                    Genome Biology, 2004, 5:R12.
+                    <a href="https://www.ncbi.nlm.nih.gov/pubmed/14759262">PubMed</a>
+                </li>
 
-                <li><a href="http://eddylab.org/infernal/">Infernal</a>: E. P. Nawrocki and S. R. Eddy, Infernal 1.1: 100-fold
-                  faster RNA homology searches, Bioinformatics 29:2933-2935 (2013). <a href="https://www.ncbi.nlm.nih.gov/pubmed/24008419">PubMed</a>.</li>
-
-                <li><a href="http://mummer.sourceforge.net/">MUMmer/Nucmer</a>: Open source MUMmer 3.0 is described in "Versatile
-                  and open software for comparing large genomes." S. Kurtz, A. Phillippy, A.L. Delcher, M. Smoot, M.
-                  Shumway, C. Antonescu, and S.L. Salzberg, Genome Biology (2004), 5:R12.
-                  <a href="https://www.ncbi.nlm.nih.gov/pubmed/14759262">PubMed</a>.</li>
-              </ul>
+                <li><a href="https://rdp.cme.msu.edu/">RDP</a>: Cole, J. R., Q. Wang, J. A. Fish, B. Chai, D. M. McGarrell, Y. Sun, C. T. Brown, A. Porras-Alfaro, C. R. Kuske, and J. M. Tiedje.
+                    Ribosomal Database Project: data and tools for high throughput rRNA analysis
+                    Nucl. Acids Res., 2014, 42(Database issue):D633-D642; doi: 10.1093/nar/gkt1244.
+                    <a href="https://www.ncbi.nlm.nih.gov/pubmed/24288368">PubMed</a>
+                </li>
 
               <h3 id="glossary-19">Glossary</h3>
 
@@ -1494,9 +1537,11 @@
               <h3 id="links-14">Links</h3>
 
               <ul>
-                <li><a href="http://www.microbesonline.org/fasttree/">FastTreeMP</a>; Price, M.N., Dehal, P.S., and Arkin,
-                  A.P. (2010) FastTree 2 -- Approximately Maximum-Likelihood Trees for Large Alignments. PLoS ONE, 5(3):e9490.
-                  doi:10.1371/journal.pone.0009490. <a href="https://www.ncbi.nlm.nih.gov/pubmed/20224823">PubMed</a>.</li>
+                <li><a href="http://www.microbesonline.org/fasttree/">FastTreeMP</a>: Price, M.N., Dehal, P.S., and Arkin, A.P. 
+                  FastTree 2 -- Approximately Maximum-Likelihood Trees for Large Alignments. 
+                  PLoS ONE, 2010, 5(3):e9490., doi:10.1371/journal.pone.0009490. 
+                  <a href="https://www.ncbi.nlm.nih.gov/pubmed/20224823">PubMed</a>
+                </li>
 
                 <li><a href="http://phylocanvas.org/">Phylocanvas</a>; Centre for Genomic Pathogen Surveillance (2016 ).
                   Interactive tree visualisation for the web.</li>

@@ -57,18 +57,19 @@
                         <div class="modal-content">
                           <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <h2 class="modal-title" id="myModalLabel">ASAP multi locus sequence typing overview</h2>
+                            <h2 class="modal-title" id="myModalLabel">ASA&#179;P multi locus sequence typing overview</h2>
                           </div>
                           <div class="modal-body">
                             <p>
                               <code>MLST</code> is a typing method for closely related bacterial strains within a species. Therefore, genomes are blasted
                               against public databases containing 5 to 7 thoroughly selected loci for each typed organism. Each combination
-                              of alleles determines a unique sequence type. ASA³P uses a proprietary implementation based on <code>BLASTn</code>                  and the public database <code>PubMLST</code>. If a genome contains exactly one reference loci set the classification
+                              of alleles determines a unique sequence type. ASA&#179;P uses a proprietary implementation based on <code>BLASTn</code>
+                              and the public database <code>PubMLST</code>. If a genome contains exactly one reference loci set the classification
                               was successful. Otherwise, the most similar reference is shown in case there were sufficient matches.</p>
 
                             <h3>Interactive donut chart</h3>
 
-                            <p>The distribution of the different Sequence Types, Clonal Clusters and Lineages are displayed.</p>
+                            <p>The distribution of the different sequence types, clonal clusters and lineages are displayed.</p>
 
                             <h3>Interactive data table</h3>
 
@@ -78,14 +79,17 @@
 
                             <h3>Downloads</h3>
 
-                            <p>The table can be saved as comma separated value (<code>csv</code>) file via click on the csv button (search
+                            <p>The table can be saved as a comma separated value (<code>csv</code>) file via a click on the csv button (search
                               and sorting are contained in the downloaded file).</p>
 
                             <h3>Links</h3>
 
                             <ul>
-                              <li><a href="https://pubmlst.org/general.shtml">MLST</a>; R. Urwin &amp; M.C. Maiden, 2003, Multi-locus sequence
-                                typing: a tool for global epidemiology. Trends Microbiol., 11, 479-487. <a href="https://www.ncbi.nlm.nih.gov/pubmed/14557031">PubMed</a>.</li>
+                              <li><a href="https://pubmlst.org/general.shtml">MLST</a>: R. Urwin &amp; M.C. Maiden
+                                  Multi-locus sequence typing: a tool for global epidemiology.
+                                  Trends Microbiol., 2003, 11, 479-487.
+                                  <a href="https://www.ncbi.nlm.nih.gov/pubmed/14557031">PubMed</a>
+                              </li>
 
                               <li><a href="https://pubmlst.org/">PubMLST</a>; Database.</li>
                             </ul>

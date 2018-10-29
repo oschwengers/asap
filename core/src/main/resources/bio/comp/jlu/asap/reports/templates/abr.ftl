@@ -71,14 +71,13 @@
                         <div class="modal-content">
                           <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <h2 class="modal-title" id="myModalLabel">ASAP antibiotic resistances overview</h2>
+                            <h2 class="modal-title" id="myModalLabel">ASA&#179;P antibiotic resistances overview</h2>
                           </div>
                           <div class="modal-body">
                             <p>
-                              There are many different molecular mechanisms for ABR posing them as a major bioinformatic challenge. Addressing this issue ASA³P
+                              There are many different molecular mechanisms for ABR posing them as a major bioinformatic challenge. Addressing this issue ASA&#179;P
                               takes advantage of the Comprehensive Antibiotic Resistance Database (<code>CARD</code>) and its
-                              corresponding search tool. The database is manually curated and updated on a monthly basis. Additionally,
-                              CARD provides its own sophisticated ontology in order to classify detected ABRs. To our best
+                              corresponding search tool. The database is manually curated and provides its own sophisticated ontology in order to classify detected ABRs. To our best
                               knowledge it’s the only database/tool which can detect, classify and describe several different
                               types of ABR, e.g. gene homology and mutations driven mechanisms.</p>
 
@@ -87,27 +86,30 @@
                             <p><code>Individual sorting</code> can be applied via clicking on the respective column header.
                               Use the <code>Search</code> function (top right of the table) to display only genomes that
                               contain the search term in any of their table fields. The <code>number of entries</code> displayed
-                              per page can be chosen on the top left of the table. <code>Blue horizontal bar plots</code>                              are displayed in columns containing numeric values. They visualize the relative relation of
-                              this value compared to the according values of the other genomes. The <code>red colored bar plots</code>                              indicates outliners based on Z-score. In the <code>ABR Profile</code> column found antibiotic
+                              per page can be chosen on the top left of the table. <code>Blue horizontal bar plots</code>
+                              are displayed in columns containing numeric values. They visualize the relative relation of
+                              this value compared to the according values of the other genomes. The <code>red colored bar plots</code>
+                              indicates outliners based on Z-score. In the <code>ABR Profile</code> column found antibiotic
                               agent resistances are visualized as colored circles. You can mouse over the circles to display
-                              the individual resistances. Mouse over on underlined term to display further information on
-                              it.</p>
+                              the individual resistances. Mouse over on underlined terms to display further information.</p>
 
                             <h3>Downloads</h3>
 
-                            <p>The table can be saved as comma separated value (<code>csv</code>) file via click on the csv
+                            <p>The table can be saved as a comma separated value (<code>csv</code>) file via a click on the csv
                               button (search and sorting are contained in the downloaded file).</p>
 
                             <h3>Links</h3>
 
                             <ul>
-                              <li><code>Details</code> on the resistance of a particular genome can be accessed via click on
-                                the magnifying glass in the overview table.</li>
+                                <li><code>Details</code> on the resistance of a particular genome can be accessed via a click on
+                                    the magnifying glass in the overview table.
+                                </li>
 
-                              <li><a href="https://card.mcmaster.ca/">CARD</a>; Jia et al. 2017. CARD 2017: expansion and model-centric
-                                curation of the Comprehensive Antibiotic Resistance Database. Nucleic Acids Research, 45,
-                                D566-573.
-                                <a href="https://www.ncbi.nlm.nih.gov/pubmed/27789705">PubMed</a>.</li>
+                                <li><a href="https://card.mcmaster.ca/">CARD</a>: Jia et al.
+                                    CARD 2017: expansion and model-centric curation of the Comprehensive Antibiotic Resistance Database.
+                                    Nucleic Acids Research, 2017, 45:D566-573.
+                                    <a href="https://www.ncbi.nlm.nih.gov/pubmed/27789705">PubMed</a>
+                                </li>
                             </ul>
 
                             <h3>Glossary</h3>

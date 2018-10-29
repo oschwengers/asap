@@ -26,13 +26,13 @@
                         <div class="modal-content">
                           <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <h2 class="modal-title" id="myModalLabel">ASAP phylogeny overview</h2>
+                            <h2 class="modal-title" id="myModalLabel">ASA&#179;P phylogeny overview</h2>
                           </div>
                           <div class="modal-body">
                             <p>
-                              Based on a consensus sequence created with BCFtools during the SNP detection ASA³P uses <code>FastTreeMP</code> to calculate
-                              a phylogenetic tree of all analyzed genomes. FastTreeMP follows an approximately-maximum-likelihood
-                              approach on the nucleotide level. The resulting Newick file (.nwk) contains the tree representation
+                              Based on a consensus sequence created with BCFtools during the SNP detection ASA&#179;P uses <code>FastTreeMP</code> to calculate
+                              a phylogenetic tree of all analyzed genomes for which reads have been provided. FastTreeMP follows an approximately-maximum-likelihood
+                              approach on the nucleotide level. The resulting newick file (.nwk) contains the tree representation
                               including edge lengths and can be used for graphical display. The phylogenetic distances of the analysed
                               genomes are calculated via <code>FastTreeMP</code> based on their SNPs. Information on the runtime
                               of the analysis is provided. The calculated phylogenetic trees are displayed via <code>Phylocanvas</code>.</p>
@@ -54,11 +54,13 @@
                             <h3>Links</h3>
 
                             <ul>
-                              <li><a href="http://www.microbesonline.org/fasttree/">FastTreeMP</a>; Price, M.N., Dehal, P.S., and Arkin,
-                                A.P. (2010) FastTree 2 -- Approximately Maximum-Likelihood Trees for Large Alignments. PLoS ONE,
-                                5(3):e9490. doi:10.1371/journal.pone.0009490. <a href="https://www.ncbi.nlm.nih.gov/pubmed/20224823">PubMed</a>.</li>
+                              <li><a href="http://www.microbesonline.org/fasttree/">FastTreeMP</a>: Price, M.N., Dehal, P.S., and Arkin, A.P.
+                                  FastTree 2 -- Approximately Maximum-Likelihood Trees for Large Alignments.
+                                  PLoS ONE, 2010, 5(3):e9490. doi:10.1371/journal.pone.0009490.
+                                  <a href="https://www.ncbi.nlm.nih.gov/pubmed/20224823">PubMed</a>
+                              </li>
 
-                              <li><a href="http://phylocanvas.org/">Phylocanvas</a>; Centre for Genomic Pathogen Surveillance (2016 ).
+                              <li><a href="http://phylocanvas.org/">Phylocanvas</a>: Centre for Genomic Pathogen Surveillance (2016 ).
                                 Interactive tree visualisation for the web.</li>
                             </ul>
                           </div>

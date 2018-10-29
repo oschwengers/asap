@@ -57,14 +57,16 @@
                         <div class="modal-content">
                           <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <h2 class="modal-title" id="myModalLabel">ASAP single nucleotide polymorphism overview</h2>
+                            <h2 class="modal-title" id="myModalLabel">ASA&#179;P single nucleotide polymorphism overview</h2>
                           </div>
                           <div class="modal-body">
                             <p>
-                              This analysis provides information on SNPs compared to the reference genome. Via the mpileup function of <code>SAMtools</code>  the mapped BAM files together with the reference fasta are used to compute the likelihood of each possible genotype. The
+                              This analysis provides information on SNPs compared to the first reference genome. Via the mpileup function of <code>SAMtools</code>
+                              the mapped BAM files together with the reference fasta are used to compute the likelihood of each possible genotype. The
                               resulting likelihoods containing genomic positions are stored as Binary Variant Call Format (BCF). <code>BCFtools</code>is
                               then used to call variants in the sequence compared to the reference. The genomic variants in the resulting Variant Call
-                              Format (VCF) file are then filtered via <code>SnpSift</code>. The filtered variants are then analysed by <code>SnpEff</code>  to predict the resulting effects. To improve further processing and compressing <code>HTSlib</code> is used. Finally a
+                              Format (VCF) file are then filtered via <code>SnpSift</code>. The filtered variants are then analysed by <code>SnpEff</code>
+                              to predict the resulting effects. To improve further processing and compressing <code>HTSlib</code> is used. Finally, a
                               consensus sequence and statistics is calculated with <code>BCFtools</code>. This page provides an average SNP distribution
                               mapping and a SNP comparison of the analysed genome.</p>
 
@@ -75,37 +77,43 @@
 
                             <h3>Interactive data table</h3>
 
-                            <p><code>Individual sorting</code> can be applied via clicking on the respective column header. Use the <code>Search</code>  function (top right of the table) to display only genomes that contain the search term in any of their table fields. The
-                              <code>number of entries</code> displayed per page can be chosen on the top left of the table. <code>Blue horizontal bar plots</code>  are displayed in most columns containing numeric values. They visualize the relative relation of this value compared to
+                            <p><code>Individual sorting</code> can be applied via clicking on the respective column header. Use the <code>Search</code>
+                                function (top right of the table) to display only genomes that contain the search term in any of their table fields. The
+                              <code>number of entries</code> displayed per page can be chosen on the top left of the table. <code>Blue horizontal bar plots</code>
+                              are displayed in most columns containing numeric values. They visualize the relative relation of this value compared to
                               the according values of the other genomes. Mouse over on underlined term to display further information on it.</p>
 
                             <h3>Downloads</h3>
 
-                            <p>The table can be saved as comma separated value (<code>csv</code>) file via click on the csv button (search and sorting are
+                            <p>The table can be saved as a comma separated value (<code>csv</code>) file via a click on the csv button (search and sorting are
                               contained in the downloaded file). The <code>vcf</code> file of each genome can be downloaded.</p>
 
                             <h3>Links</h3>
 
                             <ul>
-                              <li><code>Details</code> on the SNPs of a particular genome can be accessed via click on the magnifying glass in the overview
+                                <li><code>Details</code> on the SNPs of a particular genome can be accessed via click on the magnifying glass in the overview
                                 table.</li>
 
-                              <li><a href="http://www.htslib.org/">SAMtools</a>; Li H., Handsaker B., Wysoker A., Fennell T., Ruan J., Homer N., Marth G.,
-                                Abecasis G., Durbin R. and 1000 Genome Project Data Processing Subgroup (2009) The Sequence alignment/map (SAM) format
-                                and SAMtools. Bioinformatics, 25, 2078-9. <a href="https://www.ncbi.nlm.nih.gov/pubmed/19505943">PubMed</a>.</li>
+                                <li><a href="http://www.htslib.org/">SAMtools</a>: Li H., Handsaker B., Wysoker A., Fennell T., Ruan J., Homer N., Marth G., Abecasis G., Durbin R., 1000 Genome Project Data Processing Subgroup
+                                    The Sequence alignment/map (SAM) format and SAMtools.
+                                    Bioinformatics, 2009, 25, 2078-9.
+                                    <a href="https://www.ncbi.nlm.nih.gov/pubmed/19505943">PubMed</a>
+                                </li>
 
-                              <li><a href="https://github.com/samtools/bcftools">BCFtools</a>; Included in SAMtools.</li>
+                                <li><a href="https://github.com/samtools/bcftools">BCFtools</a>: Included in SAMtools.
+                                </li>
 
-                              <li><a href="http://snpeff.sourceforge.net/SnpSift.html">SnpSift</a>; "Using Drosophila melanogaster as a model for genotoxic
-                                chemical mutational studies with a new program, SnpSift", Cingolani, P., et. al., Frontiers in Genetics, 3, 2012.
-                                <a
-                                  href="https://www.ncbi.nlm.nih.gov/pubmed/22435069">PubMed</a>.</li>
+                                <li><a href="http://snpeff.sourceforge.net/SnpSift.html">SnpSift</a>: Cingolani, P., et. al.
+                                    Using Drosophila melanogaster as a model for genotoxic chemical mutational studies with a new program, SnpSift
+                                    Frontiers in Genetics, 2012, 3
+                                    <a href="https://www.ncbi.nlm.nih.gov/pubmed/22435069">PubMed</a>
+                                </li>
 
-                              <li><a href="http://snpeff.sourceforge.net/">SnpEff</a>; "A program for annotating and predicting the effects of single nucleotide
-                                polymorphisms, SnpEff: SNPs in the genome of Drosophila melanogaster strain w1118; iso-2; iso-3.", Cingolani P, Platts
-                                A, Wang le L, Coon M, Nguyen T, Wang L, Land SJ, Lu X, Ruden DM. Fly (Austin). 2012 Apr-Jun;6(2):80-92. <a href="https://www.ncbi.nlm.nih.gov/pubmed/22728672">PubMed</a>.</li>
+                                <li><a href="http://snpeff.sourceforge.net/">SnpEff</a>: Cingolani P, Platts A, Wang le L, Coon M, Nguyen T, Wang L, Land SJ, Lu X, Ruden DM.
+                                    A program for annotating and predicting the effects of single nucleotide polymorphisms, SnpEff: SNPs in the genome of Drosophila melanogaster strain w1118; iso-2; iso-3.
+                                    Fly (Austin), 2012 Apr-Jun;6(2):80-92. <a href="https://www.ncbi.nlm.nih.gov/pubmed/22728672">PubMed</a>
+                                </li>
 
-                              <li><a href="https://github.com/samtools/htslib">HTSlib</a>; Included in SAMtools.</li>
                             </ul>
 
                             <h3>Glossary</h3>

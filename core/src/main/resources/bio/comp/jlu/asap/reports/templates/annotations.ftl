@@ -57,14 +57,14 @@
                         <div class="modal-content">
                           <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <h2 class="modal-title" id="myModalLabel">ASAP annotation overview</h2>
+                            <h2 class="modal-title" id="myModalLabel">ASA&#179;P annotation overview</h2>
                           </div>
                           <div class="modal-body">
                             <p>
-                              To annotate contigs and scaffolds ASA³P internally uses <code>Prokka</code> and <code>Barrnap</code>. For high quality annotation genus
-                              specific information is used. Therefore, ASA³P uses genus specific Blast databases comprising
-                              all <code>RefSeq</code> genome annotations related to a certain genus. In order to further increase
-                              annotation quality ASA³P uses a combination of smaller high quality databases such as <code>CARD</code> for antimicrobial resistance genes and <code>VFDB</code> for virulence factors.</p>
+                              To annotate contigs and scaffolds ASA&#179;P uses <code>Prokka</code> and <code>Barrnap</code>. For high quality annotation genus
+                              specific Blast databases are used which comprise all <code>RefSeq</code> genome annotations related to a certain genus.
+                              In order to further increase annotation quality ASA&#179;P uses a combination of smaller high quality databases such as <code>CARD</code>
+                              for antimicrobial resistance genes and <code>VFDB</code> for virulence factors.</p>
 
                             <h3>Interactive dotplot</h3>
 
@@ -83,7 +83,7 @@
 
                             <h3>Downloads</h3>
 
-                            <p>The table can be saved as comma separated value (<code>csv</code>) file via click on the csv
+                            <p>The table can be saved as a comma separated value (<code>csv</code>) file via a click on the csv
                               button (search and sorting are contained in the downloaded file). To download the GenBank (<code>gbk</code>)
                               or General Feature Format (<code>gff</code>) file of a particular genome assembly click on
                               gbk or gff in the data table.</p>
@@ -91,29 +91,39 @@
                             <h3>Links</h3>
 
                             <ul>
-                              <li><a href="http://www.vicbioinformatics.com/software.barrnap.shtml">Barrnap</a>; Barrnap predicts
-                                the location of ribosomal RNA genes in genomes. It supports bacteria (5S,23S,16S), archaea
-                                (5S,5.8S,23S,16S), mitochondria (12S,16S) and eukaryotes (5S,5.8S,28S,18S). <a href="https://github.com/tseemann/barrnap">GitHub</a>.</li>
+                                <li><a href="http://www.vicbioinformatics.com/software.barrnap.shtml">Barrnap</a>: Barrnap predicts
+                                    the location of ribosomal RNA genes in genomes. It supports bacteria (5S,23S,16S), archaea
+                                    (5S,5.8S,23S,16S), mitochondria (12S,16S) and eukaryotes (5S,5.8S,28S,18S).
+                                    <a href="https://github.com/tseemann/barrnap">GitHub</a>
+                                </li>
 
-                              <li><code>Details</code> on the annotation of a particular genome can be accessed via click on
-                                the magnifying glass in the overview table.</li>
+                                <li><code>Details</code> on the annotation of a particular genome can be accessed via a click on
+                                    the magnifying glass in the overview table.
+                                </li>
 
-                              <li><a href="http://www.vicbioinformatics.com/software.prokka.shtml">Prokka</a>: Seemann T. Prokka:
-                                rapid prokaryotic genome annotation. Bioinformatics. 2014 Jul 15;30(14):2068-9. PMID:24642063
-                                <a href="https://www.ncbi.nlm.nih.gov/pubmed/24642063">PubMed</a>.</li>
+                                <li><a href="http://www.vicbioinformatics.com/software.prokka.shtml">Prokka</a>: Seemann T.
+                                    Prokka: rapid prokaryotic genome annotation.
+                                    Bioinformatics, 2014, 30(14):2068-9. PMID:24642063
+                                    <a href="https://www.ncbi.nlm.nih.gov/pubmed/24642063">PubMed</a>
+                                </li>
 
-                              <li><a href="https://www.ncbi.nlm.nih.gov/refseq/">RefSeq</a>: O'Leary, Nuala A., et al. "Reference
-                                sequence (RefSeq) database at NCBI: current status, taxonomic expansion, and functional annotation."
-                                Nucleic acids research (2015): gkv1189. <a href="https://www.ncbi.nlm.nih.gov/pubmed/26553804">PubMed</a>.</li>
+                                <li><a href="https://www.ncbi.nlm.nih.gov/refseq/">RefSeq</a>: O'Leary, Nuala A., et al.
+                                    Reference sequence (RefSeq) database at NCBI: current status, taxonomic expansion, and functional annotation.
+                                    Nucleic acids research, 2015, gkv1189.
+                                    <a href="https://www.ncbi.nlm.nih.gov/pubmed/26553804">PubMed</a>
+                                </li>
 
-                              <li><a href="https://card.mcmaster.ca/">CARD</a>; Jia et al. 2017. CARD 2017: expansion and model-centric
-                                curation of the Comprehensive Antibiotic Resistance Database. Nucleic Acids Research, 45,
-                                D566-573.
-                                <a href="https://www.ncbi.nlm.nih.gov/pubmed/27789705">PubMed</a>.</li>
+                                <li><a href="https://card.mcmaster.ca/">CARD</a>: Jia et al.
+                                    CARD 2017: expansion and model-centric curation of the Comprehensive Antibiotic Resistance Database.
+                                    Nucleic Acids Research, 2017, 45:D566-573.
+                                    <a href="https://www.ncbi.nlm.nih.gov/pubmed/27789705">PubMed</a>
+                                </li>
 
-                              <li><a href="http://www.mgc.ac.cn/VFs/main.htm">VFDB</a>: Chen LH, Zheng DD, Liu B, Yang J and
-                                Jin Q, 2016. VFDB 2016: hierarchical and refined dataset for big data analysis-10 years on.
-                                Nucleic Acids Res. 44(Database issue):D694-D697. <a href="https://www.ncbi.nlm.nih.gov/pubmed/26578559">PubMed</a>.</li>
+                                <li><a href="http://www.mgc.ac.cn/VFs/main.htm">VFDB</a>: Chen LH, Zheng DD, Liu B, Yang J and Jin Q
+                                    VFDB 2016: hierarchical and refined dataset for big data analysis-10 years on.
+                                    Nucleic Acids Res., 2016, 44(Database issue):D694-D697.
+                                    <a href="https://www.ncbi.nlm.nih.gov/pubmed/26578559">PubMed</a>
+                                </li>
                             </ul>
 
                             <h3>Glossary</h3>

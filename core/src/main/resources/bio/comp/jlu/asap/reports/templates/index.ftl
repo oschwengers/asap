@@ -134,7 +134,7 @@
                                 <div class="panel-body">
                                     <p><span class="glyphicon glyphicon-home" data-toggle="tooltip" data-original-title="Project name"></span>&nbsp;&nbsp;${project.name}</p>
                                     <p><span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-original-title="Project description"></span>&nbsp;&nbsp;${project.description}</p>
-                                    <p><span class="glyphicon glyphicon-wrench" data-toggle="tooltip" data-original-title="ASA³P version"></span>&nbsp;&nbsp;${project.version}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-tree-deciduous" data-toggle="tooltip" data-original-title="Genus of isolates within this project"></span>&nbsp;&nbsp;${project.genus}</p>
+                                    <p><span class="glyphicon glyphicon-wrench" data-toggle="tooltip" data-original-title="ASA&#179;P version"></span>&nbsp;&nbsp;${project.version}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-tree-deciduous" data-toggle="tooltip" data-original-title="Genus of isolates within this project"></span>&nbsp;&nbsp;${project.genus}</p>
                                 </div>
                             </div>
                         </div>
@@ -171,17 +171,19 @@
                         <div class="modal-content">
                           <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <h2 class="modal-title" id="myModalLabel">ASAP analysis overview</h2>
+                            <h2 class="modal-title" id="myModalLabel">ASA&#179;P analysis overview</h2>
                           </div>
                           <div class="modal-body">
                             <h3>General information</h3>
 
-                            <p>On the top of this page project information on <code>Biological background</code>, <code>User account</code>                              and <code>Runtime statistics</code> are displayed. Mouse over the symbols to display their
-                              meaning. A general multi analysis comparison of the analysed genomes is visualized as <code>Interactive infographics</code>                              and accessible in the <code>Interactive data table</code>.</p>
+                            <p>On the top of this page project information on <code>Biological background</code>, <code>User account</code>
+                                and <code>Runtime statistics</code> are displayed.
+                                A general multi analyses comparison of the analysed genomes is visualized as <code>interactive infographics</code>
+                                and accessible in the <code>interactive data table</code>.</p>
 
                             <h3>Interactive infographics</h3>
 
-                            <p>Provides an overview on <code>key data</code> of the analysed genomes. The vertical black lines
+                            <p>This dynamic visualization provides an overview on <code>key data</code> of the analysed genomes. The vertical black lines
                               display the result range of a particular analysis. The range of each analysis can be limited
                               via drag and drop on the black line. The limited range is visualized as a box. Genome graphs
                               not passing through all set ranges are greyed out. The box itself can also be dragged in position

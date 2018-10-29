@@ -133,13 +133,13 @@
                         <div class="modal-content">
                           <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <h2 class="modal-title" id="myModalLabel">ASAP core and pan genome overview</h2>
+                            <h2 class="modal-title" id="myModalLabel">ASA&#179;P core and pan genome overview</h2>
                           </div>
                           <div class="modal-body">
 
                             <p>Coding sequences (CDS) of the analysed genomes get clustered and assigned to gene abundance groups via <code>Roary</code>.
                                 These groups consist of genes present in all analysed genomes (<code>core</code>), genes present at least in one other
-                                analysed genome (<code>accessory</code>) and genes unique to one a single genome (<code>singletons</code>).
+                                analysed genome (<code>accessory</code>) and genes unique to a single genome (<code>singletons</code>).
                                 Internally, <code>Roary</code> uses <code>CD-HIT</code> and <code>BLAST+</code> and is provided with <code>.gff</code> files resulting from prior annotation.</p>
 
 
@@ -151,12 +151,15 @@
 
                             <p>Provides absolute numbers on Core, Pan, Accessory and Singleton genes.</p>
 
-                            <h3>Interactive PAN / Core / Singleton Development chart</h3>
+                            <h3>Interactive Pan / Core / Singleton Development chart</h3>
 
-                            <p>Displays changes in number of CDS (loci) in <code>Pan</code>, <code>Core</code> and <code>Singletons</code>                              with increasing number of genomes included in comparison (x-axis). For each comparisons amount
-                              the number of genomes is picked randomly ten times and the average values are displayed. <code>Pan</code>                              and <code>Core</code> genome size is referenced by the left y-axis. The number of <code>Singletons</code>                              is referenced by the right y-axis. Highlighting of an individual graph can be done via clicking
-                              on the graph or the according legend. Individual values on the graphs can be accessed via mouse
-                              over. Individual data points can be highlighted via clicking on them.</p>
+                            <p>Displays changes in number of CDS (loci) for <code>Pan</code>, <code>Core</code> and <code>Singletons</code>
+                                with increasing number of genomes taking into account (x-axis). For each step a certain number of genomes is
+                                picked randomly ten times and the average values are displayed. <code>Pan</code>
+                                and <code>Core</code> genome size is referenced by the left y-axis. The number of <code>Singletons</code>
+                                is referenced by the right y-axis. Highlighting of an individual graph can be performed via clicking
+                                on the graph or the according legend. Individual values on the graphs can be accessed via a mouse over.
+                                Individual data points can be highlighted via clicking on them.</p>
 
                             <h3>Skipped Genome</h3>
 
@@ -191,26 +194,24 @@
                             <h5>Singletons</h5>
 
                             <p>Provides information on each <code>Locus</code>, its <code>Product</code>(function) and the genome
-                              it was found.</p>
+                              it was found in.</p>
 
                             <h3>Downloads</h3>
 
-                            <p>The table can be saved as comma separated value (<code>csv</code>) file via click on the csv
-                              button (search and sorting are contained in the downloaded file). A <code>fasta</code> file
-                              with all core gene sequences and a file with all the pan gene sequences can be downloaded.
-                              The matrix maps which gene is present in which sequenced organism (present = 1, absent = 0)
-                              can be downloaded as tab separated value 'tsv' file.</p>
+                            <p>The table can be saved as a comma separated value (<code>csv</code>) file via a click on the csv
+                              button (search and sorting are contained in the downloaded file). <code>fasta</code> files
+                              with all core and pan gene sequences can be downloaded.
+                              A gene/genome present/absent matrix (present = 1, absent = 0) can be downloaded as tab separated value 'tsv' file.</p>
 
                             <h3>Links</h3>
 
                             <ul>
-                              <li><code>Details</code> on the core and pan genome distribution of a particular genome can be
-                                accessed via click on the magnifying glass in the overview table.</li>
+                                <li><code>Details</code> on the core and pan genome distribution of a particular genome can be accessed via a click on the magnifying glass in the overview table.</li>
 
-                              <li><a href="https://sanger-pathogens.github.io/Roary/">Roary</a>; "Roary: Rapid large-scale prokaryote
-                                pan genome analysis", Andrew J. Page, Carla A. Cummins, Martin Hunt, Vanessa K. Wong, Sandra
-                                Reuter, Matthew T. G. Holden, Maria Fookes, Daniel Falush, Jacqueline A. Keane, Julian Parkhill,
-                                Bioinformatics, (2015). <a href="https://www.ncbi.nlm.nih.gov/pubmed/26198102">PubMed</a>.</li>
+                                <li><a href="https://sanger-pathogens.github.io/Roary/">Roary</a>: Andrew J. Page, Carla A. Cummins, Martin Hunt, Vanessa K. Wong, Sandra Reuter, Matthew T. G. Holden, Maria Fookes, Daniel Falush, Jacqueline A. Keane, Julian Parkhill
+                                    Roary: Rapid large-scale prokaryote pan genome analysis
+                                    Bioinformatics, 2015<a href="https://www.ncbi.nlm.nih.gov/pubmed/26198102">PubMed</a>
+                                </li>
                             </ul>
 
                             <h3>Glossary</h3>

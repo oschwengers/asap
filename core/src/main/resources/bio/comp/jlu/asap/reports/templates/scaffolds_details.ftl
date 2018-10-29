@@ -32,10 +32,10 @@
                         <div class="modal-content">
                           <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <h2 class="modal-title" id="myModalLabel">ASAP scaffolds detail</h2>
+                            <h2 class="modal-title" id="myModalLabel">ASA&#179;P scaffolds detail</h2>
                           </div>
                           <div class="modal-body">
-                            <p>Provides information on contig alignment and assignment to reference genome(s). The contigs of
+                            <p>This site provides information on contig alignment and assignment to reference genome(s). The contigs of
                               the particular Whole Genome Assembly (<code>WGA</code>) are compared to each of the reference
                               genomes via Synteny plots. In order to visualize the scaffolding quality the comparison is
                               done before and after the scaffolding process.</p>

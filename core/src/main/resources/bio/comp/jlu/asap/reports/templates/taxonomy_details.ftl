@@ -87,7 +87,7 @@
                         <div class="modal-content">
                           <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <h2 class="modal-title" id="myModalLabel">ASAP taxonomy detail</h2>
+                            <h2 class="modal-title" id="myModalLabel">ASA&#179;P taxonomy detail</h2>
                           </div>
                           <div class="modal-body">
                             <h3>Interactive phylogeny visualization</h3>
@@ -235,7 +235,7 @@
                 <#else>
                     <div class="row voffset">
                         <div class="col">
-                            <div class="bs-callout bs-callout-warning"><h4>Kmers could not be classified!</h4><p>ASA³P could not find any significant kmer classification for this strain.</p></div>
+                            <div class="bs-callout bs-callout-warning"><h4>Kmers could not be classified!</h4><p>ASA&#179;P could not find any significant kmer classification for this strain.</p></div>
                         </div>
                     </div>
                 </#if>
@@ -302,7 +302,7 @@
                 <#else>
                     <div class="row voffset">
                         <div class="col">
-                            <div class="bs-callout bs-callout-warning"><h4>16S rRNA could not be classified!</h4><p>ASA³P either did not find a proper 16S rRNA sequence or could not classifiy it.</p></div>
+                            <div class="bs-callout bs-callout-warning"><h4>16S rRNA could not be classified!</h4><p>ASA&#179;P either did not find a proper 16S rRNA sequence or could not classifiy it.</p></div>
                         </div>
                     </div>
                 </#if>

@@ -87,7 +87,7 @@
                         <div class="modal-content">
                           <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <h2 class="modal-title" id="myModalLabel">ASAP core and pan genome detail</h2>
+                            <h2 class="modal-title" id="myModalLabel">ASA&#179;P core and pan genome detail</h2>
                           </div>
                           <div class="modal-body">
                             <h3>Interactive donut chart</h3>
@@ -128,7 +128,7 @@
                               <li><strong>Core</strong>: Number of genes contained in all analysed genomes.</li>
 
                               <li><strong>Locus</strong>: Defined contiguous nucleotide sequence in the genome. The name can
-                                reefer to a locus tag, gene name, synthetic cluster or group name.</li>
+                                refer to a locus tag, gene name, synthetic cluster or group name.</li>
 
                               <li><strong>Product</strong>: Functional information on the associated locus.</li>
 
