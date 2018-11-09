@@ -30,7 +30,7 @@ BOWTIE2  = "${ASAP_HOME}/share/bowtie2/bowtie2"
 PBALIGN  = "${ASAP_HOME}/share/smrtlink/smrtcmds/bin/pbalign"
 MINIMAP2 = "${ASAP_HOME}/share/minimap2"
 
-SAMTOOLS_SORT_MEM = '16G' // max-ram usage until tmp-file is created during sorting (optimum 4G for avg. files)
+SAMTOOLS_SORT_MEM = '1G' // max-ram usage until tmp-file is created during sorting (optimum 4G for avg. files)
 NUM_THREADS       = '8'
 
 
@@ -178,7 +178,7 @@ if( ft == FileType.READS_ILLUMINA_PAIRED_END  ||  ft == FileType.READS_ILLUMINA_
         mappingReadsParameter = "-U ${readsDirPath.resolve( reads.files[0] )}"
 
     ProcessBuilder pb = new ProcessBuilder( 'sh', '-c',
-        "${BOWTIE2} --sensitive --threads ${NUM_THREADS} --rg-id ${genomeName} --rg SM:${genomeName} -x ${projectPath}/references/${fileName} ${mappingReadsParameter} 2>${mappingsPath}/${genomeName}.bt2.log | ${SAMTOOLS} view -u - 2>/dev/null | ${SAMTOOLS} sort --threads ${NUM_THREADS} -m ${SAMTOOLS_SORT_MEM} -T ${genomeName} -o ${genomeMappingsPath.toString()} - 2>/dev/null" )
+        "${BOWTIE2} --sensitive --threads ${NUM_THREADS} --rg-id ${genomeName} --rg SM:${genomeName} -x ${projectPath}/references/${fileName} ${mappingReadsParameter} 2>${mappingsPath}/${genomeName}.bt2.log | ${SAMTOOLS} view -u - 2>/dev/null | ${SAMTOOLS} sort -m ${SAMTOOLS_SORT_MEM} -T ${genomeName} -o ${genomeMappingsPath.toString()} - 2>/dev/null" )
         .redirectErrorStream( true )
         .redirectOutput( ProcessBuilder.Redirect.INHERIT )
         .directory( mappingsPath.toFile() )
