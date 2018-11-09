@@ -12,7 +12,7 @@ RUN apt-get -y update && apt-get -y install \
     libdigest-md5-perl \
     bioperl \
     libtbb2 \
-    openjdk-8-jre \
+    openjdk-8-jdk \
     python-pip \
     roary
 RUN pip install biopython \
