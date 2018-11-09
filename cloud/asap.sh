@@ -20,10 +20,10 @@ while getopts ":o:i:p:" opt; do
 done
 
 
-### 1) ASAP cluster logic script & create .bibigrid.properties file ###
+### 1) ASAP cluster logic script & create bibigrid.yml file ###
 
-# Create .bibigrid.properties file with the asap-cloud-setup script from Oliver Schwengers. This script NEEDS the asap.properties file in the same dir (~/asap-cloud/)
-java -jar ~/asap-cloud/asap-cloud-setup-1.0.0.jar -p $PROJECT_DIR
+# Create bibigrid.yml file with the asap-cloud-setup script. This script needs the asap.properties file in the same dir (~/asap-cloud/)
+java -jar ~/asap-cloud/asap-cloud-setup-1.1.0.jar -p $PROJECT_DIR
 
 # Extract ID of data volume from asap.properties file
 VOLUME_ID=$(cat ~/asap-cloud/asap.properties | grep "volume.data*" | cut -d= -f2)
@@ -40,7 +40,7 @@ source $OPENSTACK_RC_FILE
 ### 3) detach volume(s) in openstack ###
 
 # Unmount & detach the data volume & project dir
-sudo umount /mnt/data/
+sudo umount /data/
 nova volume-detach $INSTANCE_ID $VOLUME_ID
 
 
@@ -61,7 +61,7 @@ echo "#############################################"
 sleep 1
 
 # Start of BiBiGrid SGE cluster
-java -jar ~/asap-cloud/BiBiGrid-1.1.jar -c -o ~/asap-cloud/.bibigrid.properties | tee ~/asap-cloud/bibigrid-specs
+java -jar ~/asap-cloud/BiBiGrid-asap-2.0.jar -c -o ~/asap-cloud/bibigrid.yml | tee ~/asap-cloud/bibigrid-specs
 
 # Extract ID & IP address of the newly created cluster
 BIBIGRID_IP=$(cat ~/asap-cloud/bibigrid-specs | grep -E 'BIBIGRID_MASTER=[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}')
@@ -95,7 +95,7 @@ ssh-keygen -f "/home/ubuntu/.ssh/known_hosts" -R $BIBIGRID_IP
 echo "#############################################"
 echo "Starting ASAP"
 echo "#############################################"
-ssh -l ubuntu $BIBIGRID_IP "export ASAP_HOME=/mnt/asap/ && java -jar /mnt/asap/asap.jar -d $PROJECT_DIR/"
+ssh -l ubuntu $BIBIGRID_IP "export ASAP_HOME=/asap/ && java -jar /asap/asap.jar -d $PROJECT_DIR/"
 
 # Enable StrictHostKeyChecking
 echo "#############################################"
@@ -106,7 +106,7 @@ sudo sed -i "s/   StrictHostKeyChecking no/#   StrictHostKeyChecking ask/g" /etc
 
 ### 7) terminate bibigrid cluster ###
 
-java -jar ~/asap-cloud/BiBiGrid-1.1.jar -o ~/asap-cloud/.bibigrid.properties -t $BIBIGRID_ID
+java -jar ~/asap-cloud/BiBiGrid-asap-2.0.jar -o ~/asap-cloud/bibigrid.yml -t $BIBIGRID_ID
 
 
 ### 8) Delete ssh keypair
@@ -128,4 +128,4 @@ nova volume-attach $INSTANCE_ID $VOLUME_ID
 echo "#############################################"
 echo "Mounting volume"
 echo "#############################################"
-sudo mount $(ls -t /dev/vd* | head -n 1 | grep -o "/dev/vd[a-z]") /mnt/data/
+sudo mount $(ls -t /dev/vd* | head -n 1 | grep -o "/dev/vd[a-z]") /data/

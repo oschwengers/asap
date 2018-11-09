@@ -81,41 +81,55 @@ String volumeIdData  = props.getProperty( 'volume.data' )
 
 def bibigridTemplate = """
 #use openstack
-mode=openstack
+mode: openstack
 
 #Access
-identity-file=${asapPath.toString()}/asap.cluster.key
-keypair=asap-cluster
-region=${region}
-availability-zone=${zone}
+sshPrivateKeyFile: ${asapPath.toString()}/asap.cluster.key
+sshUser: ubuntu
+keypair: asap-cluster
+region: ${region}
+availabilityZone: ${zone}
 
 #Network
-subnet=${subnet}
+subnet: ${subnet}
 
 #BiBiGrid-Master
-master-instance-type=${masterFlavour}
-master-image=${masterImageId}
+masterInstance:
+  type: ${masterFlavour}
+  image: ${masterImageId}
 
 #BiBiGrid-Slave
-slave-instance-type=${slavesFlavour}
-slave-instance-count=${noSlaves}
-slave-image=${slavesImageId}
+slaveInstances:
+  - type: ${slavesFlavour}
+    count: ${noSlaves}
+    image: ${slavesImageId}
 
-#Cluster Props
-master-mounts=${volumeIdAsap}=/mnt/asap/,${volumeIdData}=/mnt/data/
-nfs-shares=/mnt/asap/,/mnt/data/
-ports=80,443
-use-master-as-compute=no
-nfs=yes
-oge=yes
-spark=no
-hdfs=no
+#Mountpoints
+masterMounts:
+  - source: ${volumeIdAsap}
+    target: /asap/
+  - source: ${volumeIdData}
+    target: /data/
+
+#NFS-Shares
+nfsShares:
+  - /asap/
+  - /data/
+
+#Firewall/Security Group
+ports:
+  - type: TCP
+    number: 80
+
+#services
+useMasterAsCompute: yes
+nfs: yes
+oge: yes
 """
 
-File biBiGridPropFile = asapPath.resolve( '.bibigrid.properties' ).toFile()
+
+File biBiGridPropFile = asapPath.resolve( 'bibigrid.yml' ).toFile()
 biBiGridPropFile.text = bibigridTemplate.toString()
-
-
 
 
 def exit( String msg ) {
