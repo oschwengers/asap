@@ -26,18 +26,19 @@ final def env = System.getenv()
 ASAP_HOME = env.ASAP_HOME
 ASAP_DB   = env.ASAP_DB
 
-KRAKEN   = "${ASAP_HOME}/share/kraken"
-NUCMER   = "${ASAP_HOME}/share/mummer/nucmer"
-BLASTN   = "${ASAP_HOME}/share/blast/bin/blastn"
-CMSEARCH = "${ASAP_HOME}/share/infernal/cmsearch"
+KRAKEN       = "${ASAP_HOME}/share/kraken"
+NUCMER       = "${ASAP_HOME}/share/mummer/nucmer"
+DELTA_FILTER = "${ASAP_HOME}/share/mummer/delta-filter"
+BLASTN       = "${ASAP_HOME}/share/blast/bin/blastn"
+CMSEARCH     = "${ASAP_HOME}/share/infernal/cmsearch"
 
 KRAKEN_DB = "${ASAP_DB}/kraken"
 RDP_DB   = "${ASAP_DB}/rdp/rdp-bacteria.fasta"
 RFAM_CM_SSU_RRNA = "${ASAP_DB}/RF00177.cm"
 
 
-NUM_THREADS = 4
-
+NUM_THREADS       = 4
+MIN_FRAGMENT_SIZE = 100
 
 
 
@@ -132,7 +133,7 @@ if( Files.isReadable( scaffoldsPath ) ) {
     genomeSequencePath = sequencePath
     log.info( "sequence file: ${genomeSequencePath}" )
 } else
-    terminate( "no sequence file! gid=${genomeId}, tmp-dir=${tmpPath}", genomeName, taxPath, tmpPath )
+    terminate( "no sequence file! gid=${genomeId}", genomeName, taxPath, null )
 
 
 // create local tmp directory
@@ -398,7 +399,7 @@ config.references.each( { ref ->
     m = genomeSequencePath.text =~ /(?m)^>.+$\r?\n([ATGCNatgcn\r\n]+)$/
     m.each( { match ->
         String sequence = match[1].replaceAll( '\n', '' )
-        while( sequence.length() > 1020 ) {
+        while( sequence.length() > (1020 + MIN_FRAGMENT_SIZE) ) {
             String dnaFragment = sequence.substring( 0, 1020 )
             dnaFragmentsPath << ">${dnaFragmentIdx}\n" + dnaFragment + '\n'
             dnaFragments << [
@@ -418,7 +419,7 @@ config.references.each( { ref ->
     } )
 
     // perform global alignments via nucmer
-    log.debug( 'map contigs via nucmer...' )
+    log.debug( 'map contig fragments via nucmer...' )
     pb = new ProcessBuilder( NUCMER,
         referencePath.toString(),
         dnaFragmentsPath.toString() )
@@ -430,11 +431,23 @@ config.references.each( { ref ->
     if( pb.start().waitFor() != 0 ) terminate( 'could not exec nucmer!', genomeName, taxPath, tmpPath )
     log.info( '----------------------------------------------------------------------------------------------' )
 
+    log.debug( 'filter hits via delta-filter...' )
+    Path filterPath = tmpPath.resolve( 'out.filtered.delta' )
+    pb = new ProcessBuilder( DELTA_FILTER,
+        '-q',
+        tmpPath.resolve( 'out.delta' ).toString() )
+    .directory( tmpPath.toFile() )
+    .redirectOutput( ProcessBuilder.Redirect.to( filterPath.toFile() ) )
+    log.info( "exec: ${pb.command()}" )
+    log.info( '----------------------------------------------------------------------------------------------' )
+    if( pb.start().waitFor() != 0 ) terminate( 'could not exec nucmer!', genomeName, taxPath, tmpPath )
+    log.info( '----------------------------------------------------------------------------------------------' )
+
     // parse nucmer output
     log.debug( 'parse nucmer output...' )
     def dnaFragment = null
     def dnaFragementMatches = []
-    tmpPath.resolve( 'out.delta' ).text.eachLine( { line ->
+    filterPath.text.eachLine( { line ->
         if( line.charAt(0) == '>' ) {
             def dnaFragmentId = line.split( ' ' )[1]
             dnaFragment = dnaFragments.find( { it.id == Integer.parseInt( dnaFragmentId ) } )
@@ -460,7 +473,7 @@ config.references.each( { ref ->
 
     // calc average nucleotide identity
     def aniMatches = dnaFragementMatches.findAll( { (((it.length-it.noNonIdentities)/it.length) > 0.3 )  &&  ( (it.alignmentLength/it.length) >= 0.7) } )
-    def niSum = aniMatches.collect( { 1 - (it.noNonIdentities/(it.alignmentLength != 1020 ? it.alignmentLength : 1020)) } ).sum() ?: 0
+    def niSum = aniMatches.collect( { (it.alignmentLength-it.noNonIdentities)/it.alignmentLength } ).sum() ?: 0
     def ani = aniMatches.size() > 0 ? niSum / aniMatches.size() : 0
     log.info( "ANI: ${ani*100} %" )
 
@@ -507,8 +520,10 @@ private void terminate( String msg, Throwable t, String genomeName, Path taxPath
     if( t ) log.error( msg, t )
     else    log.error( msg )
     Files.move( taxPath.resolve( "${genomeName}.running" ), taxPath.resolve( "${genomeName}.failed" ) ) // set state-file to failed
-    tmpPath.deleteDir() // cleanup tmp dir
-    log.debug( "removed tmp-dir: ${tmpPath}" )
+    if( tmpPath ) {
+        tmpPath.deleteDir() // cleanup tmp dir
+        log.debug( "removed tmp-dir: ${tmpPath}" )
+    }
     System.exit( 1 )
 
 }
