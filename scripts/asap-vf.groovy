@@ -181,7 +181,7 @@ fhOutput.close()
 fhInput.close()
 /
     try { // start ebl -> fasta conversion process
-        ProcessBuilder pb = new ProcessBuilder( '/usr/bin/env', 'python',
+        ProcessBuilder pb = new ProcessBuilder( '/usr/bin/env', 'python3',
             '-c', script )
             .redirectErrorStream( true )
             .redirectOutput( ProcessBuilder.Redirect.INHERIT )

@@ -13,15 +13,19 @@ RUN apt-get -y update && apt-get -y install \
     bioperl \
     libtbb2 \
     openjdk-8-jdk \
-    python-pip \
+    python3 \
+    python3-setuptools \
+    python3-pip \
     roary
-RUN pip install biopython \
+
+RUN pip3 install \
+    biopython \
     networkx \
     numpy
+
 RUN mkdir /var/scratch/
 
 ENV ASAP_HOME=/asap
 ENV ASAP_DB=/asap/db
 
 CMD [ "java", "-jar", "/asap/asap.jar", "--dir", "/data/", "--local" ]
-

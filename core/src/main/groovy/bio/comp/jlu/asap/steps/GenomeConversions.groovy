@@ -152,7 +152,7 @@ from Bio import SeqIO
 SeqIO.convert( "${genbankPath}", "${Format.genbank}", "${fastaPath}", "${Format.fasta}" )
 /
                         try { // start gbk -> fasta conversion process
-                            ProcessBuilder pb = new ProcessBuilder( '/usr/bin/env', 'python',
+                            ProcessBuilder pb = new ProcessBuilder( '/usr/bin/env', 'python3',
                                 '-c', script )
                                 .redirectErrorStream( true )
                                 .redirectOutput( ProcessBuilder.Redirect.INHERIT )
@@ -175,7 +175,7 @@ from Bio import SeqIO
 SeqIO.convert( "${emblPath}", "${Format.embl}", "${fastaPath}", "${Format.fasta}" )
 /
                         try { // start ebl -> fasta conversion process
-                            ProcessBuilder pb = new ProcessBuilder( '/usr/bin/env', 'python',
+                            ProcessBuilder pb = new ProcessBuilder( '/usr/bin/env', 'python3',
                                 '-c', script )
                                 .redirectErrorStream( true )
                                 .redirectOutput( ProcessBuilder.Redirect.INHERIT )
@@ -197,7 +197,7 @@ from Bio import SeqIO
 SeqIO.convert( "${emblPath}", "${Format.embl}", "${genbankPath}", "${Format.genbank}" )
 /
                         try { // start ebl -> genbank conversion process
-                            ProcessBuilder pb = new ProcessBuilder( '/usr/bin/env', 'python',
+                            ProcessBuilder pb = new ProcessBuilder( '/usr/bin/env', 'python3',
                                 '-c', script )
                                 .redirectErrorStream( true )
                                 .redirectOutput( ProcessBuilder.Redirect.INHERIT )

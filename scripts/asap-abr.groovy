@@ -162,7 +162,7 @@ def aroTerms = (new JsonSlurper()).parseText( Paths.get( "${CARD}/aro.json" ).to
 
 
 // process
-ProcessBuilder pb = new ProcessBuilder( 'python', "${CARD}/rgi.py".toString(),
+ProcessBuilder pb = new ProcessBuilder( 'python3', "${CARD}/rgi.py".toString(),
     '--input_type', 'contig',
     '--num_threads', '1',
     '--data', 'wgs',
