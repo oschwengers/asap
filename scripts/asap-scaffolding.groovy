@@ -110,17 +110,17 @@ log.info( "genome-name: ${genomeName}")
 
 
 final Path genomeAssemblyPath = Paths.get( projectPath.toString(), PROJECT_PATH_ASSEMBLIES, genomeName, "${genomeName}.fasta" )
-final Path genomeScaffoldsDirPath = Paths.get( projectPath.toString(), PROJECT_PATH_SCAFFOLDS, genomeName )
+final Path genomeScaffoldsPath = Paths.get( projectPath.toString(), PROJECT_PATH_SCAFFOLDS, genomeName )
 try { // create tmp dir
-    if( !Files.exists( genomeScaffoldsDirPath ) ) {
-        Files.createDirectory( genomeScaffoldsDirPath )
-        log.info( "create genome-ordered-alignments folder: ${genomeScaffoldsDirPath}" )
+    if( !Files.exists( genomeScaffoldsPath ) ) {
+        Files.createDirectory( genomeScaffoldsPath )
+        log.info( "create genome-ordered-alignments folder: ${genomeScaffoldsPath}" )
     }
 } catch( Throwable t ) {
-    log.error( "could create genome ordered alignments dir! gid=${genomeId}, ordered-alignments-dir=${genomeScaffoldsDirPath}" )
+    log.error( "could create genome ordered alignments dir! gid=${genomeId}, ordered-alignments-dir=${genomeScaffoldsPath}" )
     System.exit( 1 )
 }
-Files.createFile( genomeScaffoldsDirPath.resolve( 'state.running' ) ) // create state.running
+Files.createFile( genomeScaffoldsPath.resolve( 'state.running' ) ) // create state.running
 
 
 // create local tmp directory
@@ -129,7 +129,7 @@ try { // create tmp dir
     log.info( "tmp-folder: ${tmpPath}" )
     Files.createDirectory( tmpPath )
 } catch( Throwable t ) {
-    terminate( "could create tmp dir! gid=${genomeId}, tmp-dir=${tmpPath}", t, genomeScaffoldsDirPath, tmpPath )
+    terminate( "could create tmp dir! gid=${genomeId}, tmp-dir=${tmpPath}", t, genomeScaffoldsPath )
 }
 
 
@@ -143,7 +143,7 @@ def info = [
         species: genome.species,
         strain: genome.strain
     ],
-    path: genomeScaffoldsDirPath.toString(),
+    path: genomeScaffoldsPath.toString(),
     scaffolds: [:]
 ]
 
@@ -195,7 +195,7 @@ pbEnv.put( 'PATH', "${MUMMER}:${pathEnv}" )
 
 log.info( "exec: ${pb.command()}" )
 log.info( '----------------------------------------------------------------------------------------------' )
-if( pb.start().waitFor() != 0 ) terminate( 'could not exec MeDuSa!', genomeScaffoldsDirPath, tmpPath )
+if( pb.start().waitFor() != 0 ) terminate( 'could not exec MeDuSa!', genomeScaffoldsPath )
 log.info( '----------------------------------------------------------------------------------------------' )
 
 
@@ -262,8 +262,8 @@ linkedScaffoldsPath.text = sbPseudoGenome.toString()
 
 
 // copy scaffolds and pseudo genome files to genome scaffold dir
-Files.copy( scaffoldsPath, genomeScaffoldsDirPath.resolve( "${genomeName}.fasta" ) )
-Files.copy( linkedScaffoldsPath, genomeScaffoldsDirPath.resolve( "${genomeName}-pseudo.fasta" ) )
+Files.copy( scaffoldsPath, genomeScaffoldsPath.resolve( "${genomeName}.fasta" ) )
+Files.copy( linkedScaffoldsPath, genomeScaffoldsPath.resolve( "${genomeName}-pseudo.fasta" ) )
 
 
 // copy scaffolds to sequence dir for characterization steps
@@ -292,7 +292,7 @@ config.references.each( { ref ->
         .directory( tmpPath.toFile() )
     log.info( "exec: ${pb.command()}" )
     log.info( '----------------------------------------------------------------------------------------------' )
-    if( pb.start().waitFor() != 0 ) terminate( 'could not exec nucmer!', genomeScaffoldsDirPath, tmpPath )
+    if( pb.start().waitFor() != 0 ) terminate( 'could not exec nucmer!', genomeScaffoldsPath )
     log.info( '----------------------------------------------------------------------------------------------' )
     pb = new ProcessBuilder( 'sh', '-c',
         "${MUMMER}/delta-filter -q -i 0.8 ${tmpPath}/out.delta > ${tmpPath}/out-filtered.delta".toString() ) // assembled alignments
@@ -301,7 +301,7 @@ config.references.each( { ref ->
         .directory( tmpPath.toFile() )
     log.info( "exec: ${pb.command()}" )
     log.info( '----------------------------------------------------------------------------------------------' )
-    if( pb.start().waitFor() != 0 ) terminate( 'could not exec delta-filter!', genomeScaffoldsDirPath, tmpPath )
+    if( pb.start().waitFor() != 0 ) terminate( 'could not exec delta-filter!', genomeScaffoldsPath )
     log.info( '----------------------------------------------------------------------------------------------' )
     reference.pre = parseNucmer( tmpPath.resolve( 'out-filtered.delta' ), false )
 
@@ -313,7 +313,7 @@ config.references.each( { ref ->
         .directory( tmpPath.toFile() )
     log.info( "exec: ${pb.command()}" )
     log.info( '----------------------------------------------------------------------------------------------' )
-    if( pb.start().waitFor() != 0 ) terminate( 'could not exec nucmer!', genomeScaffoldsDirPath, tmpPath )
+    if( pb.start().waitFor() != 0 ) terminate( 'could not exec nucmer!', genomeScaffoldsPath )
     log.info( '----------------------------------------------------------------------------------------------' )
     pb = new ProcessBuilder( 'sh', '-c',
         "${MUMMER}/delta-filter -q -i 0.8 ${tmpPath}/out.delta > ${tmpPath}/out-filtered.delta".toString() ) // assembled alignments
@@ -322,7 +322,7 @@ config.references.each( { ref ->
         .directory( tmpPath.toFile() )
     log.info( "exec: ${pb.command()}" )
     log.info( '----------------------------------------------------------------------------------------------' )
-    if( pb.start().waitFor() != 0 ) terminate( 'could not exec delta-filter!', genomeScaffoldsDirPath, tmpPath )
+    if( pb.start().waitFor() != 0 ) terminate( 'could not exec delta-filter!', genomeScaffoldsPath )
     log.info( '----------------------------------------------------------------------------------------------' )
     reference.post = parseNucmer( tmpPath.resolve( 'out-filtered.delta' ), true )
 
@@ -332,17 +332,17 @@ config.references.each( { ref ->
 
 // cleanup
 log.debug( 'delete tmp-dir' )
-if( !tmpPath.deleteDir() ) terminate( "could not recursively delete tmp-dir=${tmpPath}", genomeScaffoldsDirPath, tmpPath )
+if( !tmpPath.deleteDir() ) terminate( "could not recursively delete tmp-dir=${tmpPath}", genomeScaffoldsPath )
 
 
 // store info.json
 info.time.end = (new Date()).format( DATE_FORMAT )
-File infoJson = genomeScaffoldsDirPath.resolve( 'info.json' ).toFile()
+File infoJson = genomeScaffoldsPath.resolve( 'info.json' ).toFile()
 infoJson << JsonOutput.prettyPrint( JsonOutput.toJson( info ) )
 
 
 // set state-file to finished
-Files.move( genomeScaffoldsDirPath.resolve( 'state.running' ), genomeScaffoldsDirPath.resolve( 'state.finished' ) )
+Files.move( genomeScaffoldsPath.resolve( 'state.running' ), genomeScaffoldsPath.resolve( 'state.finished' ) )
 
 
 
@@ -352,17 +352,15 @@ Files.move( genomeScaffoldsDirPath.resolve( 'state.running' ), genomeScaffoldsDi
 **********************/
 
 
-private void terminate( String msg, Path genomePath, Path tmpPath ) {
-    terminate( msg, null, genomePath, tmpPath )
+private void terminate( String msg, Path genomePath ) {
+    terminate( msg, null, genomePath )
 }
 
-private void terminate( String msg, Throwable t, Path genomePath, Path tmpPath ) {
+private void terminate( String msg, Throwable t, Path genomePath ) {
 
     if( t ) log.error( msg, t )
     else    log.error( msg )
     Files.move( genomePath.resolve( 'state.running' ), genomePath.resolve( 'state.failed' ) ) // set state-file to failed
-    tmpPath.deleteDir() // cleanup tmp dir
-    log.debug( "removed tmp-dir: ${tmpPath}" )
     System.exit( 1 )
 
 }

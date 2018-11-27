@@ -142,7 +142,7 @@ try { // create tmp dir
     log.info( "tmp-folder: ${tmpPath}" )
     Files.createDirectory( tmpPath )
 } catch( Throwable t ) {
-    terminate( "could create tmp dir! gid=${genomeId}, tmp-dir=${tmpPath}", t, genomeContigsPath, tmpPath )
+    terminate( "could create tmp dir! gid=${genomeId}, tmp-dir=${tmpPath}", t, genomeContigsPath )
 }
 
 
@@ -173,7 +173,7 @@ genome.data.each( { datum ->
                 log.info( "copy: ${srcFile} -> ${destFile}" )
                 Files.copy( srcFile, destFile )
             } catch( Exception ex ) {
-                terminate( "Failed to copy file!", ex, genomeContigsPath, tmpPath )
+                terminate( "Failed to copy file!", ex, genomeContigsPath )
             }
         } else {
             datum.files.each( { file ->
@@ -183,7 +183,7 @@ genome.data.each( { datum ->
                     log.info( "copy: ${srcFile} -> ${destFile}" )
                     Files.copy( srcFile, destFile )
                 } catch( Exception ex ) {
-                    terminate( "Failed to copy file! src=${srcFile}, dest=${destFile}", ex, genomeContigsPath, tmpPath )
+                    terminate( "Failed to copy file! src=${srcFile}, dest=${destFile}", ex, genomeContigsPath )
                 }
             } )
         }
@@ -249,7 +249,7 @@ if( (FileType.READS_NANOPORE.toString() in fileTypes)  &&  (FileType.READS_ILLUM
     /**
      * What else ?
      */
-    terminate( "wrong sequencing file constallation. Use either only PacBio/ONT/Illumina reads or long with short reads!", genomeContigsPath, tmpPath )
+    terminate( "wrong sequencing file constallation. Use either only PacBio/ONT/Illumina reads or long with short reads!", genomeContigsPath )
 
 }
 
@@ -262,7 +262,7 @@ infoJson << JsonOutput.prettyPrint( JsonOutput.toJson( info ) )
 
 // cleanup
 log.debug( 'delete tmp-dir' )
-if( !tmpPath.deleteDir() ) terminate( "could not recursively delete tmp-dir=${tmpPath}", genomeContigsPath, tmpPath )
+if( !tmpPath.deleteDir() ) terminate( "could not recursively delete tmp-dir=${tmpPath}", genomeContigsPath )
 
 // set state-file to finished
 Files.move( genomeContigsPath.resolve( 'state.running' ), genomeContigsPath.resolve( 'state.finished' ) )
@@ -289,7 +289,7 @@ private void runUnicycler( def config, def genome, Path genomeContigsPath, Path 
             .directory( tmpPath.toFile() )
             log.info( "exec: ${pb.command()}" )
             log.info( '----------------------------------------------------------------------------------------------' )
-            if( pb.start().waitFor() != 0 ) terminate( 'could not exec bam2fastq!', genomeQCReadsPath, tmpPath )
+            if( pb.start().waitFor() != 0 ) terminate( 'could not exec bam2fastq!', genomeContigsPath )
             log.info( '----------------------------------------------------------------------------------------------' )
             longReadsPath = tmpPath.resolve( "${genomeName}.fastq" )
         } else {
@@ -332,7 +332,7 @@ private void runUnicycler( def config, def genome, Path genomeContigsPath, Path 
         log.info( '----------------------------------------------------------------------------------------------' )
         int exitCode = pb.start().waitFor()
         log.info( '----------------------------------------------------------------------------------------------' )
-        if( exitCode != 0 ) terminate( "abnormal Unicycler exit code! exitCode!=${exitCode}", genomeContigsPath, tmpPath )
+        if( exitCode != 0 ) terminate( "abnormal Unicycler exit code! exitCode!=${exitCode}", genomeContigsPath )
 
 
         // calc preFilter assembly stats
@@ -410,7 +410,7 @@ private void runUnicycler( def config, def genome, Path genomeContigsPath, Path 
         info.n90Coverage = n50Contigs.collect( {it.coverage * it.length} ).sum() / n90Contigs.collect( {it.length} ).sum()
 
     } catch( Throwable t ) {
-        terminate( "Unicycler assembly failed! gid=${genome.id}", t, genomeContigsPath, tmpPath )
+        terminate( "Unicycler assembly failed! gid=${genome.id}", t, genomeContigsPath )
     }
 
 
@@ -468,7 +468,7 @@ private void runSpades( def config, def genome, Path genomeContigsPath, Path tmp
         log.info( '----------------------------------------------------------------------------------------------' )
         int exitCode = pb.start().waitFor()
         log.info( '----------------------------------------------------------------------------------------------' )
-        if( exitCode != 0 ) terminate( "abnormal SPAdes exit code! exitCode!=${exitCode}", genomeContigsPath, tmpPath )
+        if( exitCode != 0 ) terminate( "abnormal SPAdes exit code! exitCode!=${exitCode}", genomeContigsPath )
 
         // cp assembled contigs to genome contig folder
         Path rawAssemblyPath = tmpPath.resolve( 'scaffolds.fasta' )
@@ -524,7 +524,7 @@ private void runSpades( def config, def genome, Path genomeContigsPath, Path tmp
         info.n90Coverage = n50Contigs.collect( {it.coverage * it.length} ).sum() / n90Contigs.collect( {it.length} ).sum()
 
     } catch( Throwable t ) {
-        terminate( "SPAdes assembly failed! gid=${genome.id}", t, genomeContigsPath, tmpPath )
+        terminate( "SPAdes assembly failed! gid=${genome.id}", t, genomeContigsPath )
     }
 }
 
@@ -548,7 +548,7 @@ private void runHGap( def config, def genome, Path genomeContigsPath, Path tmpPa
         log.info( "exec: ${pb.command()}" )
         log.info( '----------------------------------------------------------------------------------------------' )
         int exitCode = pb.start().waitFor()
-        if( exitCode != 0 ) terminate( "abnormal dataset exit code! exitCode!=${exitCode}", genomeContigsPath, tmpPath )
+        if( exitCode != 0 ) terminate( "abnormal dataset exit code! exitCode!=${exitCode}", genomeContigsPath )
         log.info( '----------------------------------------------------------------------------------------------' )
 
         // run HGap4
@@ -565,7 +565,7 @@ private void runHGap( def config, def genome, Path genomeContigsPath, Path tmpPa
         log.info( "exec: ${pb.command()}" )
         log.info( '----------------------------------------------------------------------------------------------' )
         exitCode = pb.start().waitFor()
-        if( exitCode != 0 ) terminate( "abnormal HGap4 exit code! exitCode!=${exitCode}", genomeContigsPath, tmpPath )
+        if( exitCode != 0 ) terminate( "abnormal HGap4 exit code! exitCode!=${exitCode}", genomeContigsPath )
         log.info( '----------------------------------------------------------------------------------------------' )
 
         // copy assembled contigs
@@ -639,7 +639,7 @@ private void runHGap( def config, def genome, Path genomeContigsPath, Path tmpPa
         info.n90Coverage = n50Contigs.collect( {it.coverage * it.length} ).sum() / n90Contigs.collect( {it.length} ).sum()
 
     } catch( Throwable t ) {
-        terminate( "HGap assembly failed! gid=${genome.id}", t, genomeContigsPath, tmpPath )
+        terminate( "HGap assembly failed! gid=${genome.id}", t, genomeContigsPath )
     }
 
 }
@@ -808,21 +808,16 @@ private void filterContigs( def config, def genome, Path rawAssemblyPath, Path g
 
 
 
-private void terminate( String msg, Path genomePath, Path tmpPath ) {
-    terminate( msg, null, genomePath, tmpPath )
+private void terminate( String msg, Path genomePath ) {
+    terminate( msg, null, genomePath )
 }
 
 
-private void terminate( String msg, Throwable t, Path genomePath, Path tmpPath ) {
+private void terminate( String msg, Throwable t, Path genomePath ) {
 
-    if( t )
-        log.error( msg, t )
-    else {
-        log.error( msg )
-        tmpPath.deleteDir() // cleanup tmp dir
-    }
+    if( t ) log.error( msg, t )
+    else    log.error( msg )
     Files.move( genomePath.resolve( 'state.running' ), genomePath.resolve( 'state.failed' ) ) // set state-file to failed
-    log.debug( "removed tmp-dir: ${tmpPath}" )
     System.exit( 1 )
 
 }

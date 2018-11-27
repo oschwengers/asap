@@ -122,7 +122,7 @@ if( Files.isReadable( scaffoldsPath ) ) {
     genomeSequencePath = sequencePath
     log.info( "sequence file: ${genomeSequencePath}" )
 } else
-    terminate( "no sequence file! gid=${genomeId}, tmp-dir=${tmpPath}", genomeName, taxPath, tmpPath )
+    terminate( "no sequence file! gid=${genomeId}, tmp-dir=${tmpPath}", mlstPath, genomeName )
 
 
 // create info object
@@ -169,7 +169,7 @@ log.info( '---------------------------------------------------------------------
 def proc = pb.start()
 def stdOut = new StringBuilder(), stdErr = new StringBuilder()
 proc.consumeProcessOutput( stdOut, stdErr )
-if( proc.waitFor() != 0 ) terminate( "could not exec blastn! stderr=${stdErr}", genomeName, mlstPath )
+if( proc.waitFor() != 0 ) terminate( "could not exec blastn! stderr=${stdErr}", mlstPath, genomeName )
 log.info( '----------------------------------------------------------------------------------------------' )
 
 
@@ -252,11 +252,11 @@ Files.move( mlstPath.resolve( "${genomeName}.running" ), mlstPath.resolve( "${ge
 **********************/
 
 
-private void terminate( String msg, String genomeName, Path mlstPath ) {
-    terminate( msg, null, genomeName, mlstPath )
+private void terminate( String msg, Path mlstPath, String genomeName ) {
+    terminate( msg, null, mlstPath, genomeName  )
 }
 
-private void terminate( String msg, Throwable t, String genomeName, Path mlstPath ) {
+private void terminate( String msg, Throwable t, Path mlstPath, String genomeName ) {
 
     if( t ) log.error( msg, t )
     else    log.error( msg )

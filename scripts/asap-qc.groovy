@@ -139,7 +139,7 @@ try { // create tmp dir
     log.debug( "create tmp-trimmed folder: ${tmpTrimmedPath}" )
     Files.createDirectory( tmpTrimmedPath )
 } catch( Throwable t ) {
-    terminate( "could create tmp dir! gid=${genomeId}, tmp-dir=${tmpPath}, trimmed-tmp-dir=${tmpTrimmedPath}", t, genomeQCReadsPath, tmpPath )
+    terminate( "could create tmp dir! gid=${genomeId}, tmp-dir=${tmpPath}, trimmed-tmp-dir=${tmpTrimmedPath}", t, genomeQCReadsPath )
 }
 
 
@@ -203,7 +203,7 @@ genome.data.each( { datum ->
                     .directory( tmpPath.toFile() )
                 log.info( "exec: ${pb.command()}" )
                 log.info( '----------------------------------------------------------------------------------------------' )
-                if( pb.start().waitFor() != 0 ) terminate( 'could not exec bax2bam!', genomeQCReadsPath, tmpPath )
+                if( pb.start().waitFor() != 0 ) terminate( 'could not exec bax2bam!', genomeQCReadsPath )
                 log.info( '----------------------------------------------------------------------------------------------' )
 
                 info.rawReads << runFastQC( tmpPath.resolve( "${genomeName}.subreads.bam" ), tmpPath, genomeRawReadsPath )
@@ -265,7 +265,7 @@ genome.data.each( { datum ->
                 .redirectOutput( ProcessBuilder.Redirect.INHERIT )
             log.info( "exec: ${pb.command()}" )
             log.info( '----------------------------------------------------------------------------------------------' )
-            if( pb.start().waitFor() != 0 ) terminate( 'could not exec trimmomatic!', genomeQCReadsPath, tmpPath )
+            if( pb.start().waitFor() != 0 ) terminate( 'could not exec trimmomatic!', genomeQCReadsPath )
             log.info( '----------------------------------------------------------------------------------------------' )
             // exec Trimmomatic -> phiX filter
             pb = new ProcessBuilder( 'java', '-jar',
@@ -279,7 +279,7 @@ genome.data.each( { datum ->
                 .redirectOutput( ProcessBuilder.Redirect.INHERIT )
             log.info( "exec: ${pb.command()}" )
             log.info( '----------------------------------------------------------------------------------------------' )
-            if( pb.start().waitFor() != 0 ) terminate( 'could not exec trimmomatic!', genomeQCReadsPath, tmpPath )
+            if( pb.start().waitFor() != 0 ) terminate( 'could not exec trimmomatic!', genomeQCReadsPath )
             log.info( '----------------------------------------------------------------------------------------------' )
         } else if( ft == FileType.READS_ILLUMINA_PAIRED_END ) {
             log.info( "trim paired reads: file=${datum.files}" )
@@ -305,7 +305,7 @@ genome.data.each( { datum ->
                 .redirectOutput( ProcessBuilder.Redirect.INHERIT )
             log.info( "exec: ${pb.command()}" )
             log.info( '----------------------------------------------------------------------------------------------' )
-            if( pb.start().waitFor() != 0 ) terminate( 'could not exec trimmomatic (adapter)!', genomeQCReadsPath, tmpPath )
+            if( pb.start().waitFor() != 0 ) terminate( 'could not exec trimmomatic (adapter)!', genomeQCReadsPath )
             log.info( '----------------------------------------------------------------------------------------------' )
             // exec Trimmomatic -> phiX filter
             pb = new ProcessBuilder( 'java', '-jar',
@@ -321,7 +321,7 @@ genome.data.each( { datum ->
                 .redirectOutput( ProcessBuilder.Redirect.INHERIT )
             log.info( "exec: ${pb.command()}" )
             log.info( '----------------------------------------------------------------------------------------------' )
-            if( pb.start().waitFor() != 0 ) terminate( 'could not exec trimmomatic (quality)!', genomeQCReadsPath, tmpPath )
+            if( pb.start().waitFor() != 0 ) terminate( 'could not exec trimmomatic (quality)!', genomeQCReadsPath )
             log.info( '----------------------------------------------------------------------------------------------' )
         } else if( ft == FileType.READS_NANOPORE ) {
 
@@ -334,7 +334,7 @@ genome.data.each( { datum ->
                 .directory( tmpPath.toFile() )
                 log.info( "exec: ${pb.command()}" )
                 log.info( '----------------------------------------------------------------------------------------------' )
-                if( pb.start().waitFor() != 0 ) terminate( 'could not exec filtlong|gzip!', genomeQCReadsPath, tmpPath )
+                if( pb.start().waitFor() != 0 ) terminate( 'could not exec filtlong|gzip!', genomeQCReadsPath )
                 log.info( '----------------------------------------------------------------------------------------------' )
 
         } else if( ft == FileType.READS_PACBIO_RSII ) {
@@ -349,7 +349,7 @@ genome.data.each( { datum ->
                 .directory( tmpTrimmedPath.toFile() )
             log.info( "exec: ${pb.command()}" )
             log.info( '----------------------------------------------------------------------------------------------' )
-            if( pb.start().waitFor() != 0 ) terminate( 'could not exec pbindex!', genomeQCReadsPath, tmpPath )
+            if( pb.start().waitFor() != 0 ) terminate( 'could not exec pbindex!', genomeQCReadsPath )
             log.info( '----------------------------------------------------------------------------------------------' )
 
         } else if( ft == FileType.READS_PACBIO_SEQUEL ) {
@@ -363,7 +363,7 @@ genome.data.each( { datum ->
                 .directory( tmpTrimmedPath.toFile() )
             log.info( "exec: ${pb.command()}" )
             log.info( '----------------------------------------------------------------------------------------------' )
-            if( pb.start().waitFor() != 0 ) terminate( 'could not exec pbindex!', genomeQCReadsPath, tmpPath )
+            if( pb.start().waitFor() != 0 ) terminate( 'could not exec pbindex!', genomeQCReadsPath )
             log.info( '----------------------------------------------------------------------------------------------' )
 
         } else {
@@ -448,7 +448,7 @@ sed "s,%ASAP_HOME%,${ASAP_HOME},g" ${FASTQ_SCREEN}\/fastq_screen.conf.template \
             .directory( tmpPath.toFile() )
         log.info( "exec: ${pb.command()}" )
         log.info( '----------------------------------------------------------------------------------------------' )
-        if( pb.start().waitFor() != 0 ) terminate( "could not create FastQ Screen conf! conf-template=${localQCReadFilePath}, output-dir=${tmpTrimmedPath}", genomeQCReadsPath, tmpPath )
+        if( pb.start().waitFor() != 0 ) terminate( "could not create FastQ Screen conf! conf-template=${localQCReadFilePath}, output-dir=${tmpTrimmedPath}", genomeQCReadsPath )
         log.info( '----------------------------------------------------------------------------------------------' )
 
 
@@ -464,7 +464,7 @@ sed "s,%ASAP_HOME%,${ASAP_HOME},g" ${FASTQ_SCREEN}\/fastq_screen.conf.template \
                 .directory( tmpPath.toFile() )
             log.info( "exec: ${pb.command()}" )
             log.info( '----------------------------------------------------------------------------------------------' )
-            if( pb.start().waitFor() != 0 ) terminate( 'could not exec bam2fastq!', genomeQCReadsPath, tmpPath )
+            if( pb.start().waitFor() != 0 ) terminate( 'could not exec bam2fastq!', genomeQCReadsPath )
             log.info( '----------------------------------------------------------------------------------------------' )
             localQCReadFilePath = tmpPath.resolve( "${genomeName}.fastq" )
 
@@ -491,7 +491,7 @@ sed "s,%ASAP_HOME%,${ASAP_HOME},g" ${FASTQ_SCREEN}\/fastq_screen.conf.template \
         cmd << localQCReadFilePath.toString()
         log.debug( "exec: ${pb.command()}" )
         log.info( '----------------------------------------------------------------------------------------------' )
-        if( pb.start().waitFor() != 0 ) terminate( "could not exec FastQ Screen! read-file=${localQCReadFilePath}, output-dir=${tmpTrimmedPath}", genomeQCReadsPath, tmpPath )
+        if( pb.start().waitFor() != 0 ) terminate( "could not exec FastQ Screen! read-file=${localQCReadFilePath}, output-dir=${tmpTrimmedPath}", genomeQCReadsPath )
         log.info( '----------------------------------------------------------------------------------------------' )
 
         // parse FastQ Screen output
@@ -533,7 +533,7 @@ sed "s,%ASAP_HOME%,${ASAP_HOME},g" ${FASTQ_SCREEN}\/fastq_screen.conf.template \
 
 // cleanup
 log.debug( 'delete tmp-dir' )
-if( !tmpPath.deleteDir() ) terminate( "could not recursively delete tmp-dir=${tmpPath}", genomeQCReadsPath, tmpPath )
+if( !tmpPath.deleteDir() ) terminate( "could not recursively delete tmp-dir=${tmpPath}", genomeQCReadsPath )
 
 
 // store info.json
@@ -553,17 +553,15 @@ Files.move( genomeQCReadsPath.resolve( 'state.running' ), genomeQCReadsPath.reso
 **********************/
 
 
-private void terminate( String msg, Path genomePath, Path tmpPath ) {
-    terminate( msg, null, genomePath, tmpPath )
+private void terminate( String msg, Path genomePath ) {
+    terminate( msg, null, genomePath )
 }
 
-private void terminate( String msg, Throwable t, Path genomePath, Path tmpPath ) {
+private void terminate( String msg, Throwable t, Path genomePath ) {
 
     if( t ) log.error( msg, t )
     else    log.error( msg )
     Files.move( genomePath.resolve( 'state.running' ), genomePath.resolve( 'state.failed' ) ) // set state-file to failed
-    tmpPath.deleteDir() // cleanup tmp dir
-    log.debug( "removed tmp-dir: ${tmpPath}" )
     System.exit( 1 )
 
 }
@@ -583,7 +581,7 @@ private def runFastQC( Path readsPath, Path tmpPath, Path destinationPath ) {
     log.info( '----------------------------------------------------------------------------------------------' )
     log.info( "exec: ${pb.command()}" )
     log.info( '----------------------------------------------------------------------------------------------' )
-    if( pb.start().waitFor() != 0 ) terminate( "could not exec FastQC! read-file=${readsPath}, output-dir=${tmpPath}", genomeQCReadsPath, tmpPath )
+    if( pb.start().waitFor() != 0 ) terminate( "could not exec FastQC! read-file=${readsPath}, output-dir=${tmpPath}", genomeQCReadsPath )
 
     // parse FastQC summary and copy files
     String fileName = readsPath.toFile().name

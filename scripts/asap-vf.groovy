@@ -120,7 +120,7 @@ try { // create tmp dir
     log.info( "tmp-folder: ${tmpPath}" )
     Files.createDirectory( tmpPath )
 } catch( Throwable t ) {
-    terminate( "could create tmp dir! gid=${genomeId}, tmp-dir=${tmpPath}", t, genomeName, vfPath, tmpPath )
+    terminate( "could create tmp dir! gid=${genomeId}, tmp-dir=${tmpPath}", t, vfPath, genomeName )
 }
 
 
@@ -216,7 +216,7 @@ fhInput.close()
         System.exit( 1 )
     }
 } else {
-    terminate( 'neither GenBank nor Fasta file found!', genomeName, vfPath, tmpPath )
+    terminate( 'neither GenBank nor Fasta file found!', vfPath, genomeName )
 }
 
 
@@ -232,7 +232,7 @@ log.info( '---------------------------------------------------------------------
 def proc = pb.start()
 def stdOut = new StringBuilder( 100000 ), stdErr = new StringBuilder()
 proc.consumeProcessOutput( stdOut, stdErr )
-if( proc.waitFor() != 0 ) terminate( "could not exec blastp! stderr=${stdErr}", genomeName, vfPath, tmpPath )
+if( proc.waitFor() != 0 ) terminate( "could not exec blastp! stderr=${stdErr}", vfPath, genomeName )
 log.info( '----------------------------------------------------------------------------------------------' )
 
 
@@ -276,7 +276,7 @@ info.vf = blastHits.values().sort( { it.bitScore } )
 
 // cleanup
 log.debug( 'delete tmp-dir' )
-if( !tmpPath.deleteDir() ) terminate( "could not recursively delete tmp-dir=${tmpPath}", genomeName, vfPath, tmpPath )
+if( !tmpPath.deleteDir() ) terminate( "could not recursively delete tmp-dir=${tmpPath}", vfPath, genomeName )
 
 
 // store info.json
@@ -296,17 +296,15 @@ Files.move( vfPath.resolve( "${genomeName}.running" ), vfPath.resolve( "${genome
 **********************/
 
 
-private void terminate( String msg, String genomeName, Path vfPath, Path tmpPath ) {
-    terminate( msg, null, genomeName, vfPath, tmpPath )
+private void terminate( String msg, Path vfPath, String genomeName ) {
+    terminate( msg, null, vfPath, genomeName )
 }
 
-private void terminate( String msg, Throwable t, String genomeName, Path vfPath, Path tmpPath ) {
+private void terminate( String msg, Throwable t, Path vfPath, String genomeName ) {
 
     if( t ) log.error( msg, t )
     else    log.error( msg )
     Files.move( vfPath.resolve( "${genomeName}.running" ), vfPath.resolve( "${genomeName}.failed" ) ) // set state-file to failed
-    tmpPath.deleteDir() // cleanup tmp dir
-    log.debug( "removed tmp-dir: ${tmpPath}" )
     System.exit( 1 )
 
 }

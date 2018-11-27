@@ -123,7 +123,7 @@ if( Files.isReadable( scaffoldsPath ) ) {
     genomeSequencePath = sequencePath
     log.info( "sequence file: ${genomeSequencePath}" )
 } else
-    terminate( "no sequence file! gid=${genomeId}, tmp-dir=${tmpPath}", genomeName, taxPath, tmpPath )
+    terminate( "no sequence file! gid=${genomeId}, tmp-dir=${tmpPath}", abrPath, genomeName )
 
 // create local tmp directory
 final Path tmpPath = Paths.get( '/', 'var', 'scratch', "tmp-${System.currentTimeMillis()}-${Math.round(Math.random()*1000)}" )
@@ -131,7 +131,7 @@ try { // create tmp dir
     log.info( "tmp-folder: ${tmpPath}" )
     Files.createDirectory( tmpPath )
 } catch( Throwable t ) {
-    terminate( "could create tmp dir! gid=${genomeId}, tmp-dir=${tmpPath}", t, genomeName, abrPath, tmpPath )
+    terminate( "could create tmp dir! gid=${genomeId}, tmp-dir=${tmpPath}", t, abrPath, genomeName )
 }
 
 
@@ -185,7 +185,7 @@ pbEnv.put( 'PATH', pathEnv )
 
 log.info( "exec: ${pb.command()}" )
 log.info( '----------------------------------------------------------------------------------------------' )
-if( pb.start().waitFor() != 0 ) terminate( 'could not exec CARD rgi.py!', genomeName, abrPath, tmpPath )
+if( pb.start().waitFor() != 0 ) terminate( 'could not exec CARD rgi.py!', abrPath, genomeName )
 log.info( '----------------------------------------------------------------------------------------------' )
 
 
@@ -256,7 +256,7 @@ info.abr.additional = additionalHits.sort( { a, b -> a.orf.start <=> b.orf.start
 
 // cleanup
 log.debug( 'delete tmp-dir' )
-if( !tmpPath.deleteDir() ) terminate( "could not recursively delete tmp-dir=${tmpPath}", genomeName, abrPath, tmpPath )
+if( !tmpPath.deleteDir() ) terminate( "could not recursively delete tmp-dir=${tmpPath}", abrPath, genomeName )
 
 
 // store info.json
@@ -276,17 +276,15 @@ Files.move( abrPath.resolve( "${genomeName}.running" ), abrPath.resolve( "${geno
 **********************/
 
 
-private void terminate( String msg, String genomeName, Path abrPath, Path tmpPath ) {
-    terminate( msg, null, genomeName, abrPath, tmpPath )
+private void terminate( String msg, Path abrPath, String genomeName ) {
+    terminate( msg, null, abrPath, genomeName )
 }
 
-private void terminate( String msg, Throwable t, String genomeName, Path abrPath, Path tmpPath ) {
+private void terminate( String msg, Throwable t, Path abrPath, String genomeName ) {
 
     if( t ) log.error( msg, t )
     else    log.error( msg )
     Files.move( abrPath.resolve( "${genomeName}.running" ), abrPath.resolve( "${genomeName}.failed" ) ) // set state-file to failed
-    tmpPath.deleteDir() // cleanup tmp dir
-    log.debug( "removed tmp-dir: ${tmpPath}" )
     System.exit( 1 )
 
 }

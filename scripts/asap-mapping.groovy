@@ -119,7 +119,7 @@ try { // create tmp dir
     log.info( "tmp-folder: ${tmpPath}" )
     Files.createDirectory( tmpPath )
 } catch( Throwable t ) {
-    terminate( "could create tmp dir! gid=${genomeId}, tmp-dir=${tmpPath}", t, genomeQCReadsPath, tmpPath )
+    terminate( "could create tmp dir! gid=${genomeId}, tmp-dir=${tmpPath}", t, mappingsPath, genomeName )
 }
 
 
@@ -296,7 +296,7 @@ if( ft == FileType.READS_ILLUMINA_PAIRED_END  ||  ft == FileType.READS_ILLUMINA_
     log.info( "exec: ${pb.command()}" )
     log.info( '----------------------------------------------------------------------------------------------' )
     exitCode = pb.start().waitFor()
-    if( exitCode != 0 ) terminate( "abnormal minimap2 exit code! exitCode!=${exitCode}", genomeContigsPath, tmpPath )
+    if( exitCode != 0 ) terminate( "abnormal minimap2 exit code! exitCode!=${exitCode}", mappingsPath, genomeName )
     log.info( '----------------------------------------------------------------------------------------------' )
 
     // create, parse and store unique/multi mapping stats
@@ -350,7 +350,7 @@ if( ft == FileType.READS_ILLUMINA_PAIRED_END  ||  ft == FileType.READS_ILLUMINA_
 
 // cleanup
 log.debug( 'delete tmp-dir' )
-if( !tmpPath.deleteDir() ) terminate( "could not recursively delete tmp-dir=${tmpPath}", genomeQCReadsPath, tmpPath )
+if( !tmpPath.deleteDir() ) terminate( "could not recursively delete tmp-dir=${tmpPath}", mappingsPath, genomeName )
 
 
 // store info.json

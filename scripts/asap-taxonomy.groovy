@@ -133,7 +133,7 @@ if( Files.isReadable( scaffoldsPath ) ) {
     genomeSequencePath = sequencePath
     log.info( "sequence file: ${genomeSequencePath}" )
 } else
-    terminate( "no sequence file! gid=${genomeId}", genomeName, taxPath, null )
+    terminate( "no sequence file! gid=${genomeId}", taxPath, genomeName )
 
 
 // create local tmp directory
@@ -142,7 +142,7 @@ try { // create tmp dir
     log.info( "tmp-folder: ${tmpPath}" )
     Files.createDirectory( tmpPath )
 } catch( Throwable t ) {
-    terminate( "could create tmp dir! gid=${genomeId}, tmp-dir=${tmpPath}", t, genomeName, taxPath, tmpPath )
+    terminate( "could create tmp dir! gid=${genomeId}, tmp-dir=${tmpPath}", t, taxPath, genomeName )
 }
 
 
@@ -192,7 +192,7 @@ pbEnv.put( 'KRAKEN_DEFAULT_DB', KRAKEN_DB )
 
 log.info( "exec: ${pb.command()}" )
 log.info( '----------------------------------------------------------------------------------------------' )
-if( pb.start().waitFor() != 0 ) terminate( 'could not exec kraken | kraken-translate > tax.txt!', genomeName, taxPath, tmpPath )
+if( pb.start().waitFor() != 0 ) terminate( 'could not exec kraken | kraken-translate > tax.txt!', taxPath, genomeName )
 log.info( '----------------------------------------------------------------------------------------------' )
 
 
@@ -236,7 +236,7 @@ pb = new ProcessBuilder( CMSEARCH,
     .directory( tmpPath.toFile() )
 log.info( "exec: ${pb.command()}" )
 log.info( '----------------------------------------------------------------------------------------------' )
-if( pb.start().waitFor() != 0 ) terminate( 'could not exec cmsearch!', genomeName, taxPath, tmpPath )
+if( pb.start().waitFor() != 0 ) terminate( 'could not exec cmsearch!', taxPath, genomeName )
 log.info( '----------------------------------------------------------------------------------------------' )
 
 def ssu = [ 'score': 0.0 ]
@@ -293,7 +293,7 @@ stdErr = new StringBuilder()
 proc.consumeProcessOutput( stdOut, stdErr )
 if( proc.waitFor() != 0 ){
     log.error( stdErr.toString() )
-    terminate( 'could not exec blastn!', genomeName, taxPath, tmpPath )
+    terminate( 'could not exec blastn!', taxPath, genomeName )
 }
 log.info( '----------------------------------------------------------------------------------------------' )
 
@@ -428,7 +428,7 @@ config.references.each( { ref ->
     .redirectOutput( ProcessBuilder.Redirect.INHERIT )
     log.info( "exec: ${pb.command()}" )
     log.info( '----------------------------------------------------------------------------------------------' )
-    if( pb.start().waitFor() != 0 ) terminate( 'could not exec nucmer!', genomeName, taxPath, tmpPath )
+    if( pb.start().waitFor() != 0 ) terminate( 'could not exec nucmer!', taxPath, genomeName )
     log.info( '----------------------------------------------------------------------------------------------' )
 
     log.debug( 'filter hits via delta-filter...' )
@@ -440,7 +440,7 @@ config.references.each( { ref ->
     .redirectOutput( ProcessBuilder.Redirect.to( filterPath.toFile() ) )
     log.info( "exec: ${pb.command()}" )
     log.info( '----------------------------------------------------------------------------------------------' )
-    if( pb.start().waitFor() != 0 ) terminate( 'could not exec nucmer!', genomeName, taxPath, tmpPath )
+    if( pb.start().waitFor() != 0 ) terminate( 'could not exec nucmer!', taxPath, genomeName )
     log.info( '----------------------------------------------------------------------------------------------' )
 
     // parse nucmer output
@@ -491,7 +491,7 @@ info.ani.best = info.ani.all.sort( { -it.ani } )[0]
 
 // cleanup
 log.debug( 'delete tmp-dir' )
-if( !tmpPath.deleteDir() ) terminate( "could not recursively delete tmp-dir=${tmpPath}", genomeName, taxPath, tmpPath )
+if( !tmpPath.deleteDir() ) terminate( "could not recursively delete tmp-dir=${tmpPath}", taxPath, genomeName )
 
 
 // store info.json
@@ -511,19 +511,15 @@ Files.move( taxPath.resolve( "${genomeName}.running" ), taxPath.resolve( "${geno
 **********************/
 
 
-private void terminate( String msg, String genomeName, Path taxPath, Path tmpPath ) {
-    terminate( msg, null, genomeName, taxPath, tmpPath )
+private void terminate( String msg, Path taxPath, String genomeName ) {
+    terminate( msg, null, taxPath, genomeName )
 }
 
-private void terminate( String msg, Throwable t, String genomeName, Path taxPath, Path tmpPath ) {
+private void terminate( String msg, Throwable t, Path taxPath, String genomeName ) {
 
     if( t ) log.error( msg, t )
     else    log.error( msg )
     Files.move( taxPath.resolve( "${genomeName}.running" ), taxPath.resolve( "${genomeName}.failed" ) ) // set state-file to failed
-    if( tmpPath ) {
-        tmpPath.deleteDir() // cleanup tmp dir
-        log.debug( "removed tmp-dir: ${tmpPath}" )
-    }
     System.exit( 1 )
 
 }

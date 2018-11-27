@@ -97,7 +97,7 @@ try { // create tmp dir
     log.info( "tmp-folder: ${tmpPath}" )
     Files.createDirectory( tmpPath )
 } catch( Throwable t ) {
-    terminate( "could create tmp dir! gid=${genomeId}, tmp-dir=${tmpPath}", t, corePanPath, tmpPath )
+    terminate( "could create tmp dir! gid=${genomeId}, tmp-dir=${tmpPath}", t, corePanPath )
 }
 
 
@@ -162,7 +162,7 @@ info.corepan.includedGenomes.each( { cmd << "genomes/${it}.gff".toString() } )
 
 log.info( "exec: ${pb.command()}" )
 log.info( '----------------------------------------------------------------------------------------------' )
-if( pb.start().waitFor() != 0 ) terminate( 'could not exec Roary!', corePanPath, tmpPath )
+if( pb.start().waitFor() != 0 ) terminate( 'could not exec Roary!', corePanPath )
 log.info( '----------------------------------------------------------------------------------------------' )
 
 
@@ -325,7 +325,7 @@ infoJson << JsonOutput.prettyPrint( JsonOutput.toJson( info ) )
 
 // cleanup
 log.debug( 'delete tmp-dir' )
-if( !tmpPath.deleteDir() ) terminate( "could not recursively delete tmp-dir=${tmpPath}", genomeContigsPath, tmpPath )
+if( !tmpPath.deleteDir() ) terminate( "could not recursively delete tmp-dir=${tmpPath}", corePanPath )
 
 
 // set state-file to finished
@@ -339,17 +339,15 @@ Files.move( corePanPath.resolve( 'state.running' ), corePanPath.resolve( 'state.
 **********************/
 
 
-private void terminate( String msg, Path analysisPath, Path tmpPath ) {
-    terminate( msg, null, analysisPath, tmpPath )
+private void terminate( String msg, Path analysisPath ) {
+    terminate( msg, null, analysisPath )
 }
 
-private void terminate( String msg, Throwable t, Path analysisPath, Path tmpPath ) {
+private void terminate( String msg, Throwable t, Path analysisPath ) {
 
     if( t ) log.error( msg, t )
     else    log.error( msg )
     Files.move( analysisPath.resolve( 'state.running' ), analysisPath.resolve( 'state.failed' ) ) // set state-file to failed
-    tmpPath.deleteDir() // cleanup tmp dir
-    log.debug( "removed tmp-dir: ${tmpPath}" )
     System.exit( 1 )
 
 }
