@@ -256,8 +256,8 @@ stdOut.eachLine( { line ->
     if( hit.coverage >= 0.8  &&  hit.pIdent >= 0.9 ) {
 
         def category = vfdbCategories[ hit.dbId ]
-        hit.catId = category.id
-        hit.catName = category.name
+        hit.catId = category.id ?: ''
+        hit.catName = category.name ?: ''
 
         def altHit = blastHits[ hit.locus ]
         if( !altHit )
