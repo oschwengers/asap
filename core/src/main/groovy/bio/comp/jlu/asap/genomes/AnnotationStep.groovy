@@ -240,50 +240,6 @@ class AnnotationStep extends GenomeStep {
 
         // parse gff
         info.features = []
-        def gffParts = genomePath.resolve( "${genomeName}.gff" ).text.split( '>' )
-        gffParts[0].eachLine( { line -> // parse annotation part
-            if( line[0] != '#' ) { // skip comments
-                def (contigName, inference, type, start, end, score, strand, phase, attributesCol) = line.split( '\t' )
-                def attributes = attributesCol.split( ';' ).collect( {
-                    def cols = it.split( '=' )
-                    return [ tag: cols[0], value: cols[1] ]
-                } )
-                if( type != 'gene' ) {
-                    def feature = [
-                        contig: contigName,
-                        locusTag: attributes.find( { it.tag == 'locus_tag' } )?.value ?: '',
-                        type: type,
-                        start: Integer.parseInt( start ),
-                        end: Integer.parseInt( end ),
-                        strand: strand,
-                        //phase: phase,
-                        gene: attributes.find( { it.tag == 'gene' } )?.value ?: '',
-                        product: attributes.find( { it.tag == 'product' } )?.value ?: '',
-                        inference: attributes.find( { it.tag == 'inference' } )?.value ?: ''
-                    ]
-                    if( feature.type == 'CDS' ) {
-                        feature.ec = attributes.find( { it.tag == 'eC_number' } )?.value ?: ''
-                    }
-                    if( feature.product == '' ) {
-                        feature.product = attributes.find( { it.tag == 'rpt_family' } )?.value ?: ''
-                    }
-                    info.features << feature
-                }
-            }
-        } )
-        info.contigs = []
-        gffParts[1..-1].each( { // syntax sugar for all without the first
-            m = it =~ /(?m)^>(.+)$\n([ATGCNatgcn\n]+)$/
-            m.each( { match ->
-                info.contigs << [
-                    name: match[1].split(' ')[0],
-                    length: match[2].replaceAll( '[^ATGCNatgcn]', '' ).length()
-                ]
-            } )
-        } )
-
-
-
         boolean isSequencePart = false
         genomePath.resolve( "${genomeName}.gff" ).eachLine( { line ->
             if( !isSequencePart ) {

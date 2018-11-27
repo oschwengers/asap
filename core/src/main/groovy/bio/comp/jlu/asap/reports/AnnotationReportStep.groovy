@@ -10,6 +10,7 @@ import groovy.json.JsonSlurper
 import groovy.json.JsonOutput
 import freemarker.template.Configuration
 import freemarker.template.Template
+import bio.comp.jlu.asap.api.FileType
 import bio.comp.jlu.asap.reports.ReportStep
 
 import static bio.comp.jlu.asap.api.GenomeSteps.ANNOTATION
@@ -90,6 +91,8 @@ class AnnotationReportStep extends ReportStep {
             noTRna: [],
         ]
 
+        model.nanopore = false
+
         // build detail pages
         Template detailTemplate = templateConfiguration.getTemplate( "annotations_details.ftl" )
         config.genomes.each( { genome ->
@@ -110,6 +113,12 @@ class AnnotationReportStep extends ReportStep {
                 stat << (new JsonSlurper()).parseText( infoJsonPath.toFile().text )
                 stat.genomeName = genomeName
                 stat.features = stat.features.sort( { a,b -> a.start <=> b.start } )
+
+                // add warning for nanopore only assemblies
+                stat.nanopore = ( genome.data.size() == 1  &&  FileType.getEnum( genome.data[0].type ) == FileType.READS_NANOPORE )
+                if( stat.nanopore ) {
+                    model.nanopore = true
+                }
 
                 Path contigsAnnotatedGenomeReportsPath = contigsAnnotatedReportsPath.resolve( genomeName )
                 Files.createDirectory( contigsAnnotatedGenomeReportsPath )

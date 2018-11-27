@@ -180,6 +180,18 @@
 
                     <#-- content start -->
 
+                <#if nanopore>
+                    <div class="row">
+                        <div class="alert alert-warning alert-dismissible" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <strong>Warning!</strong>
+                            This isolate was sequenced with an Oxford Nanopore Technology (ONT) device only. As the per base error rate of ONT sequencing devices is
+                            currently rather high, structural and functional genome annotation is very prone to errors. Please, sceptically check these annotations!
+                            As a rule of thumb, consider a gene density of roughly 1 CDS per 1 kb of genome sequence.
+                        </div>
+                    </div
+                </#if>
+
                     <div class="row">
 
                     <#if (noGenes>0)>
