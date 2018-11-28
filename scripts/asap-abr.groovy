@@ -159,18 +159,14 @@ def info = [
 
 
 // parse CARD aro terms
-def aroTerms = (new JsonSlurper()).parseText( Paths.get( "${CARD}/aro.json" ).toFile().text )
+def aroTerms = (new JsonSlurper()).parseText( Paths.get( "${CARD}/aro.json" ).text )
 
 
 // process
-ProcessBuilder pb = new ProcessBuilder( 'python3', "${CARD}/rgi.py".toString(),
+ProcessBuilder pb = new ProcessBuilder( 'python3', "${CARD}/rgi".toString(),
+    'main',
     '--input_type', 'contig',
     '--num_threads', '1',
-    '--data', 'wgs',
-    '--clean', 'NO', // do not clean intermediate files
-    '--clean_database', 'NO', // do not clean database files
-    '--loose_criteria', 'NO', // exlude loose hits (only report strict and perfect hits)
-    '--verbose', 'ON', // exlude loose hits (only report strict and perfect hits)
     '--input_sequence', genomeSequencePath.toString(),
     '--output_file', "${genomeName}-card".toString() )
     .redirectErrorStream( true )
@@ -186,12 +182,12 @@ pbEnv.put( 'PATH', pathEnv )
 
 log.info( "exec: ${pb.command()}" )
 log.info( '----------------------------------------------------------------------------------------------' )
-if( pb.start().waitFor() != 0 ) terminate( 'could not exec CARD rgi.py!', abrPath, genomeName )
+if( pb.start().waitFor() != 0 ) terminate( 'could not exec CARD rgi!', abrPath, genomeName )
 log.info( '----------------------------------------------------------------------------------------------' )
 
 
 // parse and aggregate CARD output
-def p = ~/determinant of ([a-zA-Z_-]+) resistance/
+def p = ~/([a-zA-Z]+) antibiotic/
 def abrs = [:]
 (new JsonSlurper()).parseText( tmpPath.resolve( "${genomeName}-card.json" ).text ).each( { cardHit ->
     if( !cardHit.value[ 'data_type' ] ) {
@@ -202,10 +198,10 @@ def abrs = [:]
                     name: hsp.model_name,
                     desc: aroTerms.find( { it.accession.split(':')[1] == hsp.ARO_accession } ).description ?: '-',
                     type: hsp.model_type,
-                    eVal: hsp.pass_evalue
+                    bitScore: hsp.pass_bitscore
                 ],
                 eValue: hsp.evalue,
-                bitScore: hsp[ 'bit-score' ],
+                bitScore: hsp[ 'bit_score' ],
                 percentSeqIdentity: hsp.perc_identity / 100,
                 alignment: hsp.match,
                 orf: [
@@ -214,17 +210,22 @@ def abrs = [:]
                     length: Math.abs( hsp.orf_start - hsp.orf_end ),
                     strand: hsp.orf_strand
                 ],
-                antibiotics: []
+                antibiotics: [],
+                drugClasses: []
             ]
-            if( hsp.SNP )
-                abr << hsp.SNP
-            hsp.ARO_category.each( { aroCat ->
-                def m = aroCat.value.category_aro_name =~ p
-                if( m ) {
-                    abr.antibiotics << m[0][1]
+            if( hsp.snp )
+                abr << hsp.snp
+            hsp.ARO_category.each( {
+                def aroCat = it.value
+                if( aroCat.category_aro_class_name == 'Drug Class' ) {
+                    abr.drugClasses << aroCat.category_aro_name - ' antibiotic'
+                } else if( aroCat.category_aro_class_name == 'Antibiotic' ) {
+                    abr.antibiotics << aroCat.category_aro_name
                 }
+
             } )
-            abr.antibiotics = abr.antibiotics.sort()
+            abr.antibiotics = abr.antibiotics.toUnique().sort()
+            abr.drugClasses = abr.drugClasses.toUnique().sort()
             if( abr.percentSeqIdentity > PERC_SEQ_IDENT ) {
                 if( abrs.containsKey( abr.orf.start ) ) {
                     abrs[ (abr.orf.start) ] << abr

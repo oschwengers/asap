@@ -21,7 +21,15 @@ RUN apt-get -y update && apt-get -y install \
 RUN pip3 install \
     biopython \
     networkx \
-    numpy
+    numpy \
+    filetype \
+    pytest \
+    mock \
+    pandas \
+    matplotlib \
+    seaborn \
+    pyfaidx \
+    pyahocorasick
 
 RUN mkdir /var/scratch/
 

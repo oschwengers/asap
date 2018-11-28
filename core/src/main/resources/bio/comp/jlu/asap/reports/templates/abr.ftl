@@ -117,7 +117,7 @@
                             <ul>
                               <li><strong># ABR Genes</strong>: Number of antibiotic resistance genes found.</li>
 
-                              <li><strong>ABR Profile</strong>: Found antibiotic agent resistances.</li>
+                              <li><strong>ABR Profile</strong>: Found antibiotic drug class resistances.</li>
 
                               <li><strong># ABR Target Drugs</strong>: Number of antibiotic agent resistances.</li>
 
@@ -211,7 +211,7 @@
                                         <td>${step.genome.id}</td>
                                         <td>${project.genus[0]}. ${step.genome.species} ${step.genome.strain}</td>
                                         <td class="text-center"><div class="abrs ${step.abrProfile?join(" ")}"></div></td>
-                                        <td class="text-center" gradient="1"><abbr class="abr-list" title="ABR Target Drug List" data-content="${step.targetDrugs?join("<br>")}">${step.targetDrugs?size}</abbr></td>
+                                        <td class="text-center" gradient="1"><abbr class="abr-list" title="ABR Target Drug List" data-content="${step.antibiotics?join("<br>")}">${step.antibiotics?size}</abbr></td>
                                         <td class="text-center" gradient="2">${step.abr.perfect?size}</td>
                                         <td class="text-center" gradient="3">${step.noPotentialResistances}</td>
                                         <td class="text-center"><a href="./abr/${step.genomeName}.html"><span class="glyphicon glyphicon-search"></span></a></td>

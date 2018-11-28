@@ -22,6 +22,34 @@ class ABRReportStep extends ReportStep {
     private final Path abrPath
     private final Path abrReportPath
 
+    private final def abrAbbr = [
+        'aminoglycoside': 'ab',
+        'beta-lactam': 'bl',
+        'diaminopyrimidine': 'da',
+        'elfamycin': 'em',
+        'fluoroquinolone': 'fl',
+        'glycopeptide': 'gl',
+        'lincosamide': 'ls',
+        'lipopeptide': 'lp',
+        'macrocyclic': 'mc',
+        'macrolide': 'ml',
+        'nitrofuran': 'nf',
+        'nitroimidazole': 'ni',
+        'nucleoside': 'nc',
+        'organoarsenic': 'oa',
+        'oxazolidinone': 'oz',
+        'peptide': 'pt',
+        'phenicol': 'pc',
+        'pleuromutilin': 'pm',
+        'polyamine': 'pa',
+        'polymyxin': 'px',
+        'rifamycin': 'ra',
+        'streptogramin': 'sg',
+        'sulfonamide': 'sa',
+        'sulfone': 'sf',
+        'tetracycline': 'tc'
+    ]
+
 
     public ABRReportStep( def config, Configuration templateConfiguration ) {
 
@@ -91,30 +119,8 @@ class ABRReportStep extends ReportStep {
 
                 // conversions
                 stat.noPotentialResistances = (stat.abr.additional*.orf.start).toUnique().size()
-                stat.targetDrugs = stat.abr.perfect*.antibiotics.flatten().toUnique().sort()
-                def abrAbbr = [
-                    'aminoglycoside': 'ab',
-                    'beta-lactam': 'bl',
-                    'chloramphenicol': 'ca',
-                    'fluoroquinolone': 'fl',
-                    'fosfomycin': 'fo',
-                    'fusidic acid': 'fu',
-                    'glycopeptide': 'gl',
-                    'lincosamide': 'ls',
-                    'linezolid': 'lz',
-                    'macrolide': 'ma',
-                    'mupirocin': 'mu',
-                    'nitrofuratoin': 'ni',
-                    'oxazolidinone': 'ox',
-                    'polymyxin': 'po',
-                    'rifampin': 'ri',
-                    'streptogramin': 'sg',
-                    'sulfonamide': 'sa',
-                    'tetracycline': 'te',
-                    'triclosan': 'tc',
-                    'trimethoprim': 'tr'
-                ]
-                stat.abrProfile = stat.targetDrugs.collect( { abrAbbr[ it ] } ).findAll( { it != null } )
+                stat.antibiotics = stat.abr.perfect*.antibiotics.toUnique().sort()
+                stat.abrProfile = stat.abr.perfect*.drugClasses.toUnique().sort().collect( { abrAbbr[ it ] } ).findAll( { it != null } )
 
                 def bestAdditinalABRs = [:]
                 stat.abr.additional.each( {
