@@ -122,7 +122,7 @@ if( Files.isReadable( scaffoldsPath ) ) {
     genomeSequencePath = sequencePath
     log.info( "sequence file: ${genomeSequencePath}" )
 } else
-    terminate( "no sequence file! gid=${genomeId}, tmp-dir=${tmpPath}", mlstPath, genomeName )
+    terminate( "no sequence file! gid=${genomeId}", mlstPath, genomeName )
 
 
 // create info object

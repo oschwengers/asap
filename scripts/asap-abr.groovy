@@ -123,7 +123,8 @@ if( Files.isReadable( scaffoldsPath ) ) {
     genomeSequencePath = sequencePath
     log.info( "sequence file: ${genomeSequencePath}" )
 } else
-    terminate( "no sequence file! gid=${genomeId}, tmp-dir=${tmpPath}", abrPath, genomeName )
+    terminate( "no sequence file! gid=${genomeId}", abrPath, genomeName )
+
 
 // create local tmp directory
 final Path tmpPath = Paths.get( '/', 'var', 'scratch', "tmp-${System.currentTimeMillis()}-${Math.round(Math.random()*1000)}" )
