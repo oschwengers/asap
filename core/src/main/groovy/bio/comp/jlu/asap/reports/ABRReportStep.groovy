@@ -24,10 +24,17 @@ class ABRReportStep extends ReportStep {
 
     private final def abrAbbr = [
         'aminoglycoside': 'ab',
-        'beta-lactam': 'bl',
+        'monobactam': 'mb',
+        'penam': 'pn',
+        'penem': 'pe',
+        'carbapenem': 'cp',
+        'cephalosporin': 'cs',
+        'cephamycin': 'cm',
+        'cycloserine': 'ce',
         'diaminopyrimidine': 'da',
         'elfamycin': 'em',
         'fluoroquinolone': 'fl',
+        'fosfomycin': 'fm',
         'glycopeptide': 'gl',
         'lincosamide': 'ls',
         'lipopeptide': 'lp',
@@ -36,6 +43,7 @@ class ABRReportStep extends ReportStep {
         'nitrofuran': 'nf',
         'nitroimidazole': 'ni',
         'nucleoside': 'nc',
+        'nybomycin': 'ny',
         'organoarsenic': 'oa',
         'oxazolidinone': 'oz',
         'peptide': 'pt',
@@ -47,7 +55,8 @@ class ABRReportStep extends ReportStep {
         'streptogramin': 'sg',
         'sulfonamide': 'sa',
         'sulfone': 'sf',
-        'tetracycline': 'tc'
+        'tetracycline': 'tc',
+        'triclosan': 'ts'
     ]
 
 
@@ -119,8 +128,8 @@ class ABRReportStep extends ReportStep {
 
                 // conversions
                 stat.noPotentialResistances = (stat.abr.additional*.orf.start).toUnique().size()
-                stat.antibiotics = stat.abr.perfect*.antibiotics.toUnique().sort()
-                stat.abrProfile = stat.abr.perfect*.drugClasses.toUnique().sort().collect( { abrAbbr[ it ] } ).findAll( { it != null } )
+                stat.antibiotics = stat.abr.perfect*.antibiotics.flatten().toUnique().sort()
+                stat.abrProfile = stat.abr.perfect*.drugClasses.flatten().toUnique().collect( { abrAbbr[ it ] } ).findAll( { it != null } ).sort()
 
                 def bestAdditinalABRs = [:]
                 stat.abr.additional.each( {

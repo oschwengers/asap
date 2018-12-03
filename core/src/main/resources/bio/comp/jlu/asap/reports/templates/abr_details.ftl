@@ -205,7 +205,7 @@
                                 <tbody>
                                     <#list abr.perfect as abr_>
                                     <tr>
-                                        <td class="text-center"><a href="https://card.mcmaster.ca/aro/${abr_.model.aroId}" target="_blank" class="model-description" data-toggle="popover" title="Model Information" data-content="<p>ARO-ID: ${abr_.model.aroId}</p><p>Name: ${abr_.model.name}</p><p>Description: ${abr_.model.desc}</p><p>Type: ${abr_.model.type}</p><p>E-Value: ${abr_.model.eVal}</p>">${abr_.model.name}</a></td>
+                                        <td class="text-center"><a href="https://card.mcmaster.ca/aro/${abr_.model.aroId}" target="_blank" class="model-description" data-toggle="popover" title="Model Information" data-content="<p>ARO-ID: ${abr_.model.aroId}</p><p>Name: ${abr_.model.name}</p><p>Description: ${abr_.model.desc}</p><p>Type: ${abr_.model.type}</p><p>Bitscore: ${abr_.model.bitScore}</p>">${abr_.model.name}</a></td>
                                         <td class="text-center">${abr_.antibiotics?join(", ")}</td>
                                         <td class="text-center">${abr_.orf.start}</td>
                                         <td class="text-center">${abr_.orf.end}</td>
@@ -238,7 +238,7 @@
                                 <tbody>
                                     <#list abr.bestAdditinalABRs as abr_>
                                     <tr>
-                                        <td class="text-center"><a href="https://card.mcmaster.ca/aro/${abr_.model.aroId}" target="_blank" class="model-description" data-toggle="popover" title="Model Information" data-content="<p>ARO-ID: ${abr_.model.aroId}</p><p>Name: ${abr_.model.name}</p><p>Description: ${abr_.model.desc}</p><p>Type: ${abr_.model.type}</p><p>E-Value: ${abr_.model.eVal}</p>">${abr_.model.name}</a></td>
+                                        <td class="text-center"><a href="https://card.mcmaster.ca/aro/${abr_.model.aroId}" target="_blank" class="model-description" data-toggle="popover" title="Model Information" data-content="<p>ARO-ID: ${abr_.model.aroId}</p><p>Name: ${abr_.model.name}</p><p>Description: ${abr_.model.desc}</p><p>Type: ${abr_.model.type}</p><p>Bitscore: ${abr_.model.bitScore}</p>">${abr_.model.name}</a></td>
                                         <td class="text-center">${abr_.antibiotics?join(", ")}</td>
                                         <td class="text-center">${abr_.orf.start}</td>
                                         <td class="text-center">${abr_.orf.end}</td>
@@ -274,7 +274,7 @@
                                 <tbody>
                                     <#list abr.additional as abr_>
                                     <tr>
-                                        <td class="text-center"><a href="https://card.mcmaster.ca/aro/${abr_.model.aroId}" target="_blank" class="model-description" data-toggle="popover" title="Model Information" data-content="<p>ARO-ID: ${abr_.model.aroId}</p><p>Name: ${abr_.model.name}</p><p>Description: ${abr_.model.desc}</p><p>Type: ${abr_.model.type}</p><p>E-Value: ${abr_.model.eVal}</p>">${abr_.model.name}</a></td>
+                                        <td class="text-center"><a href="https://card.mcmaster.ca/aro/${abr_.model.aroId}" target="_blank" class="model-description" data-toggle="popover" title="Model Information" data-content="<p>ARO-ID: ${abr_.model.aroId}</p><p>Name: ${abr_.model.name}</p><p>Description: ${abr_.model.desc}</p><p>Type: ${abr_.model.type}</p><p>Bitscore: ${abr_.model.bitScore}</p>">${abr_.model.name}</a></td>
                                         <td class="text-center">${abr_.antibiotics?join(", ")}</td>
                                         <td class="text-center">${abr_.orf.start}</td>
                                         <td class="text-center">${abr_.orf.end}</td>

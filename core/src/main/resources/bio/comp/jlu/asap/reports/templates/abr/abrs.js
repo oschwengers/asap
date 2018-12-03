@@ -2,11 +2,18 @@
 (function (d3) {
 
     let dict = {
-        ab: ["Aminoglycoside",],
-        bl: ["Beta-lactam"],
-        da: ["diaminopyrimidine"],
+        ab: ["Aminoglycoside"],
+        mb: ["Monobactam"],
+        pn: ["Penam"],
+        pe: ["Penem"],
+        cp: ["Carbapenem"],
+        cs: ["Cephalosporin"],
+        cm: ["Cephamycin"],
+        ce: ["Cycloserine"],
+        da: ["Diaminopyrimidine"],
         em: ["Elfamycin"],
         fl: ["Fluoroquinolone"],
+        fm: ["Fosfomycin"],
         gl: ["Glycopeptide"],
         ls: ["Lincosamide"],
         lp: ["Lipopeptide"],
@@ -15,6 +22,7 @@
         nf: ["Nitrofuran"],
         ni: ["Nitroimidazole"],
         nc: ["Nucleoside"],
+        ny: ["Nybomycin"],
         oa: ["Organoarsenic"],
         oz: ["Oxazolidinone"],
         pt: ["Peptide"],
@@ -26,12 +34,13 @@
         sg: ["Streptogramin"],
         sa: ["Sulfonamide"],
         sf: ["Sulfone"],
-        tc: ["Tetracycline"]
+        tc: ["Tetracycline"],
+        ts: ["Triclosan"]
     };
     let dictLen = Object.keys(dict).length;
 
     Object.keys(dict).forEach( (key, idx) => {
-        dict[key][1] = d3.schemeCategory20[idx];
+        dict[key][1] = d3.schemeCategory20[idx%20];
     } );
 
     Array.from( document.getElementsByClassName( "abrs" ) ).forEach( (e) => {

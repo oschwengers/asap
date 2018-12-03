@@ -213,8 +213,9 @@ def abrs = [:]
                 antibiotics: [],
                 drugClasses: []
             ]
-            if( hsp.snp )
-                abr << hsp.snp
+            if( hsp.snp ) {
+                abr.snp = hsp.snp
+            }
             hsp.ARO_category.each( {
                 def aroCat = it.value
                 if( aroCat.category_aro_class_name == 'Drug Class' ) {
