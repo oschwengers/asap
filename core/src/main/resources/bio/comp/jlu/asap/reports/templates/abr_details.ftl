@@ -40,7 +40,7 @@
                             text: 'csv',
                             filename: 'abr-${project.genus[0]}_${genome.species}_${genome.strain}',
                             exportOptions: {
-                                columns: [ 0, 1, 2, 3, 4, 5 ]
+                                columns: [ 0, 1, 2, 3, 4, 5, 6 ]
                             }
                         }
                     ],
@@ -64,7 +64,7 @@
                             text: 'csv',
                             filename: 'abr-potential-${project.genus[0]}_${genome.species}_${genome.strain}',
                             exportOptions: {
-                                columns: [ 0, 1, 2, 3, 4, 6, 7, 8 ]
+                                columns: [ 0, 1, 2, 3, 4, 5, 7, 8 ]
                             }
                         }
                     ],
@@ -195,7 +195,8 @@
                                 <thead>
                                     <tr>
                                         <th class="text-center">Model</th>
-                                        <th class="text-center">ABR Target Drugs</th>
+                                        <th class="text-center">Drug Class(es)</th>
+                                        <th class="text-center">Target Drugs</th>
                                         <th class="text-center">Start</th>
                                         <th class="text-center">End</th>
                                         <th class="text-center">Length</th>
@@ -206,6 +207,7 @@
                                     <#list abr.perfect as abr_>
                                     <tr>
                                         <td class="text-center"><a href="https://card.mcmaster.ca/aro/${abr_.model.aroId}" target="_blank" class="model-description" data-toggle="popover" title="Model Information" data-content="<p>ARO-ID: ${abr_.model.aroId}</p><p>Name: ${abr_.model.name}</p><p>Description: ${abr_.model.desc}</p><p>Type: ${abr_.model.type}</p><p>Bitscore: ${abr_.model.bitScore}</p>">${abr_.model.name}</a></td>
+                                        <td class="text-center">${abr_.drugClasses?join(", ")}</td>
                                         <td class="text-center">${abr_.antibiotics?join(", ")}</td>
                                         <td class="text-center">${abr_.orf.start}</td>
                                         <td class="text-center">${abr_.orf.end}</td>
@@ -225,7 +227,8 @@
                                 <thead>
                                     <tr>
                                         <th class="text-center">Model</th>
-                                        <th class="text-center">ABR Target Drugs</th>
+                                        <th class="text-center">Drug Class(es)</th>
+                                        <th class="text-center">Target Drugs</th>
                                         <th class="text-center">Start</th>
                                         <th class="text-center">End</th>
                                         <th class="text-center">Length</th>
@@ -239,6 +242,7 @@
                                     <#list abr.bestAdditinalABRs as abr_>
                                     <tr>
                                         <td class="text-center"><a href="https://card.mcmaster.ca/aro/${abr_.model.aroId}" target="_blank" class="model-description" data-toggle="popover" title="Model Information" data-content="<p>ARO-ID: ${abr_.model.aroId}</p><p>Name: ${abr_.model.name}</p><p>Description: ${abr_.model.desc}</p><p>Type: ${abr_.model.type}</p><p>Bitscore: ${abr_.model.bitScore}</p>">${abr_.model.name}</a></td>
+                                        <td class="text-center">${abr_.drugClasses?join(", ")}</td>
                                         <td class="text-center">${abr_.antibiotics?join(", ")}</td>
                                         <td class="text-center">${abr_.orf.start}</td>
                                         <td class="text-center">${abr_.orf.end}</td>
@@ -261,7 +265,8 @@
                                 <thead>
                                     <tr>
                                         <th class="text-center">Model</th>
-                                        <th class="text-center">ABR Target Drugs</th>
+                                        <th class="text-center">Drug Class(es)</th>
+                                        <th class="text-center">Target Drugs</th>
                                         <th class="text-center">Start</th>
                                         <th class="text-center">End</th>
                                         <th class="text-center">Length</th>
@@ -275,6 +280,7 @@
                                     <#list abr.additional as abr_>
                                     <tr>
                                         <td class="text-center"><a href="https://card.mcmaster.ca/aro/${abr_.model.aroId}" target="_blank" class="model-description" data-toggle="popover" title="Model Information" data-content="<p>ARO-ID: ${abr_.model.aroId}</p><p>Name: ${abr_.model.name}</p><p>Description: ${abr_.model.desc}</p><p>Type: ${abr_.model.type}</p><p>Bitscore: ${abr_.model.bitScore}</p>">${abr_.model.name}</a></td>
+                                        <td class="text-center">${abr_.drugClasses?join(", ")}</td>
                                         <td class="text-center">${abr_.antibiotics?join(", ")}</td>
                                         <td class="text-center">${abr_.orf.start}</td>
                                         <td class="text-center">${abr_.orf.end}</td>

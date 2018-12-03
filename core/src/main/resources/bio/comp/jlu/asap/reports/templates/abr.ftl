@@ -117,9 +117,9 @@
                             <ul>
                               <li><strong># ABR Genes</strong>: Number of antibiotic resistance genes found.</li>
 
-                              <li><strong>ABR Profile</strong>: Found antibiotic drug class resistances.</li>
+                              <li><strong>Target Drug Class Profile</strong>: Found target drug class resistances.</li>
 
-                              <li><strong># ABR Target Drugs</strong>: Number of antibiotic agent resistances.</li>
+                              <li><strong># Target Drugs</strong>: Number of antibiotic agent resistances.</li>
 
                               <li><strong>Genome</strong>: Name of the processed genome.</li>
 
@@ -198,8 +198,8 @@
                                     <tr>
                                         <th><span class="glyphicon glyphicon-barcode"></span></th>
                                         <th>Genome</th>
-                                        <th class="text-center">ABR Profile</th>
-                                        <th class="text-center"># ABR Target Drugs</th>
+                                        <th class="text-center">Target Drug Class Profile</th>
+                                        <th class="text-center"># Target Drugs</th>
                                         <th class="text-center"># ABR Genes</th>
                                         <th class="text-center"># Potential ABR Genes</th>
                                         <th class="text-center">Details</th>
