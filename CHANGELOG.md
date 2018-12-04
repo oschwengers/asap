@@ -1,12 +1,17 @@
 # v1.1
-## Enhancements
-- Replaced Kraken based kmer classification by Mash GenBank lookup
+## Features
+- Added support for ONT sequencing platform
 - Added option to skip comparative analyses
+
+## Enhancements
+- Updated CARD db
+- Updated VF db
 - Applied many bugfixes and minor improvements to report pages
+
 # v1.0.4
 ##Enhancements
 - Updated NCBI tbl2asn
-- Fixed VF reports bug introduced by CARD/ResFinder replacement 
+- Fixed VF reports bug introduced by CARD/ResFinder replacement
 
 # v1.0.3
 ## Enhancements
