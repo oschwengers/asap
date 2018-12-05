@@ -31,6 +31,8 @@ MLST_DB = "${ASAP_DB}/mlst"
 BLASTN  = "${ASAP_HOME}/share/blast/bin/blastn"
 
 
+
+
 /*********************
  *** Script Params ***
 *********************/
@@ -153,7 +155,7 @@ def info = [
 // blast genome vs mlst db
 ProcessBuilder pb = new ProcessBuilder( BLASTN,
     '-query', genomeSequencePath.toString(),
-    '-db', "${MLST_DB}/mlst.fna".toString(),
+    '-db', "${MLST_DB}/mlst".toString(),
     '-num_threads', '1',
     '-ungapped',
     '-dust', 'no',
@@ -167,26 +169,31 @@ ProcessBuilder pb = new ProcessBuilder( BLASTN,
 log.info( "exec: ${pb.command()}" )
 log.info( '----------------------------------------------------------------------------------------------' )
 def proc = pb.start()
-def stdOut = new StringBuilder(), stdErr = new StringBuilder()
+def stdOut = new StringBuilder()
+def stdErr = new StringBuilder()
 proc.consumeProcessOutput( stdOut, stdErr )
-if( proc.waitFor() != 0 ) terminate( "could not exec blastn! stderr=${stdErr}", mlstPath, genomeName )
+if( proc.waitFor() != 0 ) {
+    log.error( "ERROR: ${stdErr.toString()}" )
+    terminate( "could not exec blastn! stderr=${stdErr}", mlstPath, genomeName )
+}
 log.info( '----------------------------------------------------------------------------------------------' )
 
 
 //  parse blastn output
 def blastHits = [:]
+def p = /^(\w+)\.(\w+)[_-](\d+)\t(\d+)\t(\d+)\t(\d+)/
 stdOut.eachLine( { line ->
-    def blastCols = (line =~ /^(\w+)\.(\w+)[_-](\d+)\t(\d+)\t(\d+)\t(\d+)/)[0]
+    def blastCols = (line =~ p )[0]
     def bh = [
-        scheme : blastCols[1],
-        gene : blastCols[2],
-        allele : blastCols[3],
-        geneLength : Integer.parseInt( blastCols[4] ),
-        alignmentLength : Integer.parseInt( blastCols[5] ),
-        identities : Integer.parseInt( blastCols[6] )
+        scheme: blastCols[1],
+        gene: blastCols[2],
+        allele: blastCols[3],
+        geneLength: Integer.parseInt( blastCols[4] ),
+        alignmentLength: Integer.parseInt( blastCols[5] ),
+        identities: Integer.parseInt( blastCols[6] )
     ]
     bh.mismatches = bh.geneLength - bh.identities
-    if( bh.identities / bh.geneLength > 0.95 ) { // discard all hits below 95 % subject identity
+    if( bh.identities / bh.geneLength >= 0.95 ) { // discard all hits below 95 % subject identity
         String key = "${bh.scheme}-${bh.gene}"
         def tmpBH = blastHits[ (key) ]
         if( !tmpBH )
@@ -204,19 +211,23 @@ if( blastHits.size() > 1 ) {
 
     // find ST profile hits
     def foundSTProfiles = []
-    stProfiles.each( { p -> // find ST matches
+    stProfiles.each( { stP -> // find ST matches
         boolean wrongAllele = false
         boolean missedGene  = false
-        p.mismatches = []
-        for( gene in p.alleles.keySet() ) {
-            def bh = blastHits.find( { it.scheme == p.scheme  &&  it.gene == gene } )
-            if( bh  &&  bh.allele == p.alleles[ gene ] ) {
-                if( bh.mismatches > 0 ) p.mismatches << gene
-            } else if ( bh ) wrongAllele = true
-            else             missedGene  = true
+        stP.mismatches = []
+        for( gene in stP.alleles.keySet() ) {
+            def bh = blastHits.find( { it.scheme == stP.scheme  &&  it.gene == gene } )
+            if( bh  &&  bh.allele == stP.alleles[ gene ] ) {
+                if( bh.mismatches > 0 )
+                    stP.mismatches << gene
+            } else if ( bh ) {
+                wrongAllele = true
+            } else {
+                missedGene  = true
+            }
         }
         if( !missedGene  &&  !wrongAllele )
-            foundSTProfiles << p
+            foundSTProfiles << stP
     } )
 
     // sort ST
@@ -224,12 +235,12 @@ if( blastHits.size() > 1 ) {
         a.mismatches.size() <=> b.mismatches.size()
     } )
 
-    for( p in foundSTProfiles ) {
-        if( p.mismatches )
-            info.mlst.related << p
+    for( stP in foundSTProfiles ) {
+        if( stP.mismatches )
+            info.mlst.related << stP
         else {
-            p.remove( 'mismatches' )
-            info.mlst.perfect << p
+            stP.remove( 'mismatches' )
+            info.mlst.perfect << stP
         }
     }
 }

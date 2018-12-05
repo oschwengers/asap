@@ -110,7 +110,7 @@ parsedXml.species.eachWithIndex( {species, idx ->
 
 
 // write MLST fasta db to file
-Path mlstFasta  = destinationPath.resolve( 'mlst.fna' )
+Path mlstFasta  = destinationPath.resolve( 'mlst' )
 mlstFasta.text = mlstDb.toString().trim()
 
 
@@ -177,5 +177,5 @@ schemesPath.eachFileRecurse( FILES, { file ->
 destinationPath.resolve( 'mlst-db.json' ).text = JsonOutput.toJson( stProfiles )
 
 // delete tmp files
-Files.delete( destinationPath.resolve( 'mlst.fna' ) )
+Files.delete( destinationPath.resolve( 'mlst' ) )
 schemesPath.deleteDir()
