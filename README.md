@@ -61,17 +61,17 @@ simplicity, reproducibility and easy distribution, we offer ASA³P as a
 
 Setup:
 ```bash
-sudo docker pull oschwengers/asap
-wget https://s3.computational.bio.uni-giessen.de/swift/v1/asap/latest/asap.tar.gz
-tar -xzf asap.tar.gz
-rm asap.tar.gz
-wget https://s3.computational.bio.uni-giessen.de/swift/v1/asap/latest/asap-docker.sh
-chmod 755 asap-docker.sh
+$ sudo docker pull oschwengers/asap
+$ wget https://s3.computational.bio.uni-giessen.de/swift/v1/asap/latest/asap.tar.gz
+$ tar -xzf asap.tar.gz
+$ rm asap.tar.gz
+$ wget https://s3.computational.bio.uni-giessen.de/swift/v1/asap/latest/asap-docker.sh
+$ chmod 755 asap-docker.sh
 ```
 
 Running an ASA³P Container using the `asap-docker.sh` shell wrapper script:
 ```bash
-sudo asap-docker.sh <ASAP_DIR> <PROJECT_DIR>
+$ sudo asap-docker.sh <ASAP_DIR> <PROJECT_DIR>
 ```
 
 Parameters:
@@ -81,16 +81,16 @@ Parameters:
 
 **Complete example**: (user name: ubuntu)
 ```bash
-sudo docker pull oschwengers/asap
-wget https://s3.computational.bio.uni-giessen.de/swift/v1/asap/latest/asap.tar.gz
-tar -xzf asap.tar.gz
-rm asap.tar.gz
-wget https://s3.computational.bio.uni-giessen.de/swift/v1/asap/example-lmonocytogenes.tar.gz
-tar -xzf example-lmonocytogenes.tar.gz
-rm example-lmonocytogenes.tar.gz
-wget https://s3.computational.bio.uni-giessen.de/swift/v1/asap/latest/asap-docker.sh
-chmod 755 asap-docker.sh
-sudo ./asap-docker.sh asap/ example-lmonocytogenes/
+$ sudo docker pull oschwengers/asap
+$ wget https://s3.computational.bio.uni-giessen.de/swift/v1/asap/latest/asap.tar.gz
+$ tar -xzf asap.tar.gz
+$ rm asap.tar.gz
+$ wget https://s3.computational.bio.uni-giessen.de/swift/v1/asap/example-lmonocytogenes.tar.gz
+$ tar -xzf example-lmonocytogenes.tar.gz
+$ rm example-lmonocytogenes.tar.gz
+$ wget https://s3.computational.bio.uni-giessen.de/swift/v1/asap/latest/asap-docker.sh
+$ chmod 755 asap-docker.sh
+$ sudo ./asap-docker.sh asap/ example-lmonocytogenes/
 ```
 
 For further information have a look at the Docker readme (DOCKER.md ).
