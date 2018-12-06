@@ -1,5 +1,7 @@
 # ASA³P - Automatic Bacterial Isolate Assembly, Annotation and Analyses Pipeline
 
+![ASA³P Overview](https://s3.computational.bio.uni-giessen.de/swift/v1/asap/asap-figure-1.1.mini.web.png)
+
 ## Contents
 - [Description](#description)
 - [Features](#features)
