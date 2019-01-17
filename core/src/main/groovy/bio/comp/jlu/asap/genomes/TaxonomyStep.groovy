@@ -28,8 +28,8 @@ class TaxonomyStep extends GenomeStep {
 
     private static final GenomeSteps STEP_DEPENDENCY = GenomeSteps.SCAFFOLDING
 
-    private static final String QSUB_SLOTS = '5'
-    private static final String QSUB_FREE_MEM = '3' // 15 Gig Memory divided by 5 PE instances -> 3
+    private static final String QSUB_SLOTS = '4'
+    private static final String QSUB_FREE_MEM = '4' // 16 Gig Memory divided by 4 PE instances -> 4
 
     private Path   taxPath = projectPath.resolve( PROJECT_PATH_TAXONOMY )
 
