@@ -242,7 +242,7 @@ SeqIO.convert( "${emblPath}", "${Format.embl}", "${genbankPath}", "${Format.genb
                 Path gffPath = Paths.get( projectPath.toString(), PROJECT_PATH_ANNOTATIONS, genomeName, "${genomeName}.gff" )
                 String sequence = fastaPath.text
                 String gffAnnotation = gffPath.text.split( '\n' ).findAll( {!it.isEmpty()} ).join( '\n' ) // remove empty lines at the end
-                gffPath.text = "${gffAnnotation}\n##Fasta\n${sequence}"
+                gffPath.text = "${gffAnnotation}\n##FASTA\n${sequence}"
             }
 
         } )
