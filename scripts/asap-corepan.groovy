@@ -123,7 +123,6 @@ def info = [
 
 
 // copy genome GFF3 files
-int noGenomes = 0
 Path localGenomePath = tmpPath.resolve( 'genomes' )
 Files.createDirectory( localGenomePath )
 config.genomes.each( { genome ->
@@ -132,15 +131,14 @@ config.genomes.each( { genome ->
     if( Files.exists( gffGenomePath ) ) {
         Files.copy( gffGenomePath, localGenomePath.resolve( "${genomeName}.gff" ) )
         info.corepan.includedGenomes << genomeName
-        noGenomes++
     } else {
         log.warn( "skip genome id=${genome.id}, genome-name=${genomeName}" )
         info.corepan.excludedGenomes << genomeName
     }
 } )
-log.debug( "no genomes: ${noGenomes}" )
-log.debug( "no included: ${info.corepan.includedGenomes.size()}" )
-log.debug( "no excluded: ${info.corepan.excludedGenomes.size()}" )
+log.debug( "# genomes: ${config.genomes.size()}" )
+log.debug( "# included: ${info.corepan.includedGenomes.size()}" )
+log.debug( "# excluded: ${info.corepan.excludedGenomes.size()}" )
 
 
 // build core/pan genome -> run Roary
@@ -174,10 +172,9 @@ log.info( '---------------------------------------------------------------------
 ].each( { task, file ->
     def simulations = []
     tmpPath.resolve( file ).eachLine( { line -> simulations << line.split( '\t' ).collect( { it as Integer } ) } )
-    assert noGenomes == simulations[0].size()
+    int noGenomes = simulations[0].size() // update real # of genomes analyzed by Roary
     def means = []
-    for( sim in simulations ){ assert sim.size() == noGenomes }
-    for( int i=0; i<noGenomes; i++ ) {
+    for( int i=0; i<noGenomes; i++ ) { // noGenomes = # included genomes - 1
         def tmp = []
         for( sim in simulations ){ tmp << sim[i] }
         double mean = tmp.sum() / tmp.size()
@@ -235,17 +232,16 @@ tmpPath.resolve( 'gene_presence_absence.csv' ).eachLine( { line ->
     }
 } )
 
-assert noGenomes == genomeNames.size()
-assert genomeGeneSets.size() == genomeNames.size()
-assert genomeGeneSets.size() == noGenomes
+assert info.corepan.includedGenomes.size() == genomeNames.size()
+assert info.corepan.includedGenomes.size() == genomeGeneSets.size()
 
 
-info.corepan.noGenomes = noGenomes
+info.corepan.noGenomes = info.corepan.includedGenomes.size()
 info.corepan.pan = genes
 info.corepan.noPan = info.corepan.pan.size()
-info.corepan.core = genes.findAll( { it.abundance == noGenomes } )
+info.corepan.core = genes.findAll( { it.abundance == info.corepan.includedGenomes.size() } )
 info.corepan.noCore = info.corepan.core.size()
-info.corepan.accessory = genes.findAll( { it.abundance > 1  &&  it.abundance < noGenomes } )
+info.corepan.accessory = genes.findAll( { it.abundance > 1  &&  it.abundance < info.corepan.includedGenomes.size() } )
 info.corepan.noAccessory = info.corepan.accessory.size()
 info.corepan.singletons = genes.findAll( { it.abundance == 1 } )
 info.corepan.noSingletons = info.corepan.singletons.size()
@@ -255,10 +251,6 @@ log.info( "pan: ${info.corepan.pan.size()}" )
 log.info( "core: ${info.corepan.core.size()}" )
 log.info( "accessory: ${info.corepan.accessory.size()}" )
 log.info( "singletons: ${info.corepan.singletons.size()}" )
-
-
-assert genomeNames.size() == info.corepan.includedGenomes.size()
-assert genomeNames.toSorted() == info.corepan.includedGenomes.toSorted()
 
 
 // write genome specific core/pan/singleton gene information
@@ -277,9 +269,9 @@ info.corepan.includedGenomes.each( { genomeName ->
                 strain: genome.strain
             ],
             corepan: [
-                noGenomes:  noGenomes,
-                core:       genomeGeneSet.findAll( { it.abundance == noGenomes } ).collect( { [name: it.name, product: it.product] } ),
-                accessory:  genomeGeneSet.findAll( { it.abundance > 1  &&  it.abundance < noGenomes } ),
+                noGenomes:  info.corepan.includedGenomes.size(),
+                core:       genomeGeneSet.findAll( { it.abundance == info.corepan.includedGenomes.size() } ).collect( { [name: it.name, product: it.product] } ),
+                accessory:  genomeGeneSet.findAll( { it.abundance > 1  &&  it.abundance < info.corepan.includedGenomes.size() } ),
                 singletons: genomeGeneSet.findAll( { it.abundance == 1 } ).collect( { [name: it.name, product: it.product] } )
             ]
         ]
