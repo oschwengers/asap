@@ -270,7 +270,7 @@ genome.data.each( { datum ->
             // exec Trimmomatic -> phiX filter
             pb = new ProcessBuilder( 'java', '-jar',
                 TRIMMOMATIC, 'SE',
-                '-threads', '10',
+                '-threads', NUM_THREADS,
                 "-phred${illuminaEncoding}",
                 tmpFilePath.toString(),
                 tmpTrimmedPath.resolve( fileName ).toString(),
