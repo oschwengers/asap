@@ -43,7 +43,7 @@ BOWTIE2_BUILD = "${ASAP_HOME}/share/bowtie2/bowtie2-build"
 PILON         = "${ASAP_HOME}/share/pilon.jar"
 MINIMAP2      = "${ASAP_HOME}/share/minimap2"
 
-SAMTOOLS_SORT_MEM = '16G' // max-ram usage until tmp-file is created during sorting (optimum 4G for avg. files)
+SAMTOOLS_SORT_MEM = '1G' // max-ram usage until tmp-file is created during sorting (optimum 4G for avg. files)
 NUM_THREADS       = '8'
 
 
