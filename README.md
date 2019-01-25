@@ -67,19 +67,18 @@ $ sudo docker pull oschwengers/asap
 $ wget https://s3.computational.bio.uni-giessen.de/swift/v1/asap/latest/asap.tar.gz
 $ tar -xzf asap.tar.gz
 $ rm asap.tar.gz
-$ wget https://s3.computational.bio.uni-giessen.de/swift/v1/asap/latest/asap-docker.sh
-$ chmod 755 asap-docker.sh
 ```
 
 Running an ASA³P Container using the `asap-docker.sh` shell wrapper script:
 ```bash
-$ sudo asap-docker.sh <ASAP_DIR> <PROJECT_DIR>
+$ sudo asap/asap-docker.sh <ASAP_DIR> <PROJECT_DIR> [<SCRATCH_DIR>]
 ```
 
 Parameters:
-* `<ASAP_DIR>`: absolute path to the downloaded and extracted ASA³P directory
-* `<PROJECT_DIR>`: absolute path to the actual project directory
-(containing `config.xls` and `data` directory)
+* `<ASAP_DIR>`: path to the downloaded and extracted ASA³P directory
+* `<PROJECT_DIR>`: path to the actual project directory (containing `config.xls` and `data` directory)
+* `<SCRATCH_DIR>`: optionally path to a distinct scratch/tmp dir
+
 
 **Complete example**: (user name: ubuntu)
 ```bash
@@ -90,9 +89,7 @@ $ rm asap.tar.gz
 $ wget https://s3.computational.bio.uni-giessen.de/swift/v1/asap/example-lmonocytogenes.tar.gz
 $ tar -xzf example-lmonocytogenes.tar.gz
 $ rm example-lmonocytogenes.tar.gz
-$ wget https://s3.computational.bio.uni-giessen.de/swift/v1/asap/latest/asap-docker.sh
-$ chmod 755 asap-docker.sh
-$ sudo ./asap-docker.sh asap/ example-lmonocytogenes/
+$ sudo asap/asap-docker.sh asap/ example-lmonocytogenes/
 ```
 
 For further information have a look at the Docker readme (DOCKER.md ).
