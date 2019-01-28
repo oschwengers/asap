@@ -47,12 +47,6 @@ if( !ASAP_HOME ) {
     println( "Error: unset environment variable ASAP_HOME!" )
     System.exit(1)
 }
-// check ASAP_DB env variable
-final String ASAP_DB = System.getenv()['ASAP_DB']
-if( !ASAP_DB ) {
-    println( "Error: unset environment variable ASAP_DB!" )
-    System.exit(1)
-}
 
 
 
@@ -118,7 +112,6 @@ log.info( "USER: ${env.USER}" )
 log.info( "CWD: ${env.PWD}" )
 log.info( "HOSTNAME: ${env.HOSTNAME}" )
 log.info( "ASAP_HOME: ${env.ASAP_HOME}" )
-log.info( "ASAP_DB: ${env.ASAP_DB}" )
 log.info( "PATH: ${env.PATH}" )
 def props = System.getProperties()
 log.info( "file.encoding: ${props['file.encoding']}" )

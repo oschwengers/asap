@@ -14,7 +14,6 @@ import bio.comp.jlu.asap.api.RunningStates
 abstract class Step extends Thread {
 
     protected final static String ASAP_HOME = System.getenv()['ASAP_HOME']
-    protected final static String ASAP_DB   = System.getenv()['ASAP_DB']
     protected final static String GROOVY_PATH = "${ASAP_HOME}/bin/groovy"
 
     protected final String stepName

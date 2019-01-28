@@ -22,10 +22,10 @@ Check() {
 sudo add-apt-repository ppa:openjdk-r/ppa
 Check $? "Add OpenJDK 8 repo"
 
-sudo apt-get -y update 
+sudo apt-get -y update
 Check $? "Update"
 
-sudo apt-get -y upgrade 
+sudo apt-get -y upgrade
 Check $? "Upgrade"
 
 sudo apt-get -y install openjdk-8-jdk openjdk-8-demo openjdk-8-doc openjdk-8-jre-headless openjdk-8-source
@@ -76,11 +76,8 @@ Check $? "Roary dependencies"
 sudo cpanm -f Bio::Roary
 Check $? "Roary"
 
-echo -e "\n#ASAP \nexport ASAP_HOME=/mnt/asap \nexport ASAP_DB=/mnt/asap/db/" >> /home/ubuntu/.profile
+echo -e "\n#ASAP \nexport ASAP_HOME=/mnt/asap" >> /home/ubuntu/.profile
 Check $? "Write ASAP variables to .profile"
 
 export ASAP_HOME=/mnt/asap/
 Check $? "export variable ASAP_HOME"
-
-export ASAP_DB=/mnt/asap/db/
-Check $? "export variable ASAP_DB"

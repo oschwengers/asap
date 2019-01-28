@@ -26,7 +26,6 @@ import static bio.comp.jlu.asap.api.GenomeSteps.*
 ************************/
 final def env = System.getenv()
 ASAP_HOME = env.ASAP_HOME
-ASAP_DB   = env.ASAP_DB
 
 SPADES        = "${ASAP_HOME}/share/spades/bin/spades.py"
 SMRTLINK      = "${ASAP_HOME}/share/smrtlink"
@@ -80,7 +79,6 @@ log.info( "USER: ${env.USER}" )
 log.info( "CWD: ${env.PWD}" )
 log.info( "HOSTNAME: ${env.HOSTNAME}" )
 log.info( "ASAP_HOME: ${env.ASAP_HOME}" )
-log.info( "ASAP_DB: ${env.ASAP_DB}" )
 log.info( "PATH: ${env.PATH}" )
 def props = System.getProperties()
 log.info( "script.name: ${props['script.name']}" )

@@ -24,7 +24,6 @@ import static bio.comp.jlu.asap.api.Paths.*
 ************************/
 final def env = System.getenv()
 ASAP_HOME = env.ASAP_HOME
-ASAP_DB   = env.ASAP_DB
 
 FASTQC              = "${ASAP_HOME}/share/fastqc/fastqc"
 TRIMMOMATIC         = "${ASAP_HOME}/share/trimmomatic.jar"
@@ -33,9 +32,9 @@ FASTQ_SCREEN        = "${ASAP_HOME}/share/fastq_screen"
 BAX2BAM             = "${ASAP_HOME}/share/smrtlink/smrtcmds/bin/bax2bam"
 BAM2FASTQ           = "${ASAP_HOME}/share/smrtlink/smrtcmds/bin/bam2fastq"
 PBINDEX             = "${ASAP_HOME}/share/smrtlink/smrtcmds/bin/pbindex"
-ILLUMINA_ADAPTER_SE = "${ASAP_DB}/sequences/adapters-illumina-se.fa"
-ILLUMINA_ADAPTER_PE = "${ASAP_DB}/sequences/adapters-illumina-pe.fa"
-FILTER_PHIX         = "${ASAP_DB}/sequences/phiX.fasta"
+ILLUMINA_ADAPTER_SE = "${ASAP_HOME}/db/sequences/adapters-illumina-se.fa"
+ILLUMINA_ADAPTER_PE = "${ASAP_HOME}/db/sequences/adapters-illumina-pe.fa"
+FILTER_PHIX         = "${ASAP_HOME}/db/sequences/phiX.fasta"
 NUM_THREADS = '8'
 
 
@@ -73,7 +72,6 @@ log.info( "USER: ${env.USER}" )
 log.info( "CWD: ${env.PWD}" )
 log.info( "HOSTNAME: ${env.HOSTNAME}" )
 log.info( "ASAP_HOME: ${env.ASAP_HOME}" )
-log.info( "ASAP_DB: ${env.ASAP_DB}" )
 log.info( "PATH: ${env.PATH}" )
 def props = System.getProperties()
 log.info( "script.name: ${props['script.name']}" )
@@ -440,8 +438,7 @@ genome.data.each( { datum ->
 
         // create FastQ Screen conf file
         String script = /
-sed "s,%ASAP_HOME%,${ASAP_HOME},g" ${FASTQ_SCREEN}\/fastq_screen.conf.template \
-| sed "s,%ASAP_DB%,${ASAP_DB},g" - > fastq_screen.conf
+sed "s,%ASAP_HOME%,${ASAP_HOME},g" ${FASTQ_SCREEN}\/fastq_screen.conf.template > fastq_screen.conf
 /
         ProcessBuilder pb = new ProcessBuilder( 'sh',
             '-c', script )

@@ -24,7 +24,6 @@ import static bio.comp.jlu.asap.api.Paths.*
 ************************/
 final def env = System.getenv()
 ASAP_HOME = env.ASAP_HOME
-ASAP_DB   = env.ASAP_DB
 
 KRAKEN       = "${ASAP_HOME}/share/kraken"
 NUCMER       = "${ASAP_HOME}/share/mummer/nucmer"
@@ -32,9 +31,9 @@ DELTA_FILTER = "${ASAP_HOME}/share/mummer/delta-filter"
 BLASTN       = "${ASAP_HOME}/share/blast/bin/blastn"
 CMSEARCH     = "${ASAP_HOME}/share/infernal/cmsearch"
 
-KRAKEN_DB = "${ASAP_DB}/kraken"
-RDP_DB   = "${ASAP_DB}/rdp/rdp-bacteria.fasta"
-RFAM_CM_SSU_RRNA = "${ASAP_DB}/RF00177.cm"
+KRAKEN_DB = "${ASAP_HOME}/db/kraken"
+RDP_DB   = "${ASAP_HOME}/db/rdp/rdp-bacteria.fasta"
+RFAM_CM_SSU_RRNA = "${ASAP_HOME}/db/RF00177.cm"
 
 
 NUM_THREADS       = 4
@@ -75,7 +74,6 @@ log.info( "USER: ${env.USER}" )
 log.info( "CWD: ${env.PWD}" )
 log.info( "HOSTNAME: ${env.HOSTNAME}" )
 log.info( "ASAP_HOME: ${env.ASAP_HOME}" )
-log.info( "ASAP_DB: ${env.ASAP_DB}" )
 log.info( "PATH: ${env.PATH}" )
 def props = System.getProperties()
 log.info( "script.name: ${props['script.name']}" )

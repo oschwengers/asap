@@ -10,8 +10,8 @@ gunzip VFDB_setA_pro.fas.gz
 $ASAP_HOME/bin/groovy $ASAP_HOME/scripts/admin/asap-extract-vf-proteins.groovy VFDB_setA_pro.fas > vfdb
 $ASAP_HOME/share/blast/bin/makeblastdb -dbtype prot -in vfdb -title 'VFDB'
 
-cat card.faa vfdb > $ASAP_DB/sequences/asap-proteins.faa
+cat card.faa vfdb > $ASAP_HOME/db/sequences/asap-proteins.faa
 
-cp vfdb.* vfdb-categories.tsv $ASAP_DB/sequences/
+cp vfdb.* vfdb-categories.tsv $ASAP_HOME/db/sequences/
 rm -r card* vfdb* VFDB_setA_pro.fas
 

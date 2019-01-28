@@ -48,7 +48,6 @@ Also the the directory
 with its required access permissions is created. Finally the environment variables
 
 * ASAP_HOME = /mnt/asap/
-* ASAP_DB = /mnt/asap/db/
 
 are permanently set in the ~/.profile file.
 

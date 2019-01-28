@@ -4,18 +4,18 @@
 
 while getopts ":o:i:p:" opt; do
   case $opt in
-    o)  
+    o)
       OPENSTACK_RC_FILE=${OPTARG}
-      ;;  
+      ;;
     i)
       INSTANCE_ID=${OPTARG}
       ;;
     p)
       PROJECT_DIR=${OPTARG}
       ;;
-    \?) 
+    \?)
       echo "Invalid option: -$OPTARG" #>&2
-      ;;  
+      ;;
   esac
 done
 
@@ -49,7 +49,7 @@ nova volume-detach $INSTANCE_ID $VOLUME_ID
 # Create new ssh keypair with Openstack CLI tool & write the key into a local file.
 openstack keypair create asap-cluster > ~/asap-cloud/asap.cluster.key
 
-# Change filemod 
+# Change filemod
 chmod 600 ~/asap-cloud/asap.cluster.key
 
 
@@ -95,7 +95,7 @@ ssh-keygen -f "/home/ubuntu/.ssh/known_hosts" -R $BIBIGRID_IP
 echo "#############################################"
 echo "Starting ASAP"
 echo "#############################################"
-ssh -l ubuntu $BIBIGRID_IP "export ASAP_HOME=/mnt/asap/ && export ASAP_DB=/mnt/asap/db/ && java -jar /mnt/asap/asap.jar -d $PROJECT_DIR/"
+ssh -l ubuntu $BIBIGRID_IP "export ASAP_HOME=/mnt/asap/ && java -jar /mnt/asap/asap.jar -d $PROJECT_DIR/"
 
 # Enable StrictHostKeyChecking
 echo "#############################################"

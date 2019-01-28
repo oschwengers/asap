@@ -25,9 +25,8 @@ import static bio.comp.jlu.asap.api.Paths.*
 ************************/
 final def env = System.getenv()
 ASAP_HOME = env.ASAP_HOME
-ASAP_DB   = env.ASAP_DB
 
-MLST_DB = "${ASAP_DB}/mlst"
+MLST_DB = "${ASAP_HOME}/db/mlst"
 BLASTN  = "${ASAP_HOME}/share/blast/bin/blastn"
 
 
@@ -66,7 +65,6 @@ log.info( "USER: ${env.USER}" )
 log.info( "CWD: ${env.PWD}" )
 log.info( "HOSTNAME: ${env.HOSTNAME}" )
 log.info( "ASAP_HOME: ${env.ASAP_HOME}" )
-log.info( "ASAP_DB: ${env.ASAP_DB}" )
 log.info( "PATH: ${env.PATH}" )
 def props = System.getProperties()
 log.info( "script.name: ${props['script.name']}" )
