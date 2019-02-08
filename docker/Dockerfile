@@ -5,6 +5,7 @@ LABEL maintainer="andreas.hoek@bio.uni-giessen.de"
 LABEL maintainer="oliver.schwengers@computational.bio.uni-giessen.de"
 
 RUN apt-get -y update && apt-get -y install \
+    wget \
     gnuplot-nox \
     less \
     libdatetime-perl \
@@ -18,6 +19,11 @@ RUN apt-get -y update && apt-get -y install \
     python3-pip \
     roary
 
+RUN wget -O- http://neuro.debian.net/lists/xenial.de-md.libre | tee /etc/apt/sources.list.d/neurodebian.sources.list
+RUN apt-key adv --recv-keys --keyserver hkp://pool.sks-keyservers.net:80 0xA5D32F012649A5A9
+RUN apt-get -y update && apt-get -y install \
+    singularity-container
+
 RUN pip3 install \
     biopython \
     networkx \
@@ -30,6 +36,9 @@ RUN pip3 install \
     seaborn \
     pyfaidx \
     pyahocorasick
+
+RUN apt-get autoremove && apt-get clean
+RUN rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 RUN mkdir /var/scratch/
 

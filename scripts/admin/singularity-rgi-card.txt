@@ -1,0 +1,51 @@
+Bootstrap: docker
+
+From: ubuntu:16.04
+
+
+%labels
+    Maintainer Oliver Schwengers
+    Version v4.2.2-3.0.0
+
+%post
+    apt-get -y update &&
+    apt-get -y install wget \
+    ncbi-blast+ \
+    prodigal \
+    python3 \
+    python3-setuptools \
+    python3-pip \
+
+    pip3 install \
+    biopython \
+    filetype \
+    pytest \
+    mock \
+    pandas \
+    matplotlib \
+    seaborn \
+    pyfaidx \
+    pyahocorasick
+
+    wget https://github.com/arpcard/rgi/archive/4.2.2.tar.gz
+    tar -xzf 4.2.2.tar.gz
+
+    wget https://card.mcmaster.ca/download/0/broadstreet-v3.0.0.tar.gz
+    tar -xjf broadstreet-v3.0.0.tar.gz
+    rgi-4.2.2/rgi clean
+    rgi-4.2.2/rgi load --card_json card.json
+
+    echo -e ">fake\nATCG" > fake.fasta
+    rgi-4.2.2/rgi main --input_type contig -i fake.fasta -o test || true
+
+    apt-get autoremove
+    apt-get clean
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* *.gz *.fasta *.csv *.txt rm card.json
+
+
+%test
+    rgi-4.2.2/rgi main --version
+    rgi-4.2.2/rgi database --version
+
+%runscript
+    /rgi-4.2.2/rgi main "$@"

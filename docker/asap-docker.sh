@@ -35,6 +35,7 @@ if [ $# -eq 3 ]
                 SCRATCH=$(realpath $3)
                 echo "Scratch: $SCRATCH"
                 sudo docker run \
+                    --privileged \
                     --rm \
                     -v $ASAP:/asap:ro \
                     -v $DATA:/data \
@@ -44,6 +45,7 @@ if [ $# -eq 3 ]
     else
         echo "Scratch: internal container scratch"
 	sudo docker run \
+            --privileged \
             --rm \
             -v $ASAP:/asap:ro \
             -v $DATA:/data \

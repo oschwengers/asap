@@ -25,9 +25,8 @@ import static bio.comp.jlu.asap.api.Paths.*
 final def env = System.getenv()
 ASAP_HOME = env.ASAP_HOME
 
-CARD    = "${ASAP_HOME}/share/card"
-BLAST   = "${ASAP_HOME}/share/blast/bin"
-BARRNAP = "${ASAP_HOME}/share/barrnap/bin"
+CARD             = "${ASAP_HOME}/share/card"
+SINGULARITY_CARD = "${ASAP_HOME}/share/card-rgi-v4.2.2-3.0.0.simg"
 
 PERC_SEQ_IDENT = 0.4
 
@@ -161,22 +160,21 @@ def aroTerms = (new JsonSlurper()).parseText( Paths.get( "${CARD}/aro.json" ).te
 
 
 // process
-ProcessBuilder pb = new ProcessBuilder( 'python3', "${CARD}/rgi".toString(),
-    'main',
+Path localGenomeSequencePath = tmpPath.resolve("${genomeName}.fasta")
+Files.copy( genomeSequencePath, localGenomeSequencePath )
+String cardOutput = 'card'
+Path cardOutputPath = tmpPath.resolve( "${cardOutput}.json" )
+ProcessBuilder pb = new ProcessBuilder( 'singularity',
+    'run',
+    '--bind', tmpPath.toString(), // mount tmp (cwd) directory
+    SINGULARITY_CARD.toString(), // path to Singularity container file
     '--input_type', 'contig',
     '--num_threads', '1',
-    '--input_sequence', genomeSequencePath.toString(),
-    '--output_file', "${genomeName}-card".toString() )
+    '--input_sequence', localGenomeSequencePath.toString(),
+    '--output_file', cardOutput )
     .redirectErrorStream( true )
     .redirectOutput( ProcessBuilder.Redirect.INHERIT )
     .directory( tmpPath.toFile() )
-
-def pbEnv = pb.environment() // set path variables
-String pathEnv = pbEnv.get( 'PATH' )
-    pathEnv = "${BLAST}:${pathEnv}"
-    pathEnv = "${BARRNAP}:${pathEnv}"
-    pathEnv = "${ASAP_HOME}/share:${pathEnv}"
-pbEnv.put( 'PATH', pathEnv )
 
 log.info( "exec: ${pb.command()}" )
 log.info( '----------------------------------------------------------------------------------------------' )
@@ -187,7 +185,7 @@ log.info( '---------------------------------------------------------------------
 // parse and aggregate CARD output
 def p = ~/([a-zA-Z]+) antibiotic/
 def abrs = [:]
-(new JsonSlurper()).parseText( tmpPath.resolve( "${genomeName}-card.json" ).text ).each( { cardHit ->
+(new JsonSlurper()).parseText( cardOutputPath.text ).each( { cardHit ->
     if( !cardHit.value[ 'data_type' ] ) {
         cardHit.value.values().each( { hsp ->
             def abr = [
