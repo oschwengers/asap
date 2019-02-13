@@ -118,7 +118,11 @@ log.info( "file.encoding: ${props['file.encoding']}" )
 
 
 // convert spreadsheet config into JSON config
-ConfigWriterThread.convertConfig( log, projectPath )
+try {
+    ConfigWriterThread.convertConfig( log, projectPath )
+} catch( Exception ex ) {
+    Misc.exit( log, "couldn't convert configuration file!", ex )
+}
 Path configPath = projectPath.resolve( 'config.json' )
 if( !Files.exists( configPath ) )
     Misc.exit( log, 'config.json file does not exist!', null )

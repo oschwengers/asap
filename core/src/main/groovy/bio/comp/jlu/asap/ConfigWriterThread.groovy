@@ -84,7 +84,7 @@ class ConfigWriterThread extends Thread {
     }
 
 
-    public static void convertConfig( Logger log, Path projectPath ) {
+    public static void convertConfig( Logger log, Path projectPath ) throws Exception {
 
         // test if JSON config file already exists. Skip upon existing JSON config file.
         Path jsonPath = projectPath.resolve( 'config.json' )
