@@ -155,7 +155,15 @@ project-dir
 ```
 
 ### Output
-The pipeline stores all output files within the specified project directory
+**tl; dr**
+Just open your browser and open the **index.html** file located at:
+```
+project-dir
+├── reports   (HTML5 reports)
+│   ├── index.html
+```
+
+ASA³P stores all output files within the specified project directory
 leaving input files untouched:
 - empty status file indicating ASA³P current status, one of:
    - *status.running*
