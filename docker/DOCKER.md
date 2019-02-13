@@ -22,14 +22,13 @@ $ sudo docker pull oschwengers/asap
 ```
 
 # Running a container
-In order to hide all Docker related options and thus further simplify
-the process we offer a custom shell script:
+In order to hide all Docker related options and further simplify the process we
+offer a custom shell script within the ASA³P directory:
 ```bash
-$ sudo ./asap-docker.sh <ASAP_DIR> <PROJECT_DIR> [<SCRATCH_DIR>]
+$ sudo asap/asap-docker.sh <PROJECT_DIR> [<SCRATCH_DIR>]
 ```
 
 Parameters:
-* `<ASAP_DIR>`: path to the downloaded and extracted ASA³P directory
 * `<PROJECT_DIR>`: path to the actual project directory (containing `config.xls` and `data` directory)
 * `<SCRATCH_DIR>`: optionally path to a distinct scratch/tmp dir
 
@@ -40,7 +39,7 @@ Just download and extract it:
 $ wget https://s3.computational.bio.uni-giessen.de/swift/v1/asap/example-lmonocytogenes.tar.gz
 $ tar -xzf example-lmonocytogenes.tar.gz
 $ rm example-lmonocytogenes.tar.gz
-$ sudo ./asap-docker.sh asap/ example-lmonocytogenes/
+$ sudo asap/asap-docker.sh example-lmonocytogenes/
 ```
 
 # Advanced usage

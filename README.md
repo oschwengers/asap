@@ -71,14 +71,16 @@ $ rm asap.tar.gz
 
 Running an ASA³P Container using the `asap-docker.sh` shell wrapper script:
 ```bash
-$ sudo asap/asap-docker.sh <ASAP_DIR> <PROJECT_DIR> [<SCRATCH_DIR>]
+$ sudo asap/asap-docker.sh <PROJECT_DIR> [<SCRATCH_DIR>]
 ```
 
 Parameters:
-* `<ASAP_DIR>`: path to the downloaded and extracted ASA³P directory
 * `<PROJECT_DIR>`: path to the actual project directory (containing `config.xls` and `data` directory)
 * `<SCRATCH_DIR>`: optionally path to a distinct scratch/tmp dir
 
+**Note**
+Make sure to always leave the `asap-docker.sh` script within the ASA³P directory
+as by this the right internal paths will be auto-detected and forwarded.
 
 **Complete example**: (user name: ubuntu)
 ```bash
@@ -100,9 +102,9 @@ even thousands of bacterial isolates. Therefore, it offers automatic creation,
 setup and orchestration of an **SGE** based compute cluster and its entire
 underlying infrastructure. Hence, analysis of thousands of genomes can be
 achieved in a highly parallel manner and adequate amount of time.
-ASA³P takes care of all setup and orchestration aspects and thus hiding as much
-technical complexity as possible. For further information please have a look at
-the user manual
+ASA³P takes care of all setup and orchestration aspects and thus hides away as
+much technical complexity as possible. For further information please have a
+look at our user manual
 (https://s3.computational.bio.uni-giessen.de/swift/v1/asap/latest/manual.pdf)
 
 ### Downloads
@@ -132,7 +134,7 @@ provided via an Excel config file named *config.xls*.
 A corresponding template can be downloaded [here](https://s3.computational.bio.uni-giessen.de/swift/v1/asap/latest/config.xls).
 For further details on how to fill out a proper configuration file, please have
 a look at the [manual](https://s3.computational.bio.uni-giessen.de/swift/v1/asap/latest/manual.pdf)
-the example projects listed above. All input files referenced in a configuration
+and the exemplary projects listed above. All input files referenced in a configuration
 spreadsheet need to be placed in a subdirectory called *data*.
 
 **Example**:
@@ -265,7 +267,7 @@ project-dir
 
 ## FAQ
 * __Is there a public example project?__
-Just download this exemplary project containing a set of public
+Just download this exemplary project containing a set of 4 public
 *Listeria monocytogenes* genomes from **SRA**:
 https://s3.computational.bio.uni-giessen.de/swift/v1/asap/example-lmonocytogenes.tar.gz
 
@@ -285,9 +287,9 @@ published under different licenses, e.g. GPL2, BSD, MIT, LGPL, etc.
 A file (README.md) within the ASA³P directory contains a list of all
 dependencies and related licenses.
 
-**Please notice**
-that some bundled dependecies are published under a **free-for-academic** or
-**free-for-non-commercial** usage license model.
+**NOTE**
+Please, notice that some bundled dependecies are published under a
+**free-for-academic** or **free-for-non-commercial** usage license model.
 To our best knowledge this is true for at least the following databases:
 - CARD: free for academic usage
 - PubMLST: proprietary but free to use
