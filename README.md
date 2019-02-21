@@ -100,7 +100,8 @@ For further information have a look at the Docker readme (DOCKER.md ).
 ASA³P's **OpenStack** based cloud version targets the analysis of hundreds to
 even thousands of bacterial isolates. Therefore, it offers automatic creation,
 setup and orchestration of an **SGE** based compute cluster and its entire
-underlying infrastructure. Hence, analysis of thousands of genomes can be
+underlying infrastructure. The **OpenStack** cloud version internally takes advantage of the BiBiGrid
+(https://github.com/BiBiServ/bibigrid) framework. Hence, analysis of thousands of genomes can be
 achieved in a highly parallel manner and adequate amount of time.
 ASA³P takes care of all setup and orchestration aspects and thus hides away as
 much technical complexity as possible. For further information please have a
@@ -109,12 +110,6 @@ look at our user manual
 
 ### Downloads
 ASA³P tarball containing software and databases (for Docker): https://s3.computational.bio.uni-giessen.de/swift/v1/asap/latest/asap.tar.gz
-
-The **OpenStack** cloud version internally takes advantage of the BiBiGrid
-(https://github.com/BiBiServ/bibigrid) framework. As this is currently based on
-legacy Ubuntu 14.04 LTS we have to provide a distinct **OpenStack** tarball
-containing certain workarounds:
-https://s3.computational.bio.uni-giessen.de/swift/v1/asap/latest/asap-os.tar.gz
 
 Additional files:
 - comprehensive manual: https://s3.computational.bio.uni-giessen.de/swift/v1/asap/latest/manual.pdf
