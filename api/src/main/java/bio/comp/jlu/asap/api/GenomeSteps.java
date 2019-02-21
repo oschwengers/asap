@@ -14,14 +14,14 @@ public enum GenomeSteps {
     MAPPING( "Mapping", "mapping", "m" ),
     SNP_DETECTION( "SNP Detection", "snps", "s" ),
     ASSEMBLY( "Assembly", "assembly", "a" ),
-    PLASMIDS( "Plasmids", "plasmids", "p" ),
-    PHAGES( "Phages", "phages", "h" ),
     ABR( "Antibiotic Resistances", "abr", "r" ),
     VF( "Virulence Factors", "vf", "v" ),
-    CRISPRS( "CRISPRs", "crisprs", "c" ),
     MLST( "MLST", "mlst", "l" ),
     SCAFFOLDING( "Scaffolding", "scaffolding", "f" ),
     ANNOTATION( "Annotation", "annotation", "n" );
+//    PLASMIDS( "Plasmids", "plasmids", "p" ),
+//    PHAGES( "Phages", "phages", "h" ),
+//    CRISPRS( "CRISPRs", "crisprs", "c" );
 
 
 
