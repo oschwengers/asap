@@ -64,8 +64,8 @@ sleep 1
 java -jar ~/asap-cloud/BiBiGrid-asap-2.0.jar -c -o ~/asap-cloud/bibigrid.yml | tee ~/asap-cloud/bibigrid-specs
 
 # Extract ID & IP address of the newly created cluster
-BIBIGRID_IP=$(cat ~/asap-cloud/bibigrid-specs | grep -E 'BIBIGRID_MASTER=[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}')
-BIBIGRID_ID=$(cat ~/asap-cloud/bibigrid-specs | grep -E 'The cluster id of your started cluster is :' | grep -Eo '[A-Za-z0-9]{15}')
+BIBIGRID_IP=$(grep -E 'BIBIGRID_MASTER=[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' ~/asap-cloud/bibigrid-specs | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}')
+BIBIGRID_ID=$(grep -E 'The cluster id of your started cluster is:' ~/asap-cloud/bibigrid-specs | grep -Eo '[A-Za-z0-9]{15}')
 
 echo "#############################################"
 echo "BIBIGRID_IP = $BIBIGRID_IP"
