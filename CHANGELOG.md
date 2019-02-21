@@ -4,6 +4,8 @@
 - Added option to skip comparative analyses
 
 ## Enhancements
+- Simplified Docker based execution
+- Removed necessarity of extra cloud images and tarballs
 - Updated CARD db
 - Updated VF db
 - Applied many bugfixes and minor improvements to report pages
