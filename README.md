@@ -19,7 +19,7 @@ analyses pipeline for closely related bacterial isolates.
 At its core it's a command line tool creating standard bioinformatics file
 formats as well as sophisticated HTML5 documents. Its main purpose is the
 automatic processing of NGS data of multiple closely related isolates, thus
-transforming raw reads into assembled and annotated genomes and finally getting
+transforming raw reads into assembled and annotated genomes and finally gathering
 as much information on every single bacterial genome as possible. Per-isolate
 analyses are finally complemented by first comparative insights. Therefore, the
 pipeline incorporates many best-in-class open source bioinformatics tools and
@@ -51,9 +51,22 @@ interactive visualizations.
 
 ## Availability
 Targeting different project sizes, i.e. number of genomes which should be
-analysed together, we offer ASA³P in two versions:
+analysed as a single project, we offer ASA³P in two versions:
 - **Docker**: linux container for small to medium projects
 - **OpenStack**: highly scalable cloud version for (very) large projects
+
+For both you will need the following file:
+- ASA³P tarball (containing binaries, 3rd party executables and databases):
+https://s3.computational.bio.uni-giessen.de/swift/v1/asap/latest/asap.tar.gz
+
+Additional files:
+- configuration template: https://s3.computational.bio.uni-giessen.de/swift/v1/asap/latest/config.xls
+- comprehensive manual: https://s3.computational.bio.uni-giessen.de/swift/v1/asap/latest/manual.pdf
+- example projects:
+   - 4 public *L. monocytogenes* genomes: https://s3.computational.bio.uni-giessen.de/swift/v1/asap/example-lmonocytogenes.tar.gz
+   - 8 public *L. monocytogenes* genomes: https://s3.computational.bio.uni-giessen.de/swift/v1/asap/example-lmonocytogenes-8.tar.gz
+   - *E. coli* project merely showing support of different input types: https://s3.computational.bio.uni-giessen.de/swift/v1/asap/example-input.tar.gz
+
 
 ### Docker
 For small to medium projects (up to ~200 isolates) but also for the sake of
@@ -80,9 +93,9 @@ Parameters:
 
 **Note**
 Make sure to always leave the `asap-docker.sh` script within the ASA³P directory
-as by this the right internal paths will be auto-detected and forwarded.
+as by this the right internal paths will automatically be detected and forwarded.
 
-**Complete example**: (user name: ubuntu)
+**Complete example**:
 ```bash
 $ sudo docker pull oschwengers/asap
 $ wget https://s3.computational.bio.uni-giessen.de/swift/v1/asap/latest/asap.tar.gz
@@ -91,32 +104,26 @@ $ rm asap.tar.gz
 $ wget https://s3.computational.bio.uni-giessen.de/swift/v1/asap/example-lmonocytogenes.tar.gz
 $ tar -xzf example-lmonocytogenes.tar.gz
 $ rm example-lmonocytogenes.tar.gz
-$ sudo asap/asap-docker.sh asap/ example-lmonocytogenes/
+$ sudo asap/asap-docker.sh example-lmonocytogenes/
 ```
 
 For further information have a look at the Docker readme (DOCKER.md ).
 
 ### Cloud - OpenStack
 ASA³P's **OpenStack** based cloud version targets the analysis of hundreds to
-even thousands of bacterial isolates. Therefore, it offers automatic creation,
+even thousands of bacterial isolates. Therefore, it features automatic creation,
 setup and orchestration of an **SGE** based compute cluster and its entire
-underlying infrastructure. The **OpenStack** cloud version internally takes advantage of the BiBiGrid
-(https://github.com/BiBiServ/bibigrid) framework. Hence, analysis of thousands of genomes can be
-achieved in a highly parallel manner and adequate amount of time.
-ASA³P takes care of all setup and orchestration aspects and thus hides away as
-much technical complexity as possible. For further information please have a
-look at our user manual
-(https://s3.computational.bio.uni-giessen.de/swift/v1/asap/latest/manual.pdf)
+underlying infrastructure. Therefore, the **OpenStack** cloud version internally
+takes advantage of the BiBiGrid (https://github.com/BiBiServ/bibigrid) framework.
+Hence, analysis of thousands of genomes can be achieved in a highly parallel
+manner and adequate amount of time. ASA³P takes care of all setup and orchestration
+aspects and thus hides away as much technical complexity as possible. For further
+information please have a look at our user manual.
 
-### Downloads
-ASA³P tarball containing software and databases (for Docker): https://s3.computational.bio.uni-giessen.de/swift/v1/asap/latest/asap.tar.gz
-
-Additional files:
-- comprehensive manual: https://s3.computational.bio.uni-giessen.de/swift/v1/asap/latest/manual.pdf
-- configuration template: https://s3.computational.bio.uni-giessen.de/swift/v1/asap/latest/config.xls
-- example projects:
-   - 4 public *L. monocytogenes* genomes: https://s3.computational.bio.uni-giessen.de/swift/v1/asap/example-lmonocytogenes.tar.gz
-   - artificial *E. coli* project merely showing support of different input types: https://s3.computational.bio.uni-giessen.de/swift/v1/asap/example-input.tar.gz
+In order to trigger an **OpenStack** based cloud project, you need the following
+additional clour related files:
+- ASA³P cloud tarball (containing binaries, property files and a customized BiBiGrid version):
+https://s3.computational.bio.uni-giessen.de/swift/v1/asap/latest/asap-cloud.tar.gz
 
 
 ## Input & Output
