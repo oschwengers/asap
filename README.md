@@ -57,11 +57,11 @@ analysed as a single project, we offer ASA³P in two versions:
 
 For both you will need the following file:
 - ASA³P tarball (containing binaries, 3rd party executables and databases):
-https://s3.computational.bio.uni-giessen.de/swift/v1/asap/latest/asap.tar.gz
+https://s3.computational.bio.uni-giessen.de/swift/v1/asap/asap.tar.gz
 
 Additional files:
-- configuration template: https://s3.computational.bio.uni-giessen.de/swift/v1/asap/latest/config.xls
-- comprehensive manual: https://s3.computational.bio.uni-giessen.de/swift/v1/asap/latest/manual.pdf
+- configuration template: https://s3.computational.bio.uni-giessen.de/swift/v1/asap/config.xls
+- comprehensive manual: https://s3.computational.bio.uni-giessen.de/swift/v1/asap/manual.pdf
 - example projects:
    - 4 public *L. monocytogenes* genomes: https://s3.computational.bio.uni-giessen.de/swift/v1/asap/example-lmonocytogenes.tar.gz
    - 8 public *L. monocytogenes* genomes: https://s3.computational.bio.uni-giessen.de/swift/v1/asap/example-lmonocytogenes-8.tar.gz
@@ -77,7 +77,7 @@ simplicity, reproducibility and easy distribution, we offer ASA³P as a
 Setup:
 ```bash
 $ sudo docker pull oschwengers/asap
-$ wget https://s3.computational.bio.uni-giessen.de/swift/v1/asap/latest/asap.tar.gz
+$ wget https://s3.computational.bio.uni-giessen.de/swift/v1/asap/asap.tar.gz
 $ tar -xzf asap.tar.gz
 $ rm asap.tar.gz
 ```
@@ -98,7 +98,7 @@ as by this the right internal paths will automatically be detected and forwarded
 **Complete example**:
 ```bash
 $ sudo docker pull oschwengers/asap
-$ wget https://s3.computational.bio.uni-giessen.de/swift/v1/asap/latest/asap.tar.gz
+$ wget https://s3.computational.bio.uni-giessen.de/swift/v1/asap/asap.tar.gz
 $ tar -xzf asap.tar.gz
 $ rm asap.tar.gz
 $ wget https://s3.computational.bio.uni-giessen.de/swift/v1/asap/example-lmonocytogenes.tar.gz
@@ -123,7 +123,7 @@ information please have a look at our user manual.
 In order to trigger an **OpenStack** based cloud project, you need the following
 additional clour related files:
 - ASA³P cloud tarball (containing binaries, property files and a customized BiBiGrid version):
-https://s3.computational.bio.uni-giessen.de/swift/v1/asap/latest/asap-cloud.tar.gz
+https://s3.computational.bio.uni-giessen.de/swift/v1/asap/asap-cloud.tar.gz
 
 
 ## Input & Output
@@ -133,9 +133,9 @@ ASA³P expects all input files and information regarding a single batch run
 (i.e. a "project") within a dedicated directory. All necessary information
 (meta information, reference genomes, isolate/sample names and files) are
 provided via an Excel config file named *config.xls*.
-A corresponding template can be downloaded [here](https://s3.computational.bio.uni-giessen.de/swift/v1/asap/latest/config.xls).
+A corresponding template can be downloaded [here](https://s3.computational.bio.uni-giessen.de/swift/v1/asap/config.xls).
 For further details on how to fill out a proper configuration file, please have
-a look at the [manual](https://s3.computational.bio.uni-giessen.de/swift/v1/asap/latest/manual.pdf)
+a look at the [manual](https://s3.computational.bio.uni-giessen.de/swift/v1/asap/manual.pdf)
 and the exemplary projects listed above. All input files referenced in a configuration
 spreadsheet need to be placed in a subdirectory called *data*.
 

@@ -11,7 +11,7 @@ as for instance Python3, Java and Perl.
 Thus, before executing ASA³P one needs to download and extract the ASA³P directory
 containing everything else:
 ```bash
-$ wget https://s3.computational.bio.uni-giessen.de/swift/v1/asap/latest/asap.tar.gz
+$ wget https://s3.computational.bio.uni-giessen.de/swift/v1/asap/asap.tar.gz
 $ tar -xzf asap.tar.gz
 $ rm asap.tar.gz
 ```
