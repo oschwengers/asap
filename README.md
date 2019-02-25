@@ -58,14 +58,15 @@ analysed as a single project, we offer ASA³P in two versions:
 For both you will need the following file:
 - ASA³P tarball (containing binaries, 3rd party executables and databases):
 https://s3.computational.bio.uni-giessen.de/swift/v1/asap/asap.tar.gz
+- configuration template: https://s3.computational.bio.uni-giessen.de/swift/v1/asap/config.xls
 
 Additional files:
-- configuration template: https://s3.computational.bio.uni-giessen.de/swift/v1/asap/config.xls
 - comprehensive manual: https://s3.computational.bio.uni-giessen.de/swift/v1/asap/manual.pdf
+- configuration example: https://s3.computational.bio.uni-giessen.de/swift/v1/asap/config-example.xls
 - example projects:
    - 4 public *L. monocytogenes* genomes: https://s3.computational.bio.uni-giessen.de/swift/v1/asap/example-lmonocytogenes.tar.gz
    - 8 public *L. monocytogenes* genomes: https://s3.computational.bio.uni-giessen.de/swift/v1/asap/example-lmonocytogenes-8.tar.gz
-   - *E. coli* project merely showing support of different input types: https://s3.computational.bio.uni-giessen.de/swift/v1/asap/example-input.tar.gz
+   - 8 *E. coli* project merely showing support of different input types: https://s3.computational.bio.uni-giessen.de/swift/v1/asap/example-input.tar.gz
 
 
 ### Docker
