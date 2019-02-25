@@ -63,6 +63,7 @@ https://s3.computational.bio.uni-giessen.de/swift/v1/asap/asap.tar.gz
 Additional files:
 - comprehensive manual: https://s3.computational.bio.uni-giessen.de/swift/v1/asap/manual.pdf
 - configuration example: https://s3.computational.bio.uni-giessen.de/swift/v1/asap/config-example.xls
+- MD5SUM: https://s3.computational.bio.uni-giessen.de/swift/v1/asap/MD5SUM
 - example projects:
    - 4 public *L. monocytogenes* genomes: https://s3.computational.bio.uni-giessen.de/swift/v1/asap/example-lmonocytogenes.tar.gz
    - 8 public *L. monocytogenes* genomes: https://s3.computational.bio.uni-giessen.de/swift/v1/asap/example-lmonocytogenes-8.tar.gz
