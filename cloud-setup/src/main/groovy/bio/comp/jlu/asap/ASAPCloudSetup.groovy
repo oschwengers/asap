@@ -57,25 +57,30 @@ configPath.toFile().withInputStream {
     props.load( it )
 }
 
-
-// calculate appropriate number of SGE slave nodes
-int cpuProject = props.getProperty( 'cloud.quota.cpu' ) as int
-int cpuMaster  = props.getProperty( 'master.cpu' ) as int
-int cpuSlaves  = props.getProperty( 'slaves.cpu' ) as int
-int maxAmountSlaves = (cpuProject - cpuMaster - 2) / cpuSlaves
-int desiredAmountSlaves = noGenomes / (cpuSlaves / 8)
-final int noSlaves = desiredAmountSlaves > maxAmountSlaves ? maxAmountSlaves : desiredAmountSlaves
-
-
-// import cloud and BiBiGrid values
+// import cloud values
 String region = props.getProperty( 'cloud.region' )
 String zone = props.getProperty( 'cloud.zone' )
-String subnet = props.getProperty( 'cloud.subnet' )
-String masterFlavour = props.getProperty( 'master.instance' )
-String slavesFlavour = props.getProperty( 'slaves.instance' )
-String baseImageId = props.getProperty( 'base.image' )
-String volumeIdAsap  = props.getProperty( 'volume.asap' )
-String volumeIdData  = props.getProperty( 'volume.data' )
+
+// import project values
+String subnetId = props.getProperty( 'project.subnet.id' )
+int quotaCpu = props.getProperty( 'project.cpu' ) as int
+int quotaMem = props.getProperty( 'project.mem' ) as int
+
+// import cluster values
+String imageFlavour = props.getProperty( 'vm.flavour' )
+String baseImageId = props.getProperty( 'vm.image.id' )
+int vmCpu = props.getProperty( 'vm.cpu' ) as int
+int vmMem = props.getProperty( 'vm.mem' ) as int
+String volumeIdAsap  = props.getProperty( 'volume.asap.id' )
+String volumeIdData  = props.getProperty( 'volume.data.id' )
+
+
+// calculate appropriate number of SGE slave nodes
+int maxVmsCpu = (quotaCpu - vmCpu - 2) / vmCpu  // substract cores for 1 master and the gateway instance
+int maxVmsMem = (quotaMem - vmMem - 4) / vmMem  // substract mem [Gb] for 1 master and the gateway instance
+int maxVms = Math.min( maxVmsCpu, maxVmsMem )
+int desiredVms = noGenomes / (vmCpu / 8)
+final int noSlaves = desiredVms > maxVms ? maxVms : desiredVms
 
 
 def bibigridTemplate = """
@@ -90,18 +95,18 @@ region: ${region}
 availabilityZone: ${zone}
 
 #Network
-subnet: ${subnet}
+subnet: ${subnetId}
 
 #BiBiGrid-Master
 masterInstance:
-  type: ${masterFlavour}
+  type: ${imageFlavour}
   image: ${baseImageId}
 
 #BiBiGrid-Slave
 slaveInstances:
-  - type: ${slavesFlavour}
-    count: ${noSlaves}
+  - type: ${imageFlavour}
     image: ${baseImageId}
+    count: ${noSlaves}
 
 #Mountpoints
 masterMounts:
