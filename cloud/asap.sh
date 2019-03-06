@@ -20,7 +20,22 @@ while getopts ":o:i:p:" opt; do
 done
 
 
-### 1) ASAP cluster logic script & create bibigrid.yml file ###
+### 1) Check arguments and make paths absolute
+
+OPENSTACK_RC_FILE=$(realpath $OPENSTACK_RC_FILE)
+if [ ! -f $OPENSTACK_RC_FILE ]; then
+    echo "Wrong path to OpenStack RC file!"
+    exit 1
+fi
+
+PROJECT_DIR=$(realpath $PROJECT_DIR)
+if [ ! -d $PROJECT_DIR ]; then
+    echo "Wrong path to project directory!"
+    exit 1
+fi
+
+
+### 2) ASAP cluster logic script & create bibigrid.yml file ###
 
 # Create bibigrid.yml file with the asap-cloud-setup script. This script needs the asap.properties file in the same dir (~/asap-cloud/)
 java -jar ~/asap-cloud/asap-cloud-setup-1.1.0.jar -p $PROJECT_DIR
@@ -31,20 +46,20 @@ echo "#############################################"
 echo "VOLUME_ID = $VOLUME_ID"
 echo "#############################################"
 
-### 2) source openstack.rc file ###
+### 3) source openstack.rc file ###
 
 # Source the environment variables for the Openstack CLI tool
 source $OPENSTACK_RC_FILE
 
 
-### 3) detach volume(s) in openstack ###
+### 4) detach volume(s) in openstack ###
 
 # Unmount & detach the data volume & project dir
 sudo umount /data/
 nova volume-detach $INSTANCE_ID $VOLUME_ID
 
 
-### 4) create new ssh-key for bibigrid ###
+### 5) create new ssh-key for bibigrid ###
 
 # Create new ssh keypair with Openstack CLI tool & write the key into a local file.
 openstack keypair create asap-cluster > ~/asap-cloud/asap.cluster.key
@@ -53,7 +68,7 @@ openstack keypair create asap-cluster > ~/asap-cloud/asap.cluster.key
 chmod 600 ~/asap-cloud/asap.cluster.key
 
 
-### 5) start bibigrid cluster ###
+### 6) start bibigrid cluster ###
 
 echo "#############################################"
 echo "Starting bibigrid cluster..."
@@ -76,7 +91,7 @@ echo "#############################################"
 rm ~/asap-cloud/bibigrid-specs
 
 
-### 6) login to master node & start ASA3P run on the cluster ###
+### 7) login to master node & start ASA3P run on the cluster ###
 
 # Disable StrictHostKeyChecking (Login via ssh without manual confirmation)
 echo "#############################################"
@@ -104,12 +119,12 @@ echo "#############################################"
 sudo sed -i "s/   StrictHostKeyChecking no/#   StrictHostKeyChecking ask/g" /etc/ssh/ssh_config
 
 
-### 7) terminate bibigrid cluster ###
+### 8) terminate bibigrid cluster ###
 
 java -jar ~/asap-cloud/BiBiGrid-asap-2.0.jar -o ~/asap-cloud/bibigrid.yml -t $BIBIGRID_ID
 
 
-### 8) Delete ssh keypair
+### 9) Delete ssh keypair
 
 # Delete key on local machine
 rm ~/asap-cloud/asap.cluster.key
@@ -118,7 +133,7 @@ rm ~/asap-cloud/asap.cluster.key
 openstack keypair delete asap-cluster
 
 
-### 9) attach free volume with results from analysis ###
+### 10) attach free volume with results from analysis ###
 
 # Attach & mount the data volume & project dir
 echo "#############################################"
