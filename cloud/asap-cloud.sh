@@ -34,14 +34,17 @@ if [ ! -d $PROJECT_DIR ]; then
     exit 1
 fi
 
+SCRIPT_PATH=$(realpath $0)
+ASAP_CLOUD=$(dirname $SCRIPT_PATH)
+
 
 ### 2) ASAP cluster logic script & create bibigrid.yml file ###
 
-# Create bibigrid.yml file with the asap-cloud-setup script. This script needs the asap.properties file in the same dir (~/asap-cloud/)
-java -jar ~/asap-cloud/asap-cloud-setup.jar -p $PROJECT_DIR
+# Create bibigrid.yml file with the asap-cloud-setup script. This script needs the asap.properties file in the same dir ($ASAP_CLOUD/)
+java -jar $ASAP_CLOUD/asap-cloud-setup.jar -p $PROJECT_DIR
 
 # Extract ID of data volume from asap.properties file
-VOLUME_ID=$(cat ~/asap-cloud/asap.properties | grep "volume.data*" | cut -d= -f2)
+VOLUME_ID=$(cat $ASAP_CLOUD/asap.properties | grep "volume.data*" | cut -d= -f2)
 echo "#############################################"
 echo "VOLUME_ID = $VOLUME_ID"
 echo "#############################################"
@@ -62,10 +65,10 @@ nova volume-detach $INSTANCE_ID $VOLUME_ID
 ### 5) create new ssh-key for bibigrid ###
 
 # Create new ssh keypair with Openstack CLI tool & write the key into a local file.
-openstack keypair create asap-cluster > ~/asap-cloud/asap.cluster.key
+openstack keypair create asap-cluster > $ASAP_CLOUD/asap.cluster.key
 
 # Change filemod
-chmod 600 ~/asap-cloud/asap.cluster.key
+chmod 600 $ASAP_CLOUD/asap.cluster.key
 
 
 ### 6) start bibigrid cluster ###
@@ -76,11 +79,11 @@ echo "#############################################"
 sleep 1
 
 # Start of BiBiGrid SGE cluster
-java -jar ~/asap-cloud/BiBiGrid-asap.jar -c -o ~/asap-cloud/bibigrid.yml | tee ~/asap-cloud/bibigrid-specs
+java -jar $ASAP_CLOUD/BiBiGrid-asap.jar -c -o $ASAP_CLOUD/bibigrid.yml | tee $ASAP_CLOUD/bibigrid-specs
 
 # Extract ID & IP address of the newly created cluster
-BIBIGRID_IP=$(grep -E 'BIBIGRID_MASTER=[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' ~/asap-cloud/bibigrid-specs | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}')
-BIBIGRID_ID=$(grep -E 'The cluster id of your started cluster is:' ~/asap-cloud/bibigrid-specs | grep -Eo '[A-Za-z0-9]{15}')
+BIBIGRID_IP=$(grep -E 'BIBIGRID_MASTER=[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' $ASAP_CLOUD/bibigrid-specs | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}')
+BIBIGRID_ID=$(grep -E 'The cluster id of your started cluster is:' $ASAP_CLOUD/bibigrid-specs | grep -Eo '[A-Za-z0-9]{15}')
 
 echo "#############################################"
 echo "BIBIGRID_IP = $BIBIGRID_IP"
@@ -88,7 +91,7 @@ echo "BIBIGRID_ID = $BIBIGRID_ID"
 echo "#############################################"
 
 # Remove temporary file containing BiBiGrid output
-rm ~/asap-cloud/bibigrid-specs
+rm $ASAP_CLOUD/bibigrid-specs
 
 
 ### 7) login to master node & start ASA3P run on the cluster ###
@@ -101,7 +104,7 @@ sudo sed -i "s/#   StrictHostKeyChecking ask/   StrictHostKeyChecking no/g" /etc
 
 # Add ssh key
 eval `ssh-agent -s`
-ssh-add ~/asap-cloud/asap.cluster.key
+ssh-add $ASAP_CLOUD/asap.cluster.key
 
 # Remove known_hosts file to prevent login problems, as the Floating IP might be used several different VMs
 ssh-keygen -f "/home/ubuntu/.ssh/known_hosts" -R $BIBIGRID_IP
@@ -121,13 +124,13 @@ sudo sed -i "s/   StrictHostKeyChecking no/#   StrictHostKeyChecking ask/g" /etc
 
 ### 8) terminate bibigrid cluster ###
 
-java -jar ~/asap-cloud/BiBiGrid-asap-2.0.jar -o ~/asap-cloud/bibigrid.yml -t $BIBIGRID_ID
+java -jar $ASAP_CLOUD/BiBiGrid-asap-2.0.jar -o $ASAP_CLOUD/bibigrid.yml -t $BIBIGRID_ID
 
 
 ### 9) Delete ssh keypair
 
 # Delete key on local machine
-rm ~/asap-cloud/asap.cluster.key
+rm $ASAP_CLOUD/asap.cluster.key
 
 # Delete key in Openstack
 openstack keypair delete asap-cluster
