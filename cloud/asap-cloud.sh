@@ -44,9 +44,11 @@ ASAP_CLOUD=$(dirname $SCRIPT_PATH)
 java -jar $ASAP_CLOUD/asap-cloud-setup.jar -p $PROJECT_DIR
 
 # Extract ID of data volume from asap.properties file
-VOLUME_ID=$(cat $ASAP_CLOUD/asap.properties | grep "volume.data*" | cut -d= -f2)
+DATA_VOLUME_ID=$(cat $ASAP_CLOUD/asap.properties | grep "volume.data*" | cut -d= -f2)
 echo "#############################################"
-echo "VOLUME_ID = $VOLUME_ID"
+echo "OpenStack RC file = $OPENSTACK_RC_FILE"
+echo "Project directory = $PROJECT_DIR"
+echo "Data volume id = $DATA_VOLUME_ID"
 echo "#############################################"
 
 ### 3) source openstack.rc file ###
@@ -57,9 +59,12 @@ source $OPENSTACK_RC_FILE
 
 ### 4) detach volume(s) in openstack ###
 
+echo "#############################################"
+echo "Prepare OpenStack project"
+echo "#############################################"
 # Unmount & detach the data volume & project dir
 sudo umount /data/
-nova volume-detach $INSTANCE_ID $VOLUME_ID
+nova volume-detach $INSTANCE_ID $DATA_VOLUME_ID
 
 
 ### 5) create new ssh-key for bibigrid ###
@@ -74,7 +79,7 @@ chmod 600 $ASAP_CLOUD/asap.cluster.key
 ### 6) start bibigrid cluster ###
 
 echo "#############################################"
-echo "Starting bibigrid cluster..."
+echo "Starting BiBiGrid cluster..."
 echo "#############################################"
 sleep 1
 
@@ -86,8 +91,8 @@ BIBIGRID_IP=$(grep -E 'BIBIGRID_MASTER=[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]
 BIBIGRID_ID=$(grep -E 'The cluster id of your started cluster is:' $ASAP_CLOUD/bibigrid-specs | grep -Eo '[A-Za-z0-9]{15}')
 
 echo "#############################################"
-echo "BIBIGRID_IP = $BIBIGRID_IP"
-echo "BIBIGRID_ID = $BIBIGRID_ID"
+echo "BiBiGrid ip = $BIBIGRID_IP"
+echo "BiBiGrid id = $BIBIGRID_ID"
 echo "#############################################"
 
 # Remove temporary file containing BiBiGrid output
@@ -111,7 +116,7 @@ ssh-keygen -f "/home/ubuntu/.ssh/known_hosts" -R $BIBIGRID_IP
 
 # Start ASAP at the cluster
 echo "#############################################"
-echo "Starting ASAP"
+echo "Starting ASA³P"
 echo "#############################################"
 ssh -l ubuntu $BIBIGRID_IP "export ASAP_HOME=/asap/ && java -jar /asap/asap.jar -d $PROJECT_DIR/"
 
@@ -124,11 +129,18 @@ sudo sed -i "s/   StrictHostKeyChecking no/#   StrictHostKeyChecking ask/g" /etc
 
 ### 8) terminate bibigrid cluster ###
 
+echo "#############################################"
+echo "ASA³P analysis finished"
+echo "Terminating BiBiGrid cluster"
+echo "#############################################"
 java -jar $ASAP_CLOUD/BiBiGrid-asap-2.0.jar -o $ASAP_CLOUD/bibigrid.yml -t $BIBIGRID_ID
 
 
 ### 9) Delete ssh keypair
 
+echo "#############################################"
+echo "Clean up OpenStack project"
+echo "#############################################"
 # Delete key on local machine
 rm $ASAP_CLOUD/asap.cluster.key
 
@@ -140,11 +152,11 @@ openstack keypair delete asap-cluster
 
 # Attach & mount the data volume & project dir
 echo "#############################################"
-echo "Attaching volume"
+echo "Attaching data volume"
 echo "#############################################"
-nova volume-attach $INSTANCE_ID $VOLUME_ID
+nova volume-attach $INSTANCE_ID $DATA_VOLUME_ID
 sleep 10
 echo "#############################################"
-echo "Mounting volume"
+echo "Mounting data volume"
 echo "#############################################"
 sudo mount $(ls -t /dev/vd* | head -n 1 | grep -o "/dev/vd[a-z]") /data/
