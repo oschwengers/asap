@@ -123,10 +123,18 @@ aspects and thus hides away as much technical complexity as possible. For furthe
 information please have a look at our user manual.
 
 In order to trigger an **OpenStack** based cloud project, you need the following
-additional clour related files:
+additional cloud related files:
 - ASA³P cloud tarball (containing binaries, property files and a customized BiBiGrid version):
 https://s3.computational.bio.uni-giessen.de/swift/v1/asap/asap-cloud.tar.gz
 
+For a description of how to setup ASA³P within an OpenStack project, please
+have a look at our [manual](https://s3.computational.bio.uni-giessen.de/swift/v1/asap/manual.pdf)
+covering everything in detail. Once ASA³P is properly setup you can start it by
+executing a single shell script:
+
+```bash
+$ sh ~/asap-cloud/asap-cloud.sh
+```
 
 ## Input & Output
 
