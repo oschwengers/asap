@@ -38,7 +38,7 @@ fi
 ### 2) ASAP cluster logic script & create bibigrid.yml file ###
 
 # Create bibigrid.yml file with the asap-cloud-setup script. This script needs the asap.properties file in the same dir (~/asap-cloud/)
-java -jar ~/asap-cloud/asap-cloud-setup-1.1.0.jar -p $PROJECT_DIR
+java -jar ~/asap-cloud/asap-cloud-setup.jar -p $PROJECT_DIR
 
 # Extract ID of data volume from asap.properties file
 VOLUME_ID=$(cat ~/asap-cloud/asap.properties | grep "volume.data*" | cut -d= -f2)
@@ -76,7 +76,7 @@ echo "#############################################"
 sleep 1
 
 # Start of BiBiGrid SGE cluster
-java -jar ~/asap-cloud/BiBiGrid-asap-2.0.jar -c -o ~/asap-cloud/bibigrid.yml | tee ~/asap-cloud/bibigrid-specs
+java -jar ~/asap-cloud/BiBiGrid-asap.jar -c -o ~/asap-cloud/bibigrid.yml | tee ~/asap-cloud/bibigrid-specs
 
 # Extract ID & IP address of the newly created cluster
 BIBIGRID_IP=$(grep -E 'BIBIGRID_MASTER=[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' ~/asap-cloud/bibigrid-specs | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}')
