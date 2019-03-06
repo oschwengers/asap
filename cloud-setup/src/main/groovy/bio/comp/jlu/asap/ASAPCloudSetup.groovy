@@ -73,8 +73,7 @@ String zone = props.getProperty( 'cloud.zone' )
 String subnet = props.getProperty( 'cloud.subnet' )
 String masterFlavour = props.getProperty( 'master.instance' )
 String slavesFlavour = props.getProperty( 'slaves.instance' )
-String masterImageId = props.getProperty( 'master.image' )
-String slavesImageId = props.getProperty( 'slaves.image' )
+String baseImageId = props.getProperty( 'base.image' )
 String volumeIdAsap  = props.getProperty( 'volume.asap' )
 String volumeIdData  = props.getProperty( 'volume.data' )
 
@@ -96,13 +95,13 @@ subnet: ${subnet}
 #BiBiGrid-Master
 masterInstance:
   type: ${masterFlavour}
-  image: ${masterImageId}
+  image: ${baseImageId}
 
 #BiBiGrid-Slave
 slaveInstances:
   - type: ${slavesFlavour}
     count: ${noSlaves}
-    image: ${slavesImageId}
+    image: ${baseImageId}
 
 #Mountpoints
 masterMounts:
