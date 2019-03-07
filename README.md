@@ -111,6 +111,7 @@ $ sudo asap/asap-docker.sh example-lmonocytogenes/
 
 For further information have a look at the Docker readme (DOCKER.md ).
 
+
 ### Cloud - OpenStack
 ASA³P's **OpenStack** based cloud version targets the analysis of hundreds to
 even thousands of bacterial isolates. Therefore, it features automatic creation,
@@ -127,14 +128,20 @@ additional cloud related files:
 - ASA³P cloud tarball (containing binaries, property files and a customized BiBiGrid version):
 https://s3.computational.bio.uni-giessen.de/swift/v1/asap/asap-cloud.tar.gz
 
-For a description of how to setup ASA³P within an OpenStack project, please
-have a look at our [manual](https://s3.computational.bio.uni-giessen.de/swift/v1/asap/manual.pdf)
-covering everything in detail. Once ASA³P is properly setup you can start it by
-executing a single shell script:
-
+Once ASA³P is properly setup you can start it by executing a single shell script:
 ```bash
-$ sh ~/asap-cloud/asap-cloud.sh
+$ ~/asap-cloud/asap-cloud.sh -i <INSTANCE_ID> -o <OPEN_STACK_RC_FILE> -p <PROJECT_DIR>
 ```
+
+Parameters:
+* `<INSTANCE_ID>`: VM id of the gateway instance (VM you start ASA³P from)
+* `<OPEN_STACK_RC_FILE>`: OpenStack RC file providing cloud and project information
+* `<PROJECT_DIR>`: path to the actual project directory (containing `config.xls` and `data` directory)
+
+For a comprehensive and detailed description of how to setup an OpenStack project
+and ASA³P therein, please have a look at our
+[manual](https://s3.computational.bio.uni-giessen.de/swift/v1/asap/manual.pdf).
+
 
 ## Input & Output
 
