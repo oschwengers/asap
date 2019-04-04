@@ -155,12 +155,11 @@ ProcessBuilder pb = new ProcessBuilder( BLASTN,
     '-query', genomeSequencePath.toString(),
     '-db', "${MLST_DB}/mlst".toString(),
     '-num_threads', '1',
-    '-ungapped',
     '-dust', 'no',
     '-word_size', '32',
-    '-max_target_seqs', '10000',
-    '-culling_limit', '2',
-    '-perc_identity', '95',
+    '-ungapped',
+    '-max_target_seqs', '100000',
+    '-perc_identity', '99',
     '-outfmt', '6 sseqid slen length nident' )
     .directory( mlstPath.toFile() )
 log.info( "exec: ${pb.command()}" )
@@ -190,12 +189,12 @@ stdOut.eachLine( { line ->
         identities: Integer.parseInt( blastCols[6] )
     ]
     bh.mismatches = bh.geneLength - bh.identities
-    if( bh.identities / bh.geneLength >= 0.95 ) { // discard all hits below 95 % subject identity
+    if( bh.identities / bh.geneLength >= 0.99 ) { // discard all hits below 95 % subject identity
         String key = "${bh.scheme}-${bh.gene}"
         def tmpBH = blastHits[ (key) ]
         if( !tmpBH )
             blastHits[ (key) ] = bh
-        else if( bh.alignmentLength > tmpBH.alignmentLength  ||  bh.identities > tmpBH.identities )
+        else if( bh.alignmentLength >= tmpBH.alignmentLength  &&  bh.identities >= tmpBH.identities )
             blastHits[ (key) ] = bh
     }
 } )
