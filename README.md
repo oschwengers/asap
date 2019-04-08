@@ -63,11 +63,10 @@ https://s3.computational.bio.uni-giessen.de/swift/v1/asap/asap.tar.gz
 Additional files:
 - comprehensive manual: https://s3.computational.bio.uni-giessen.de/swift/v1/asap/manual.pdf
 - configuration example: https://s3.computational.bio.uni-giessen.de/swift/v1/asap/config-example.xls
-- MD5SUM: https://s3.computational.bio.uni-giessen.de/swift/v1/asap/MD5SUM
 - example projects:
-   - 4 public *L. monocytogenes* genomes: https://s3.computational.bio.uni-giessen.de/swift/v1/asap/example-lmonocytogenes.tar.gz
-   - 8 public *L. monocytogenes* genomes: https://s3.computational.bio.uni-giessen.de/swift/v1/asap/example-lmonocytogenes-8.tar.gz
-   - 8 *E. coli* project merely showing support of different input types: https://s3.computational.bio.uni-giessen.de/swift/v1/asap/example-input.tar.gz
+   - 4 public *L. monocytogenes* genomes: https://s3.computational.bio.uni-giessen.de/swift/v1/asap/example-lmonocytogenes-4.tar.gz
+   - 32 public *L. monocytogenes* genomes: https://s3.computational.bio.uni-giessen.de/swift/v1/asap/example-lmonocytogenes-32.tar.gz
+   - 8 *E. coli* project merely showing support of different input types: https://s3.computational.bio.uni-giessen.de/swift/v1/asap/example-ecoli-input.tar.gz
 
 
 ### Docker
@@ -296,7 +295,7 @@ project-dir
 * __Is there a public example project?__
 Just download this exemplary project containing a set of 4 public
 *Listeria monocytogenes* genomes from **SRA**:
-https://s3.computational.bio.uni-giessen.de/swift/v1/asap/example-lmonocytogenes.tar.gz
+https://s3.computational.bio.uni-giessen.de/swift/v1/asap/example-lmonocytogenes-4.tar.gz
 
 * __How to cite ASA³P?__
 A manuscript is currently in preparation. Stay tuned!
@@ -304,7 +303,7 @@ A manuscript is currently in preparation. Stay tuned!
 * __Can I install ASA³P by myself?__
 Yes you can! Nevertheless, we highly encourage to use either the **Docker**
 container or the **OpenStack** images. As there are too many combinations of
-linux distributions and tool/database versions we cannot give any support for this.
+linux distributions and tool/database versions, we cannot give any support for this.
 
 
 ## License
