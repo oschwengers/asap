@@ -203,7 +203,7 @@ def abrs = [:]
                 orf: [
                     start: hsp.orf_start,
                     end: hsp.orf_end,
-                    length: Math.abs( hsp.orf_start - hsp.orf_end ),
+                    length: Math.abs( hsp.orf_start - hsp.orf_end ) + 1,
                     strand: hsp.orf_strand
                 ],
                 antibiotics: [],
