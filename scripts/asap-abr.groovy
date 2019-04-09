@@ -187,7 +187,8 @@ def p = ~/([a-zA-Z]+) antibiotic/
 def abrs = [:]
 (new JsonSlurper()).parseText( cardOutputPath.text ).each( { cardHit ->
     if( !cardHit.value[ 'data_type' ] ) {
-        cardHit.value.values().each( { hsp ->
+        cardHit.value.values().findAll( { !it?.nudged } ) // skip "nudged" CARD entries
+        .each( { hsp ->
             def abr = [
                 model: [
                     aroId: hsp.ARO_accession,
