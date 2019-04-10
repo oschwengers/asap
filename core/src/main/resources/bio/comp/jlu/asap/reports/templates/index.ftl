@@ -269,7 +269,7 @@
                                 d3.select( '#chartParallelCoordinates svg' )
                                     .datum( [
 <#list genomes as genome>
-{ "name": "${genome.sampleName}", "Genome Size": ${genome.genomeSize?c}, "Contigs": ${genome.noContigs?c}, "GC": ${(genome.gc/100)?c}, "Genes": ${genome.noGenes?c}, "ABRs": ${genome.noABRs?c}, "VFs": ${genome.noVFs?c}, "HI SNPs": ${genome.noHISNPs?c} },
+{ "name": "${genome.sampleName}", "Genome Size": <#if genome.genomeSize?is_number>${genome.genomeSize?c}<#else>'-'</#if>, "Contigs": <#if genome.noContigs?is_number>${genome.noContigs?c}<#else>'-'</#if>, "GC": <#if genome.gc?is_number>${(genome.gc/100)?c}<#else>'-'</#if>, "Genes": <#if genome.noGenes?is_number>${genome.noGenes?c}<#else>'-'</#if>, "ABRs": <#if genome.noABRs?is_number>${genome.noABRs?c}<#else>'-'</#if>, "VFs": <#if genome.noVFs?is_number>${genome.noVFs?c}<#else>'-'</#if>, "HI SNPs": <#if genome.noHISNPs?is_number>${genome.noHISNPs?c}<#else>'-'</#if> },
 </#list>
                                         ]
                                     )
@@ -303,13 +303,13 @@
 <td class="text-center">${genome.id}</td>
 <td class="text-center">${genome.sampleName}</td>
 <td class="text-center"><a href="./taxonomy/${genome.genomeName}.html">${genome.kmer}</a></td>
-<td class="text-center<#if (genome.zScores.genomeSize>2.5)> bg-danger<#elseif (genome.zScores.genomeSize>1.5)> bg-warning</#if>" gradient="1"><a href="./assemblies/${genome.genomeName}.html">${genome.genomeSize}</a></td>
-<td class="text-center<#if (genome.zScores.noContigs>2.5)> bg-danger<#elseif (genome.zScores.noContigs>1.5)> bg-warning</#if>" gradient="2"><a href="./assemblies/${genome.genomeName}.html">${genome.noContigs}</a></td>
-<td class="text-center<#if (genome.zScores.gc>2.5)> bg-danger<#elseif (genome.zScores.gc>1.5)> bg-warning</#if>"><a href="./assemblies/${genome.genomeName}.html">${genome.gc?round}</a></td>
-<td class="text-center<#if (genome.zScores.noGenes>2.5)> bg-danger<#elseif (genome.zScores.noGenes>1.5)> bg-warning</#if>" gradient="3"><a href="./annotations/${genome.genomeName}.html">${genome.noGenes}</a></td>
-<td class="text-center<#if (genome.zScores.noABRs>2.5)> bg-danger<#elseif (genome.zScores.noABRs>1.5)> bg-warning</#if>" gradient="4"><a href="./abr/${genome.genomeName}.html">${genome.noABRs}</a></td>
-<td class="text-center<#if (genome.zScores.noVFs>2.5)> bg-danger<#elseif (genome.zScores.noVFs>1.5)> bg-warning</#if>" gradient="5"><a href="./vf/${genome.genomeName}.html">${genome.noVFs}</a></td>
-<td class="text-center<#if (genome.zScores.noHISNPs>2.5)> bg-danger<#elseif (genome.zScores.noHISNPs>1.5)> bg-warning</#if>" gradient="6"><a href="./snps/${genome.genomeName}.html">${genome.noHISNPs}</a></td>
+<td class="text-center<#if (genome.zScores.genomeSize>2.5)> bg-danger<#elseif (genome.zScores.genomeSize>1.5)> bg-warning</#if>" gradient="1"><#if genome.genomeSize?is_number><a href="./assemblies/${genome.genomeName}.html">${genome.genomeSize}</a><#else>-</#if></td>
+<td class="text-center<#if (genome.zScores.noContigs>2.5)> bg-danger<#elseif (genome.zScores.noContigs>1.5)> bg-warning</#if>" gradient="2"><#if genome.noContigs?is_number><a href="./assemblies/${genome.genomeName}.html">${genome.noContigs}</a><#else>-</#if></td>
+<td class="text-center<#if (genome.zScores.gc>2.5)> bg-danger<#elseif (genome.zScores.gc>1.5)> bg-warning</#if>"><#if genome.gc?is_number><a href="./assemblies/${genome.genomeName}.html">${genome.gc?round}</a><#else>-</#if></td>
+<td class="text-center<#if (genome.zScores.noGenes>2.5)> bg-danger<#elseif (genome.zScores.noGenes>1.5)> bg-warning</#if>" gradient="3"><#if genome.noGenes?is_number><a href="./annotations/${genome.genomeName}.html">${genome.noGenes}</a><#else>-</#if></td>
+<td class="text-center<#if (genome.zScores.noABRs>2.5)> bg-danger<#elseif (genome.zScores.noABRs>1.5)> bg-warning</#if>" gradient="4"><#if genome.noABRs?is_number><a href="./abr/${genome.genomeName}.html">${genome.noABRs}</a><#else>-</#if></td>
+<td class="text-center<#if (genome.zScores.noVFs>2.5)> bg-danger<#elseif (genome.zScores.noVFs>1.5)> bg-warning</#if>" gradient="5"><#if genome.noVFs?is_number><a href="./vf/${genome.genomeName}.html">${genome.noVFs}</a><#else>-</#if></td>
+<td class="text-center<#if (genome.zScores.noHISNPs>2.5)> bg-danger<#elseif (genome.zScores.noHISNPs>1.5)> bg-warning</#if>" gradient="6"><#if genome.noHISNPs?is_number><a href="./snps/${genome.genomeName}.html">${genome.noHISNPs}</a><#else>-</#if></td>
 </tr>
 </#list>
                                 </tbody>

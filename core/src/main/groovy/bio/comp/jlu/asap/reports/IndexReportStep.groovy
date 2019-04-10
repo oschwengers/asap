@@ -81,7 +81,7 @@ class IndexReportStep extends ReportStep {
                 stat.kmerScore = taxStats.kmer.lineages.size() > 0 ? taxStats.kmer.classification.freq / taxStats.kmer.hits : -1
             } else {
                 stat.kmer = '-'
-                stat.kmerScore = -1
+                stat.kmerScore = '-'
             }
 
 
@@ -93,9 +93,9 @@ class IndexReportStep extends ReportStep {
                 stat.noContigs = assemblyStats.noContigs
                 stat.gc = (assemblyStats.gc as double) * 100
             } else {
-                stat.genomeSize = -1
-                stat.noContigs = -1
-                stat.gc = -1
+                stat.genomeSize = '-'
+                stat.noContigs = '-'
+                stat.gc = '-'
             }
 
             // parse annotation results
@@ -104,7 +104,7 @@ class IndexReportStep extends ReportStep {
                 def annotationStats = (new JsonSlurper()).parseText( infoJsonPath.text )
                 stat.noGenes = annotationStats.noGenes
             } else {
-                stat.noGenes = -1
+                stat.noGenes = '-'
             }
 
             // parse ABR results
@@ -113,7 +113,7 @@ class IndexReportStep extends ReportStep {
                 def abrStats = (new JsonSlurper()).parseText( infoJsonPath.text )
                 stat.noABRs = abrStats.abr.perfect.size()
             } else {
-                stat.noABRs = -1
+                stat.noABRs = '-'
             }
 
             // parse virulence factor results
@@ -122,7 +122,7 @@ class IndexReportStep extends ReportStep {
                 def vfStats = (new JsonSlurper()).parseText( infoJsonPath.text )
                 stat.noVFs = vfStats.vf.size()
             } else {
-                stat.noVFs = -1
+                stat.noVFs = '-'
             }
 
             // parse SNP results
@@ -131,7 +131,7 @@ class IndexReportStep extends ReportStep {
                 def snpStats = (new JsonSlurper()).parseText( infoJsonPath.text )
                 stat.noHISNPs = snpStats.highImpactSNPs.size()
             } else {
-                stat.noHISNPs = -1
+                stat.noHISNPs = '-'
             }
 
             model.genomes << stat
@@ -139,65 +139,65 @@ class IndexReportStep extends ReportStep {
         } )
 
         // outlier classification
-        def values = model.genomes*.genomeSize.findAll( { it != -1 } )
-        if( values.size() > 1 ) {
+        def values = model.genomes*.genomeSize.findAll( { it != '-' } )
+        if( !values.isEmpty() ) {
             def mean = values.sum() / values.size()
             def sdev = calcSDev( values )
-            model.genomes.each( { it.zScores.genomeSize = ((it.genomeSize == -1) || (sdev == 0)) ? 0 : Math.abs( it.genomeSize - mean ) / sdev } )
+            model.genomes.each( { it.zScores.genomeSize = ((it.genomeSize == '-') || (sdev == 0)) ? 0 : Math.abs( it.genomeSize - mean ) / sdev } )
         } else {
             model.genomes.each( { it.zScores.genomeSize = 0 } )
         }
 
-        values = model.genomes*.noContigs.findAll( { it != -1 } )
-        if( values.size() > 1 ) {
+        values = model.genomes*.noContigs.findAll( { it != '-' } )
+        if( !values.isEmpty() ) {
             def mean = values.sum() / values.size()
             def sdev = calcSDev( values )
-            model.genomes.each( { it.zScores.noContigs = ((it.noContigs == -1) || (sdev == 0)) ? 0 : Math.abs( it.noContigs - mean ) / sdev } )
+            model.genomes.each( { it.zScores.noContigs = ((it.noContigs == '-') || (sdev == 0)) ? 0 : Math.abs( it.noContigs - mean ) / sdev } )
         } else {
             model.genomes.each( { it.zScores.noContigs = 0 } )
         }
 
-        values = model.genomes*.gc.findAll( { it != -1 } )
-        if( values.size() > 1 ) {
+        values = model.genomes*.gc.findAll( { it != '-' } )
+        if( !values.isEmpty() ) {
             def mean = values.sum() / values.size()
             def sdev = calcSDev( values )
-            model.genomes.each( { it.zScores.gc = ((it.gc == -1) || (sdev == 0)) ? 0 : Math.abs( it.gc - mean ) / sdev } )
+            model.genomes.each( { it.zScores.gc = ((it.gc == '-') || (sdev == 0)) ? 0 : Math.abs( it.gc - mean ) / sdev } )
         } else {
             model.genomes.each( { it.zScores.gc = 0 } )
         }
 
-        values = model.genomes*.noGenes.findAll( { it != -1 } )
-        if( values.size() > 1 ) {
+        values = model.genomes*.noGenes.findAll( { it != '-' } )
+        if( !values.isEmpty() ) {
             def mean = values.sum() / values.size()
             def sdev = calcSDev( values )
-            model.genomes.each( { it.zScores.noGenes = ((it.noGenes == -1) || (sdev == 0)) ? 0 : Math.abs( it.noGenes - mean ) / sdev } )
+            model.genomes.each( { it.zScores.noGenes = ((it.noGenes == '-') || (sdev == 0)) ? 0 : Math.abs( it.noGenes - mean ) / sdev } )
         } else {
             model.genomes.each( { it.zScores.noGenes = 0 } )
         }
 
-        values = model.genomes*.noABRs.findAll( { it != -1 } )
-        if( values.size() > 1 ) {
+        values = model.genomes*.noABRs.findAll( { it != '-' } )
+        if( !values.isEmpty() ) {
             def mean = values.sum() / values.size()
             def sdev = calcSDev( values )
-            model.genomes.each( { it.zScores.noABRs = ((it.noABRs == -1) || (sdev == 0)) ? 0 : Math.abs( it.noABRs - mean ) / sdev } )
+            model.genomes.each( { it.zScores.noABRs = ((it.noABRs == '-') || (sdev == 0)) ? 0 : Math.abs( it.noABRs - mean ) / sdev } )
         } else {
             model.genomes.each( { it.zScores.noABRs = 0 } )
         }
 
-        values = model.genomes*.noVFs.findAll( { it != -1 } )
-        if( values.size() > 1 ) {
+        values = model.genomes*.noVFs.findAll( { it != '-' } )
+        if( !values.isEmpty() ) {
             def mean = values.sum() / values.size()
             def sdev = calcSDev( values )
-            model.genomes.each( { it.zScores.noVFs = ((it.noVFs == -1) || (sdev == 0)) ? 0 : Math.abs( it.noVFs - mean ) / sdev } )
+            model.genomes.each( { it.zScores.noVFs = ((it.noVFs == '-') || (sdev == 0)) ? 0 : Math.abs( it.noVFs - mean ) / sdev } )
         } else {
             model.genomes.each( { it.zScores.noVFs = 0 } )
         }
 
-        values = model.genomes*.noHISNPs.findAll( { it != -1 } )
-        if( values.size() > 1 ) {
+        values = model.genomes*.noHISNPs.findAll( { it != '-' } )
+        if( !values.isEmpty() ) {
             def mean = values.sum() / values.size()
             def sdev = calcSDev( values )
-            model.genomes.each( { it.zScores.noHISNPs = ((it.noHISNPs == -1) || (sdev == 0)) ? 0 : Math.abs( it.noHISNPs - mean ) / sdev } )
+            model.genomes.each( { it.zScores.noHISNPs = ((it.noHISNPs == '-') || (sdev == 0)) ? 0 : Math.abs( it.noHISNPs - mean ) / sdev } )
         } else {
             model.genomes.each( { it.zScores.noHISNPs = 0 } )
         }
