@@ -1,3 +1,11 @@
+# v1.1.1
+
+## Enhancements
+- Fixed and improved cloud orchestration logic
+- Fixed allel detection in MLST 
+- Fixed ABR gene detection and length calculation
+- Applied minor improvements and bugfixes to report pages
+
 # v1.1
 ## Features
 - Added support for ONT sequencing platform
