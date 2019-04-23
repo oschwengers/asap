@@ -102,10 +102,10 @@ $ sudo docker pull oschwengers/asap
 $ wget https://s3.computational.bio.uni-giessen.de/swift/v1/asap/asap.tar.gz
 $ tar -xzf asap.tar.gz
 $ rm asap.tar.gz
-$ wget https://s3.computational.bio.uni-giessen.de/swift/v1/asap/example-lmonocytogenes.tar.gz
-$ tar -xzf example-lmonocytogenes.tar.gz
-$ rm example-lmonocytogenes.tar.gz
-$ sudo asap/asap-docker.sh example-lmonocytogenes/
+$ wget https://s3.computational.bio.uni-giessen.de/swift/v1/asap/example-lmonocytogenes-4.tar.gz
+$ tar -xzf example-lmonocytogenes-4.tar.gz
+$ rm example-lmonocytogenes-4.tar.gz
+$ sudo asap/asap-docker.sh example-lmonocytogenes-4/
 ```
 
 For further information have a look at the Docker readme (DOCKER.md ).
