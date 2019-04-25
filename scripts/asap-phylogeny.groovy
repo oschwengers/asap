@@ -114,16 +114,30 @@ def info = [
 Path consensusPath = phylogenyPath.resolve( 'consensus.fasta' )
 File consensusFile = consensusPath.toFile()
 
+
 // copy first reference genome
 String refName = config.references[0]
 log.info( "copy ref=${refName}" )
 Path referenceFastaPath = Paths.get( projectPath.toString(), PROJECT_PATH_REFERENCES, refName.substring( 0, refName.lastIndexOf( '.' ) ) + '.fasta' )
 log.debug( "copy content from ref=${refName}, file=${referenceFastaPath} to consensus file=${consensusPath}" )
 
-def p = /(^>.+[\natcgnATCGN]+)/
 
-def m = referenceFastaPath.toFile().text =~ p  // only copy first contig as FastTree cannot handle variable sequence lengths
-if( m  &&  m[0] ) consensusFile << m[0][1]
+def p = /(?m)^>(.+)$\n([ATGCNatgcn\n]+)$/
+def m = referenceFastaPath.text =~ p  // only copy first contig as FastTree cannot handle variable sequence lengths
+StringBuilder sb = new StringBuilder( 10_000_000 )
+boolean hasName = false
+m.each( { match ->
+    if( !hasName ) {
+        String name = match[1].split(' ')[0]
+        sb.append( ">${name}\n" )
+        hasName = true
+    }
+    String contig = match[2].replaceAll( '[^ATGCNatgcn]', '' )
+    sb.append( contig )
+} )
+sb.append( '\n' )
+consensusFile << sb.toString()
+
 
 // copy genomes
 config.genomes.each( { genome ->
@@ -138,8 +152,20 @@ config.genomes.each( { genome ->
         m = contigs =~ p  // only copy first contig as FastTree cannot handle variable sequence lengths
         if( m  &&  m[0] ) {
             log.info( "copy genome-id=${genome.id}, genome-name=${genomeName}" )
-            consensusFile << m[0][1]
             info.phylogeny.included << infoGenome
+            sb = new StringBuilder( 10_000_000 )
+            hasName = false
+            m.each( { match ->
+                if( !hasName ) {
+                    String name = match[1].split(' ')[0]
+                    sb.append( ">${name}\n" )
+                    hasName = true
+                }
+                String contig = match[2].replaceAll( '[^ATGCNatgcn]', '' )
+                sb.append( contig )
+            } )
+            sb.append( '\n' )
+            consensusFile << sb.toString()
         } else {
             log.warn( "ommit genome id=${genome.id}, genome-name=${genomeName}" )
             info.phylogeny.excluded << infoGenome
@@ -149,7 +175,6 @@ config.genomes.each( { genome ->
         info.phylogeny.excluded << infoGenome
     }
 } )
-
 
 
 // build newick file -> run fasttreeMP
