@@ -162,19 +162,19 @@ if( Files.isReadable( aaAnnotationPath ) ) { // genome was annotated by ASA³P
     aaSequencePath = tmpPath.resolve( "${genomeName}.faa" )
     String script = /
 from Bio import SeqIO
-fhInput  = open("${genbankPath}", "r")
-fhOutput = open("${aaSequencePath}", "w")
-
-for seq_record in SeqIO.parse(fhInput, "genbank") :
+fhInput  = open("${genbankPath}", 'r')
+fhOutput = open("${aaSequencePath}", 'w')
+for seq_record in SeqIO.parse(fhInput, 'genbank') :
     print ("extract GenBank record %s" % seq_record.id)
     for seq_feature in seq_record.features :
-        if seq_feature.type=="CDS" :
-            assert len(seq_feature.qualifiers['translation'])==1
-            fhOutput.write(">%s %s\n%s\n" % (
+        if seq_feature.type=='CDS'  and  'translation' in seq_feature.qualifiers:
+            fhOutput.write(">%s %s\n%s\n" %
+                (
                    seq_feature.qualifiers['locus_tag'][0],
                    seq_feature.qualifiers['product'][0],
-                   seq_feature.qualifiers['translation'][0]))
-
+                   seq_feature.qualifiers['translation'][0]
+                )
+            )
 fhOutput.close()
 fhInput.close()
 /
