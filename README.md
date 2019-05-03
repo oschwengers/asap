@@ -181,6 +181,14 @@ project-dir
 │   ├── index.html
 ```
 
+In order to provide a first glimpse into the results of the pipeline, we configured
+a public login to a static web server for demonstration purposes only at:
+https://www.computational.bio.uni-giessen.de/asap/
+```
+$ login: asap-test
+$ password: asap-test
+```
+
 ASA³P stores all output files within the specified project directory
 leaving input files untouched:
 - empty status file indicating ASA³P current status, one of:
