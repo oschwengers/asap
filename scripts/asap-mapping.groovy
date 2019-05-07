@@ -207,21 +207,40 @@ if( ft == FileType.READS_ILLUMINA_PAIRED_END  ||  ft == FileType.READS_ILLUMINA_
         m = bt2Logs =~ /  \d+ .+ were (paired|unpaired);/
         stat.isPairedEnd = m[0][1] == 'paired'
         if( stat.isPairedEnd ) { // paired-end
-            m = bt2Logs =~  /(\d+) \(.+\) aligned concordantly 0 times/
-            stat.unmapped = m[0][1] as long
+            stat.reads *= 2
+            stat.unique = 0
             m = bt2Logs =~  /(\d+) \(.+\) aligned concordantly exactly 1 time/
-            stat.unique = m[0][1] as long
-            m = bt2Logs =~  /(\d+) \(.+\) aligned concordantly >1 times/
-            stat.multiple = m[0][1] as long
-        } else { // single end
-            m = bt2Logs =~  /(\d+) \(.+\) aligned 0 times/
-            stat.unmapped = m[0][1] as long
+            if( m ) stat.unique += 2 * (m[0][1] as long)
+            m = bt2Logs =~  /(\d+) \(.+\) aligned discordantly 1 time/
+            if( m ) stat.unique += 2 * (m[0][1] as long)
             m = bt2Logs =~  /(\d+) \(.+\) aligned exactly 1 time/
-            stat.unique = m[0][1] as long
+            if( m ) stat.unique += m[0][1] as long
+
+            stat.multiple = 0
+            m = bt2Logs =~  /(\d+) \(.+\) aligned concordantly >1 times/
+            if( m ) stat.multiple += 2 * (m[0][1] as long)
+            m = bt2Logs =~  /(\d+) \(.+\) aligned discordantly >1 times/
+            if( m ) stat.multiple += 2 * (m[0][1] as long)
             m = bt2Logs =~  /(\d+) \(.+\) aligned >1 times/
-            stat.multiple = m[0][1] as long
+            if( m ) stat.multiple += m[0][1] as long
+
+            stat.ratio = (stat.unique + stat.multiple) / stat.reads
+            stat.unmapped = stat.reads - stat.unique - stat.multiple
+        } else { // single end
+            stat.unmapped = 0
+            m = bt2Logs =~  /(\d+) \(.+\) aligned 0 times/
+            if( m ) stat.unmapped = m[0][1] as long
+
+            stat.unique = 0
+            m = bt2Logs =~  /(\d+) \(.+\) aligned exactly 1 time/
+            if( m ) stat.unique = m[0][1] as long
+
+            stat.multiple = 0
+            m = bt2Logs =~  /(\d+) \(.+\) aligned >1 times/
+            if( m ) stat.multiple = m[0][1] as long
+
+            stat.ratio = (stat.unique + stat.multiple) / stat.reads
         }
-        stat.ratio = (stat.reads - stat.unmapped) / stat.reads
         info << stat
     } catch( Exception ex ) {
         terminate( 'Could not parse bowtie2 log file!', ex, mappingsPath, genomeName )
