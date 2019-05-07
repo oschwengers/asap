@@ -204,7 +204,7 @@
                                         <td>${project.genus[0]}. ${step.genome.species} ${step.genome.strain}</td>
                                         <td class="text-center" gradient="1">${step.qcReadsAvg.noReads}</td>
                                         <td class="text-center">${step.qcReadsAvg.readLengths.min?round} / ${step.qcReadsAvg.readLengths.mean?string["0.#"]} / ${step.qcReadsAvg.readLengths.max?round}</td>
-                                        <td class="text-center">${step.qcReadsAvg.gc}</td>
+                                        <td class="text-center">${step.qcReadsAvg.gc?string["0.#"]}</td>
                                         <td class="text-center">${step.qcReadsAvg.qual.min?round} / ${step.qcReadsAvg.qual.mean?string["0.#"]} / ${step.qcReadsAvg.qual.max?round}</td>
                                         <td class="text-center">${step.contaminations.potentialContaminations?string["0.0"]}</td>
                                         <td class="text-center"><a href="reads_qc/${step.genomeName}.html"><span class="glyphicon glyphicon-search"></span></a></td>

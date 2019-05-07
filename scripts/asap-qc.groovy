@@ -222,9 +222,9 @@ genome.data.each( { datum ->
 
         int l = info.rawReads.size()
         info.rawReadsAvg = [
-            encoding: info.rawReads*.encoding.sum() / l,
+            encoding: info.rawReads*.encoding,
             gc: info.rawReads*.gc.sum() / l,
-            noReads: info.rawReads*.noReads.sum() / l,
+            noReads: info.rawReads*.noReads.sum(),
             readLengths: [
                 min: info.rawReads*.readLengths.min.min(),
                 mean: info.rawReads*.readLengths.mean.sum() / l,
@@ -232,8 +232,8 @@ genome.data.each( { datum ->
             ],
             qual: [
                 min: info.rawReads*.qual.min.min(),
-                max: info.rawReads*.qual.max.max(),
-                mean: info.rawReads*.qual.mean.sum() / l
+                mean: info.rawReads*.qual.mean.sum() / l,
+                max: info.rawReads*.qual.max.max()
             ]
         ]
 
@@ -418,9 +418,9 @@ genome.data.each( { datum ->
 
         l = info.qcReads.size()
         info.qcReadsAvg = [
-            encoding: info.qcReads*.encoding.sum() / l,
+            encoding: info.qcReads*.encoding,
             gc: info.qcReads*.gc.sum() / l,
-            noReads: info.qcReads*.noReads.sum() / l,
+            noReads: info.qcReads*.noReads.sum(),
             readLengths: [
                 min: info.qcReads*.readLengths.min.min(),
                 mean: info.qcReads*.readLengths.mean.sum() / l,
@@ -428,8 +428,8 @@ genome.data.each( { datum ->
             ],
             qual: [
                 min: info.qcReads*.qual.min.min(),
-                max: info.qcReads*.qual.max.max(),
-                mean: info.qcReads*.qual.mean.sum() / l
+                mean: info.qcReads*.qual.mean.sum() / l,
+                max: info.qcReads*.qual.max.max()
             ]
         ]
 
