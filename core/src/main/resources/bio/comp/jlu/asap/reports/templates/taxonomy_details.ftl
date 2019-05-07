@@ -27,10 +27,7 @@
                                 columns: [ 0, 1, 2, 3 ]
                             }
                         }
-                    ],
-                    language: {
-                        decimal: ",",
-                    }
+                    ]
                 } );
                 $('#rRnaTable').DataTable( {
                     paging:   true,
@@ -50,10 +47,7 @@
                                 columns: [ 0, 1, 2, 3 ]
                             }
                         }
-                    ],
-                    language: {
-                        decimal: ",",
-                    }
+                    ]
                 } );
             } );
         </script>

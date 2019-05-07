@@ -25,10 +25,7 @@
                                 columns: [ 0, 1, 2, 3 ]
                             }
                         }
-                    ],
-                    language: {
-                        decimal: ",",
-                    }
+                    ]
                 } );
             } );
         </script>

@@ -20,10 +20,7 @@
                             text: 'csv',
                             filename: 'project-summary',
                         }
-                    ],
-                    language: {
-                        decimal: ",",
-                    }
+                    ]
                 } );
 
                 // tooltip

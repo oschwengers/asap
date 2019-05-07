@@ -27,10 +27,7 @@
                                 columns: [ 0, 1, 2, 3 ]
                             }
                         }
-                    ],
-                    language: {
-                        decimal: ",",
-                    }
+                    ]
                 } );
                 $('#refBased').DataTable( {
                     paging:   true,
@@ -49,10 +46,7 @@
                                 columns: [ 0, 1, 2, 3, 4 ]
                             }
                         }
-                    ],
-                    language: {
-                        decimal: ",",
-                    }
+                    ]
                 } );
             } );
         </script>

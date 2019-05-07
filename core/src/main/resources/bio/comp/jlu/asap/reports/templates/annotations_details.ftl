@@ -23,9 +23,6 @@
                             }
                         }
                     ],
-                    language: {
-                        decimal: ",",
-                    },
                     order: [[ 2, "asc" ],[ 1, "asc" ]]
                 } );
             } );

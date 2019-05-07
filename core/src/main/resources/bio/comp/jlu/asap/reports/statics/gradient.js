@@ -12,7 +12,7 @@ Array.from( document.querySelectorAll('[gradient]') ).forEach( e => {
 
 // calculate visual properties of elements
 for (const [key, elem] of Object.entries(dict)) {
-    let values = elem.map( (e, i, arr) => e.childNodes[0].textContent.replace( /\./g, '' ).replace( /,/g, '.' ) );
+    let values = elem.map( (e, i, arr) => e.childNodes[0].textContent.replace( /\,/g, '' ) );
     const max = Math.max(...values.filter( it => it !== '-' ));
     for( let i = 0; i < elem.length; i++ ) {
         let val = values[i];

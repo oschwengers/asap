@@ -29,7 +29,7 @@ class ReportRunner extends ReportStep {
         CONFIGURATION.setClassLoaderForTemplateLoading( getClass().getClassLoader(), "${PACKAGE_PREFIX}/templates" )
         CONFIGURATION.setDefaultEncoding( 'UTF-8' )
         CONFIGURATION.setTemplateExceptionHandler( TemplateExceptionHandler.HTML_DEBUG_HANDLER )
-        CONFIGURATION.setLocale( java.util.Locale.GERMAN )
+        CONFIGURATION.setLocale( java.util.Locale.ENGLISH )
     }
 
 

@@ -27,10 +27,7 @@
                                 columns: [ 0, 1, 2 ]
                             }
                         }
-                    ],
-                    language: {
-                        decimal: ",",
-                    }
+                    ]
                 } );
             } );
             $(document).ready(function() {
@@ -48,10 +45,7 @@
                                 columns: [ 0, 1 ]
                             }
                         }
-                    ],
-                    language: {
-                        decimal: ",",
-                    }
+                    ]
                 } );
             } );
         </script>
