@@ -338,15 +338,35 @@ private void runUnicycler( def config, def genome, Path genomeContigsPath, Path 
         def preFilterStatistics = calcAssemblyStatistics( rawAssemblyPath )
 
 
+        // Check for short (Illumina) or long (PB/ONT) reads
+        // -> use short reads for hybrid assemblies as some contigs might not be
+        // covered by long reads.
+        //
         // 1. create mapping (minimap2) for subsequent samtools depth call
         // 2. sort mapped reads
         // 3. compute depth per position
         def contigDepths = [:]
-        pb = new ProcessBuilder( 'sh', '-c',
-            "${MINIMAP2} -a -Q -t ${NUM_THREADS} -x map-ont ${rawAssemblyPath} ${longReadsPath} | \
-            ${SAMTOOLS} sort --threads ${NUM_THREADS} -m ${SAMTOOLS_SORT_MEM} -O BAM | \
-            ${SAMTOOLS} depth -" )
-            .directory( tmpPath.toFile() )
+        if( genome.data.size() == 2 ) { // multiple reads -> hybrid assembly -> Illumina reads available
+            pb = new ProcessBuilder( 'sh', '-c',
+                "${MINIMAP2} -a -Q -t ${NUM_THREADS} -x sr ${rawAssemblyPath} ${tmpPath.resolve( genome.data[1].files[0] ).toString()} ${tmpPath.resolve( genome.data[1].files[1] ).toString()} | \
+                ${SAMTOOLS} sort --threads ${NUM_THREADS} -m ${SAMTOOLS_SORT_MEM} -O BAM | \
+                ${SAMTOOLS} depth -" )
+                .directory( tmpPath.toFile() )
+        } else if( ft == FileType.READS_PACBIO_SEQUEL  ||  ft == FileType.READS_PACBIO_RSII ) { // PB long reads only
+            pb = new ProcessBuilder( 'sh', '-c',
+                "${MINIMAP2} -a -Q -t ${NUM_THREADS} -x map-pb ${rawAssemblyPath} ${longReadsPath} | \
+                ${SAMTOOLS} sort --threads ${NUM_THREADS} -m ${SAMTOOLS_SORT_MEM} -O BAM | \
+                ${SAMTOOLS} depth -" )
+                .directory( tmpPath.toFile() )
+        } else { // no PB -> ONT reads
+            pb = new ProcessBuilder( 'sh', '-c',
+                "${MINIMAP2} -a -Q -t ${NUM_THREADS} -x map-ont ${rawAssemblyPath} ${longReadsPath} | \
+                ${SAMTOOLS} sort --threads ${NUM_THREADS} -m ${SAMTOOLS_SORT_MEM} -O BAM | \
+                ${SAMTOOLS} depth -" )
+                .directory( tmpPath.toFile() )
+        }
+
+
         log.info( "exec: ${pb.command()}" )
         log.info( '----------------------------------------------------------------------------------------------' )
         Process ps = pb.start()
@@ -379,7 +399,7 @@ private void runUnicycler( def config, def genome, Path genomeContigsPath, Path 
         // calc N50/N90 Coverage
         def n50Contigs = preFilterStatistics.contigs.findAll( { it.length >= preFilterStatistics.n50 } )
         preFilterStatistics.n50Coverage = n50Contigs.collect( {it.coverage * it.length} ).sum() / n50Contigs.collect( {it.length} ).sum()
-        log.debug( "pre-filter-N50=${preFilterStatistics.n50Coverage}" )
+        log.debug( "pre-filter-N50=${preFilterStatistics.n50}" )
         def n90Contigs = preFilterStatistics.contigs.findAll( { it.length >= preFilterStatistics.n90 } )
         preFilterStatistics.n90Coverage = n50Contigs.collect( {it.coverage * it.length} ).sum() / n90Contigs.collect( {it.length} ).sum()
 
@@ -396,9 +416,10 @@ private void runUnicycler( def config, def genome, Path genomeContigsPath, Path 
                 log.trace( "\t\tcontigs=${it}" )
                 it.name == key
             } )
-            assert contig != null
-            contig.coverage = val / contig.length
-            log.debug( "\tname=${key}, depth-sum=${val}, length=${contig.length}, coverage=${contig.coverage}" )
+            if( contig != null ) {
+                contig.coverage = val / contig.length
+                log.debug( "\tname=${key}, depth-sum=${val}, length=${contig.length}, coverage=${contig.coverage}" )
+            }
         } )
         // calc N50/N90 Coverage based on filtered contigs
         n50Contigs = info.contigs.findAll( { it.length >= info.n50 } )
@@ -625,9 +646,10 @@ private void runHGap( def config, def genome, Path genomeContigsPath, Path tmpPa
                 log.trace( "\t\tcontigs=${it}" )
                 it.name == key
             } )
-            assert contig != null
-            contig.coverage = val / contig.length
-            log.debug( "\tname=${key}, depth-sum=${val}, length=${contig.length}, coverage=${contig.coverage}" )
+            if( contig != null ) {
+                contig.coverage = val / contig.length
+                log.debug( "\tname=${key}, depth-sum=${val}, length=${contig.length}, coverage=${contig.coverage}" )
+            }
         } )
         // calc N50/N90 Coverage based on filtered contigs
         n50Contigs = info.contigs.findAll( { it.length >= info.n50 } )
@@ -659,7 +681,6 @@ private def calcAssemblyStatistics( Path contigsPath ) {
             def contigInfo = [
                 name: match[1].split(' ')[0],
                 length: contig.length(),
-//                gc:   (contig =~ /[GCgc]/).count / (contig =~ /[ATGCatgc]/).count,
                 noAs: (contig =~ /[Aa]/).count,
                 noTs: (contig =~ /[Tt]/).count,
                 noGs: (contig =~ /[Gg]/).count,
