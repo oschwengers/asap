@@ -1,8 +1,16 @@
-# v1.1.1
+# v1.1.2
+## Enhancements
+- Fixed calculation of contig coverages for hybrid assemblies
+- Improved resolution of phyl. trees
+- Fixed calculation of PE read mapping metrics
+- Fixed GenBank CDS extraction in VF detection
+- Changed reports locale to EN
+- Applied many bugfixes and minor improvements to report pages
 
+# v1.1.1
 ## Enhancements
 - Fixed and improved cloud orchestration logic
-- Fixed allel detection in MLST 
+- Fixed allel detection in MLST
 - Fixed ABR gene detection and length calculation
 - Applied minor improvements and bugfixes to report pages
 
