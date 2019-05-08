@@ -202,11 +202,11 @@
                                     <tr>
                                         <td>${step.genome.id}</td>
                                         <td>${project.genus[0]}. ${step.genome.species} ${step.genome.strain}</td>
-                                        <td class="text-center" gradient="1">${step.reads}</td>
-                                        <td class="text-center" gradient="2">${step.unique}</td>
-                                        <td class="text-center" gradient="3">${step.multiple}</td>
-                                        <td class="text-center" gradient="4">${step.unmapped}</td>
-                                        <td class="text-center" gradient="5">${step.ratio?string["0.0"]}</td>
+                                        <td class="text-center" gradient="${step?counter}">${step.reads}</td>
+                                        <td class="text-center" gradient="${step?counter}">${step.unique}</td>
+                                        <td class="text-center" gradient="${step?counter}">${step.multiple}</td>
+                                        <td class="text-center" gradient="${step?counter}">${step.unmapped}</td>
+                                        <td class="text-center" gradient="0">${step.ratio?string["0.0"]}</td>
                                         <td class="text-center"><a href="./mappings/${project.genus}_${step.genome.species}_${step.genome.strain}.bam">bam</a></td>
                                     </tr>
                                 </#list>
