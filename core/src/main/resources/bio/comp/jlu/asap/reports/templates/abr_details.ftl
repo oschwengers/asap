@@ -244,7 +244,7 @@
                                         <td class="text-center">${abr_.orf.start}</td>
                                         <td class="text-center">${abr_.orf.end}</td>
                                         <td class="text-center">${abr_.orf.length}</td>
-                                        <td class="text-center"><abbr title="${abr_.alignment}">${abr_.bitScore}</abbr></a></td>
+                                        <td class="text-center"><abbr title="${abr_.alignment}">${abr_.bitScore?round}</abbr></a></td>
                                         <td class="text-center">${abr_.orf.strand}</td>
                                         <td class="text-center"><#if abr_.eValue==0>0<#else>${abr_.eValue?string["0E0"]}</#if></td>
                                         <td class="text-center abr">${abr_.percentSeqIdentity * 100}</td>
@@ -282,7 +282,7 @@
                                         <td class="text-center">${abr_.orf.start}</td>
                                         <td class="text-center">${abr_.orf.end}</td>
                                         <td class="text-center">${abr_.orf.length}</td>
-                                        <td class="text-center"><abbr title="${abr_.alignment}">${abr_.bitScore}</abbr></a></td>
+                                        <td class="text-center"><abbr title="${abr_.alignment}">${abr_.bitScore?round}</abbr></a></td>
                                         <td class="text-center">${abr_.orf.strand}</td>
                                         <td class="text-center"><#if abr_.eValue==0>0<#else>${abr_.eValue?string["0E0"]}</#if></td>
                                         <td class="text-center abr">${abr_.percentSeqIdentity * 100}</td>

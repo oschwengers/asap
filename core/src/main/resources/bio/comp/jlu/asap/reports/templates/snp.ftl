@@ -255,7 +255,7 @@
                                         <td>${project.genus[0]}. ${step.genome.species} ${step.genome.strain}</td>
                                         <td class="text-center" gradient="1">${step.noSNPs}</td>
                                         <td class="text-center" gradient="2">${step.noHighImpactSNPs}</td>
-                                        <td class="text-center">${step.tstv.tstv}</td>
+                                        <td class="text-center">${step.tstv.tstv?string["0.#"]}</td>
                                         <td class="text-center" gradient="3">${step.changeRate}</td>
                                         <td class="text-center"><a href="./snps/${step.genomeName}.vcf.gz">vcf.gz</a></td>
                                         <td class="text-center"><#if (step.noSNPs>0)><a href="./snps/${step.genomeName}.html"><span class="glyphicon glyphicon-search"></span></a><#else>-</#if></td>
