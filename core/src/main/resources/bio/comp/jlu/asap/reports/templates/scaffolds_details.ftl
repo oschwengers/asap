@@ -136,11 +136,11 @@
                                     <h4><small>Pre Scaffolding</small></h4>
                                 </div>
                                 <div class="col-md-11 col-sd-10">
-                                    <section id="${ref.name}-pre" class="caption" role="region">
+                                    <section id="${ref.name?replace(".", "")}-pre" class="caption" role="region">
                                     <script>
                                         $(() => {
                                             let data = ${ref.preJson}
-                                            drawDotPlot( data, '#${ref.name}-pre', 'WGA - Pre Scaffolding', '${ref.name}', '${genomeName}');
+                                            drawDotPlot( data, '#${ref.name?replace(".", "")}-pre', 'WGA - Pre Scaffolding', '${ref.name}', '${genomeName}');
                                         });
                                     </script>
                                 </div>
@@ -150,11 +150,11 @@
                                     <h4><small>Post Scaffolding</small></h4>
                                 </div>
                                 <div class="col-md-11 col-sd-10">
-                                    <section id="${ref.name}-post" class="caption" role="region">
+                                    <section id="${ref.name?replace(".", "")}-post" class="caption" role="region">
                                     <script>
                                         $(() => {
                                             let data = ${ref.postJson}
-                                            drawDotPlot( data, '#${ref.name}-post', 'WGA - Post Scaffolding', '${ref.name}', '${genomeName}');
+                                            drawDotPlot( data, '#${ref.name?replace(".", "")}-post', 'WGA - Post Scaffolding', '${ref.name}', '${genomeName}');
                                         });
                                     </script>
                                 </div>
