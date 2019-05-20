@@ -20,7 +20,7 @@
                         {
                             extend: 'csv',
                             text: 'csv',
-                            filename: 'contigs',
+                            filename: 'scaffolds',
                             exportOptions: {
                                 columns: [ 0, 1, 2, 3, 4 ]
                             }
