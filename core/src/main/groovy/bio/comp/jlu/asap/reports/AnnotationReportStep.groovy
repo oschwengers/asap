@@ -59,7 +59,6 @@ class AnnotationReportStep extends ReportStep {
         Path jsPath = reportsPath.resolve( 'js' )
         String packagePrefix = '/bio/comp/jlu/asap/reports/templates'
         [
-            [ jsPath, 'plotly-1.1.0.min.js' ],
             [ jsPath, 'biocircos-1.1.1-own.js' ],
             [ jsPath, 'browser-detection.js' ]
         ].each( { path, name ->
