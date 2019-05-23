@@ -7,6 +7,7 @@ import java.nio.file.Path
 import java.nio.file.Paths
 import java.text.SimpleDateFormat
 import groovy.json.JsonOutput
+import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 import org.slf4j.Logger
 import bio.comp.jlu.asap.api.FileType
@@ -44,6 +45,7 @@ class ConfigWriterThread extends Thread {
     }
 
 
+    @CompileStatic
     public void finish() {
 
         finish = true
@@ -74,6 +76,7 @@ class ConfigWriterThread extends Thread {
     }
 
 
+    @CompileStatic
     private void writeConfig() {
 
         def json = JsonOutput.toJson( config )

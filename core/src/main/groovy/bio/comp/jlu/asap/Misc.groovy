@@ -1,9 +1,10 @@
 
 package bio.comp.jlu.asap
 
-import groovy.io.FileType
 import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
+import groovy.io.FileType
+import groovy.transform.CompileStatic
 
 
 public final class Misc {
@@ -43,6 +44,7 @@ public final class Misc {
      * @param destination (optional), the destination directory where this file's content will be unzipped to.
      * @return a {@link java.util.Collection} of unzipped {@link java.io.File} objects.
      */
+    @CompileStatic
     static Collection<File> unzip( File self, File destination, Closure<Boolean> filter ) {
 
         if( !self.isFile() )
