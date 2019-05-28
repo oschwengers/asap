@@ -6,6 +6,7 @@
 
 
 import java.nio.file.*
+import java.time.*
 import groovy.util.CliBuilder
 import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
@@ -13,7 +14,6 @@ import org.slf4j.LoggerFactory
 import bio.comp.jlu.asap.api.DataType
 import bio.comp.jlu.asap.api.FileType
 
-import static bio.comp.jlu.asap.api.MiscConstants.*
 import static bio.comp.jlu.asap.api.Paths.*
 
 
@@ -93,7 +93,7 @@ Files.createFile( phylogenyPath.resolve( 'state.running' ) ) // create state.run
 // create info object
 def info = [
     time: [
-        start: (new Date()).format( DATE_FORMAT )
+        start: OffsetDateTime.now().toString()
     ],
     path: phylogenyPath.toString(),
     phylogeny: [
@@ -196,7 +196,7 @@ log.info( '---------------------------------------------------------------------
 
 
 // store info.json
-info.time.end = (new Date()).format( DATE_FORMAT )
+info.time.end = OffsetDateTime.now().toString()
 File infoJson = phylogenyPath.resolve( 'info.json' ).toFile()
 infoJson << JsonOutput.prettyPrint( JsonOutput.toJson( info ) )
 

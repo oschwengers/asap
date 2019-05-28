@@ -2,15 +2,15 @@
 package bio.comp.jlu.asap.reports
 
 
-import groovy.util.logging.Slf4j
 import java.nio.file.Path
+import java.time.*
+import groovy.util.logging.Slf4j
 import freemarker.template.Configuration
 import bio.comp.jlu.asap.api.AnalysesSteps
 import bio.comp.jlu.asap.api.RunningStates
 import bio.comp.jlu.asap.Step
 
 import static bio.comp.jlu.asap.api.AnalysesSteps.*
-import static bio.comp.jlu.asap.api.MiscConstants.*
 import static bio.comp.jlu.asap.api.Paths.*
 import static bio.comp.jlu.asap.api.RunningStates.*
 
@@ -41,7 +41,7 @@ abstract class ReportStep extends Step {
             config.reports = [:]
 
         config.reports[ stepName ] = [
-            start: (new Date()).format( DATE_FORMAT ),
+            start: OffsetDateTime.now().toString(),
             status: INIT.toString()
         ]
 
@@ -121,7 +121,7 @@ abstract class ReportStep extends Step {
             config.reports[ stepName ].error = ex.getLocalizedMessage()
         }
 
-        config.reports[ stepName ].end = (new Date()).format( DATE_FORMAT )
+        config.reports[ stepName ].end = OffsetDateTime.now().toString()
 
     }
 

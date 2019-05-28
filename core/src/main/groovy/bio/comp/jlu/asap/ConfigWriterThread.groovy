@@ -5,13 +5,12 @@ package bio.comp.jlu.asap
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
-import java.text.SimpleDateFormat
+import java.time.*
 import groovy.json.JsonOutput
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 import org.slf4j.Logger
 import bio.comp.jlu.asap.api.FileType
-import bio.comp.jlu.asap.api.MiscConstants
 
 import static java.nio.file.StandardCopyOption.*
 import static bio.comp.jlu.asap.api.AnalysesSteps.*
@@ -138,9 +137,9 @@ class ConfigWriterThread extends Thread {
 
 
         // dates
-        SimpleDateFormat sdf = new SimpleDateFormat( MiscConstants.DATE_FORMAT )
+        Instant i = Files.getLastModifiedTime( spreadsheetFilePath ).toInstant()
         config.dates = [
-            config: sdf.format( new Date( spreadsheetFilePath.toFile().lastModified() ) )
+            config: OffsetDateTime.ofInstant( i, ZoneId.systemDefault() ).toString()
         ]
 
 

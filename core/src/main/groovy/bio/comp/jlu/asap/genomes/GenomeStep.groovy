@@ -2,12 +2,12 @@
 package bio.comp.jlu.asap.genomes
 
 
+import java.time.*
 import groovy.util.logging.Slf4j
 import bio.comp.jlu.asap.api.GenomeSteps
 import bio.comp.jlu.asap.api.RunningStates
 import bio.comp.jlu.asap.Step
 
-import static bio.comp.jlu.asap.api.MiscConstants.*
 import static bio.comp.jlu.asap.api.RunningStates.*
 
 
@@ -82,11 +82,11 @@ abstract class GenomeStep extends Step {
                 setup()
 
                 setStatus( RUNNING )
-                genome.steps[ stepName ].start = (new Date()).format( DATE_FORMAT )
+                genome.steps[ stepName ].start = OffsetDateTime.now().toString()
                 runStep()
 
                 clean()
-                genome.steps[ stepName ].end = (new Date()).format( DATE_FORMAT )
+                genome.steps[ stepName ].end = OffsetDateTime.now().toString()
                 setStatus( FINISHED )
                 success = true
 

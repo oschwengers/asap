@@ -4,6 +4,11 @@
     <#include "commons/meta.ftl">
 
         <script src="js/phylocanvas-asap.js"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js" integrity="sha256-4iQZ6BVL4qNKlQ27TExEhBN1HFPvAvAMbFavKKosSWQ=" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js" integrity="sha256-LlHVI5rUauudM5ZcZaD6hHPHKrA7CSefHHnKgq+/AZc=" crossorigin="anonymous"></script>
+        <script src="js/time.js" defer></script>
+
     </head>
     <body>
     <#include "commons/header.ftl">
@@ -102,9 +107,9 @@
                             <table class="table table-hover table-condensed">
                                 <caption>Runtime</caption>
                                 <tbody>
-                                    <tr><td>start <span class="glyphicon glyphicon-play"></span></td><td class="text-center">${runtime.start}</tr>
-                                    <tr><td>end <span class="glyphicon glyphicon-stop"></span></td><td class="text-center">${runtime.end}</tr>
-                                    <tr><td>duration <span class="glyphicon glyphicon-refresh"></span></td><td class="text-center">${runtime.time}</tr>
+                                    <tr><td><span class="glyphicon glyphicon-play" data-toggle="tooltip" data-original-title="Start date"></span></td><td><span class="time" data-time="${runtime.start}"></span></tr>
+                                    <tr><td><span class="glyphicon glyphicon-stop" data-toggle="tooltip" data-original-title="Stop date"></span></td><td><span class="time" data-time="${runtime.end}"></span></tr>
+                                    <tr><td><span class="glyphicon glyphicon-refresh" data-toggle="tooltip" data-original-title="Runtime"></span></td><td><span class="time-duration" data-start="${runtime.start}" data-end="${runtime.end}"></span></tr>
                                 </tbody>
                             </table>
                         </div>

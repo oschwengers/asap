@@ -2,15 +2,14 @@
 package bio.comp.jlu.asap.reports
 
 
-import groovy.util.logging.Slf4j
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.StandardCopyOption
+import groovy.util.logging.Slf4j
 import freemarker.template.Configuration
 import freemarker.template.Template
 import freemarker.template.TemplateExceptionHandler
 
-import static bio.comp.jlu.asap.api.MiscConstants.*
 import static bio.comp.jlu.asap.api.Paths.*
 import static bio.comp.jlu.asap.api.RunningStates.*
 
@@ -80,6 +79,7 @@ class ReportRunner extends ReportStep {
             [ 'js', 'back-to-top.js' ],
             [ 'js', 'gradient.js' ],
             [ 'js', 'synteny.js' ],
+            [ 'js', 'time.js' ],
             [ 'fonts', 'glyphicons-halflings-regular.ttf' ]
         ].each{ String pathName , String name ->
             InputStream is =  getClass().getResourceAsStream( "${PACKAGE_PREFIX}/statics/${name}" )

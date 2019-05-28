@@ -6,12 +6,12 @@
 
 
 import java.nio.file.*
+import java.time.*
 import groovy.util.CliBuilder
 import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
 import org.slf4j.LoggerFactory
 
-import static bio.comp.jlu.asap.api.MiscConstants.*
 import static bio.comp.jlu.asap.api.Paths.*
 
 
@@ -102,7 +102,7 @@ try { // create tmp dir
 // create info object
 def info = [
     time: [
-        start: (new Date()).format( DATE_FORMAT )
+        start: OffsetDateTime.now().toString()
     ],
     path: tmpPath.toString(),
     corepan: [
@@ -308,7 +308,7 @@ corePanPath.resolve( 'core.fasta' ).text = sbCoreGenes.toString()
 
 
 // store info.json
-info.time.end = (new Date()).format( DATE_FORMAT )
+info.time.end = OffsetDateTime.now().toString()
 File infoJson = corePanPath.resolve( 'info.json' ).toFile()
 infoJson << JsonOutput.prettyPrint( JsonOutput.toJson( info ) )
 

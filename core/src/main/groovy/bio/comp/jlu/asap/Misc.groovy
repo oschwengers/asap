@@ -1,6 +1,8 @@
 
 package bio.comp.jlu.asap
 
+import java.time.*
+import java.time.format.DateTimeFormatter
 import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
 import groovy.io.FileType
@@ -9,29 +11,25 @@ import groovy.transform.CompileStatic
 
 public final class Misc {
 
+    private static final DateTimeFormatter DF = DateTimeFormatter.ISO_LOCAL_TIME
+
     public static final String ZIP_EXTENSION = '.zip'
 
-    public static String formatRuntimes( int runtime ) {
 
-        def times = []
+    public static String formatRuntimes( Duration runtime ) {
 
-        int hours = runtime / (60 * 60 * 1000);
-        times << hours
-        runtime -= hours * 60 * 60 * 1000;
+        long h = runtime.toHours()
+        runtime = runtime.minusHours(h)
 
-        int mins  = runtime / (60 * 1000);
-        times << mins
-        runtime -= mins * 60 * 1000;
+        long m = runtime.toMinutes()
+        runtime = runtime.minusMinutes(m)
 
-        int secs  = runtime / 1000;
-        times << secs
+        long s = runtime.toSeconds()
+        runtime = runtime.minusSeconds(s)
 
-        runtime -= secs * 1000;
+        long mi = runtime.toMillis()
 
-        int msecs = runtime;
-        times << msecs
-
-        return String.format('%02d',times[0]) + ':' + String.format('%02d',times[1]) + ':' + String.format('%02d',times[2]) + '.' + String.format('%03d',times[3])
+        return String.format( '%02d:%02d:%02d.%03d', h, m, s, mi )
 
     }
 

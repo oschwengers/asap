@@ -10,7 +10,6 @@ import freemarker.template.Template
 import bio.comp.jlu.asap.Misc
 
 import static bio.comp.jlu.asap.api.GenomeSteps.*
-import static bio.comp.jlu.asap.api.MiscConstants.*
 import static bio.comp.jlu.asap.api.Paths.*
 
 

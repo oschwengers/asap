@@ -6,6 +6,7 @@
 
 
 import java.nio.file.*
+import java.time.*
 import groovy.json.*
 import groovy.util.CliBuilder
 import org.slf4j.LoggerFactory
@@ -13,7 +14,6 @@ import bio.comp.jlu.asap.api.DataType
 import bio.comp.jlu.asap.api.FileType
 
 import static bio.comp.jlu.asap.api.GenomeSteps.*
-import static bio.comp.jlu.asap.api.MiscConstants.*
 import static bio.comp.jlu.asap.api.Paths.*
 
 
@@ -125,7 +125,7 @@ try { // create tmp dir
 // create info object
 def info = [
     time: [
-        start: (new Date()).format( DATE_FORMAT )
+        start: OffsetDateTime.now().toString()
     ],
     genome: [
         id: genome.id,
@@ -278,7 +278,7 @@ if( !tmpPath.deleteDir() ) terminate( "could not recursively delete tmp-dir=${tm
 
 
 // store info.json
-info.time.end = (new Date()).format( DATE_FORMAT )
+info.time.end = OffsetDateTime.now().toString()
 File infoJson = vfPath.resolve( "${genomeName}.json" ).toFile()
 infoJson << JsonOutput.prettyPrint( JsonOutput.toJson( info ) )
 

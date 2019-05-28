@@ -6,6 +6,7 @@
 
 
 import java.nio.file.*
+import java.time.*
 import java.util.regex.Pattern
 import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
@@ -14,7 +15,6 @@ import org.slf4j.LoggerFactory
 import bio.comp.jlu.asap.api.DataType
 import bio.comp.jlu.asap.api.FileType
 
-import static bio.comp.jlu.asap.api.MiscConstants.*
 import static bio.comp.jlu.asap.api.Paths.*
 import static bio.comp.jlu.asap.api.GenomeSteps.*
 
@@ -192,7 +192,7 @@ genome.data.each( { datum ->
 // setup assembly info map
 def info = [
     time: [
-        start: (new Date()).format( DATE_FORMAT )
+        start: OffsetDateTime.now().toString()
     ],
     genome: [
         id: genome.id,
@@ -253,7 +253,7 @@ if( (FileType.READS_NANOPORE.toString() in fileTypes)  &&  (FileType.READS_ILLUM
 
 
 // store info.json
-info.time.end = (new Date()).format( DATE_FORMAT )
+info.time.end = OffsetDateTime.now().toString()
 File infoJson = genomeContigsPath.resolve( 'info.json' ).toFile()
 infoJson << JsonOutput.prettyPrint( JsonOutput.toJson( info ) )
 

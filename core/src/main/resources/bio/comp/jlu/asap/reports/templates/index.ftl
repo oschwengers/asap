@@ -6,6 +6,10 @@
         <link href="css/datatables.min.css" rel="stylesheet">
         <script src="js/datatables.min.js"></script>
 
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js" integrity="sha256-4iQZ6BVL4qNKlQ27TExEhBN1HFPvAvAMbFavKKosSWQ=" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js" integrity="sha256-LlHVI5rUauudM5ZcZaD6hHPHKrA7CSefHHnKgq+/AZc=" crossorigin="anonymous"></script>
+        <script src="js/time.js" defer></script>
+
         <script>
             $(document).ready(function() {
 
@@ -151,9 +155,9 @@
                         <div class="col-md-3">
                             <div class="panel">
                                 <div class="panel-body">
-                                    <p><span class="glyphicon glyphicon-play" data-toggle="tooltip" data-original-title="Start date"></span>&nbsp;&nbsp;${runtime.start}</p>
-                                    <p><span class="glyphicon glyphicon-stop" data-toggle="tooltip" data-original-title="Stop date"></span>&nbsp;&nbsp;${runtime.end}</p>
-                                    <p><span class="glyphicon glyphicon-refresh" data-toggle="tooltip" data-original-title="Runtime"></span>&nbsp;&nbsp;${runtime.time}</p>
+                                    <p><span class="glyphicon glyphicon-play" data-toggle="tooltip" data-original-title="Start date"></span>&nbsp;&nbsp;<span class="time" data-time="${runtime.start}"></span></p>
+                                    <p><span class="glyphicon glyphicon-stop" data-toggle="tooltip" data-original-title="Stop date"></span>&nbsp;&nbsp;<span class="time" data-time="${runtime.end}"></span></p>
+                                    <p><span class="glyphicon glyphicon-refresh" data-toggle="tooltip" data-original-title="Runtime"></span>&nbsp;&nbsp;<span class="time-duration" data-start="${runtime.start}" data-end="${runtime.end}"></span></p>
                                 </div>
                             </div>
                         </div>

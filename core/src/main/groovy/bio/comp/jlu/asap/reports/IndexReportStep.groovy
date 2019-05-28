@@ -10,7 +10,6 @@ import freemarker.template.Template
 import bio.comp.jlu.asap.Misc
 
 import static bio.comp.jlu.asap.api.GenomeSteps.*
-import static bio.comp.jlu.asap.api.MiscConstants.*
 import static bio.comp.jlu.asap.api.Paths.*
 
 
@@ -54,13 +53,10 @@ class IndexReportStep extends ReportStep {
         log.trace( 'run' )
 
         // build index.html
-        Date startTime = Date.parse( DATE_FORMAT, config.dates.start )
-        Date endTime   = Date.parse( DATE_FORMAT, config.dates.end )
         model.runtime = [
-            config: Date.parse( DATE_FORMAT, config.dates.config ).format( DATE_FORMAT_HUMAN_READABLE ),
-            start: startTime.format( DATE_FORMAT_HUMAN_READABLE ),
-            end:   endTime.format( DATE_FORMAT_HUMAN_READABLE ),
-            time:  Misc.formatRuntimes( (int)(endTime.getTime() - startTime.getTime()) )
+            config: config.dates.config,
+            start: config.dates.start,
+            end:   config.dates.end
         ]
         model.genomes = []
         config.genomes.each( { genome ->

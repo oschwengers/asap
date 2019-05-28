@@ -10,7 +10,6 @@ import freemarker.template.Template
 import bio.comp.jlu.asap.Misc
 
 import static bio.comp.jlu.asap.api.AnalysesSteps.*
-import static bio.comp.jlu.asap.api.MiscConstants.*
 import static bio.comp.jlu.asap.api.Paths.PROJECT_PATH_PHYLOGENY
 import static bio.comp.jlu.asap.api.RunningStates.*
 
@@ -63,12 +62,9 @@ class PhylogenyReportStep extends ReportStep {
         Template template
         def snpPhyloTreeStep = config.analyses[ PHYLOGENY.getAbbreviation() ]
         if( snpPhyloTreeStep?.status == FINISHED.toString() ) {
-            Date startTime = Date.parse( DATE_FORMAT, snpPhyloTreeStep.start )
-            Date endTime   = Date.parse( DATE_FORMAT, snpPhyloTreeStep.end )
             model.runtime = [
-                start: startTime.format( DATE_FORMAT_HUMAN_READABLE ),
-                end:   endTime.format( DATE_FORMAT_HUMAN_READABLE ),
-                time:  Misc.formatRuntimes( (int)(endTime.getTime() - startTime.getTime()) )
+                start: snpPhyloTreeStep.start,
+                end:   snpPhyloTreeStep.end
             ]
 
             model.tree = phylogenyReportPath.resolve( 'tree.nwk' ).toFile().text.replaceAll( '\n', '' )

@@ -2,13 +2,13 @@
 package bio.comp.jlu.asap.analyses
 
 
-import groovy.util.logging.Slf4j
+import java.time.*
 import java.nio.file.Path
+import groovy.util.logging.Slf4j
 import bio.comp.jlu.asap.api.RunningStates
 import bio.comp.jlu.asap.api.AnalysesSteps
 import bio.comp.jlu.asap.Step
 
-import static bio.comp.jlu.asap.api.MiscConstants.*
 import static bio.comp.jlu.asap.api.Paths.*
 import static bio.comp.jlu.asap.api.RunningStates.*
 
@@ -75,11 +75,11 @@ abstract class AnalysisStep extends Step {
                 setup()
 
                 setStatus( RUNNING )
-                config.analyses[ stepName ].start = (new Date()).format( DATE_FORMAT )
+                config.analyses[ stepName ].start = OffsetDateTime.now().toString()
                 runStep()
 
                 clean()
-                config.analyses[ stepName ].end = (new Date()).format( DATE_FORMAT )
+                config.analyses[ stepName ].end = OffsetDateTime.now().toString()
                 setStatus( FINISHED )
                 success = true
 

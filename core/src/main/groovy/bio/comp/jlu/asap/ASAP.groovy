@@ -3,6 +3,7 @@ package bio.comp.jlu.asap
 
 import java.io.IOException
 import java.nio.file.*
+import java.time.*
 import java.util.concurrent.*
 import groovy.json.JsonSlurper
 import groovy.util.CliBuilder
@@ -16,7 +17,6 @@ import bio.comp.jlu.asap.steps.*
 
 import static bio.comp.jlu.asap.api.AnalysesSteps.*
 import static bio.comp.jlu.asap.api.Paths.*
-import static bio.comp.jlu.asap.api.MiscConstants.*
 import static bio.comp.jlu.asap.api.RunningStates.*
 import static bio.comp.jlu.asap.api.GenomeSteps.*
 import static bio.comp.jlu.asap.ASAPConstants.*
@@ -215,8 +215,7 @@ if( opts.c ) { // only check config and data files
         Files.createFile( projectPath.resolve( 'state.running' ) )
 
 
-    Date startTime = new Date()
-    config.dates.start = startTime.format( DATE_FORMAT )
+    config.dates.start = OffsetDateTime.now().toString()
 
     checkConfig( config, projectPath )
     setupStepSelections( config ) // sanitize step selection
@@ -275,8 +274,7 @@ if( opts.c ) { // only check config and data files
     }
 
 
-    Date endTime = new Date()
-    config.dates.end = endTime.format( DATE_FORMAT )
+    config.dates.end = OffsetDateTime.now().toString()
 
 
     // start html reporting
@@ -601,7 +599,7 @@ def printInfo( config ) {
 def printRuntime( config ) {
 
     def stepsStatistics = [:]
-    GenomeSteps.values().each( { stepsStatistics[ it.getAbbreviation() ] = [ 'amount': 0, 'sum': 0L, 'min': Integer.MAX_VALUE, 'max': 0L, 'suc': 0, 'err': 0, 'skip': 0 ] } )
+    GenomeSteps.values().each( { stepsStatistics[ it.getAbbreviation() ] = [ 'amount': 0, 'sum': 0L, 'min': Duration.ofSeconds(Long.MAX_VALUE), 'max': Duration.ofSeconds(0L), 'suc': 0, 'err': 0, 'skip': 0 ] } )
 
     // print genome statistics
     println()
@@ -613,13 +611,13 @@ def printRuntime( config ) {
             if( step.status == FINISHED.toString() ) {
                 stepsStatistics[ abbr ].suc++
                 if( step.start  &&  step.end  ) {
-                    int runtime = (int)( Date.parse( DATE_FORMAT, step.end ).getTime() - Date.parse( DATE_FORMAT, step.start ).getTime() )
+                    Duration runtime = Duration.between( OffsetDateTime.parse( step.start ), OffsetDateTime.parse( step.end ) )
                     if( runtime < stepsStatistics[ abbr ].min )
                     stepsStatistics[ abbr ].min = runtime
                     if( runtime > stepsStatistics[ abbr ].max )
                     stepsStatistics[ abbr ].max = runtime
                     stepsStatistics[ abbr ].amount++
-                    stepsStatistics[ abbr ].sum += runtime
+                    stepsStatistics[ abbr ].sum += runtime.toSeconds()
                     println( String.format( '\t%-11s %s, %s, (%s -> %s)', abbr+':', step.status, Misc.formatRuntimes( runtime ), step.start, step.end ) )
                 } else {
                     println( String.format( '\t%-11s %s', abbr+':', step.status ) )
@@ -641,7 +639,7 @@ def printRuntime( config ) {
     println( String.format( '%-28s %4s | %4s | %4s \t %12s | %12s | %12s', 'genome analyses statistics:', 'suc', 'err', 'skip', 'min', 'mean', 'max' ) );
     stepsStatistics.each( { abbr, step ->
         String minRuntime  = step.amount > 0 ? Misc.formatRuntimes( step.min ) : '-'
-        String meanRuntime = step.amount > 0 ? Misc.formatRuntimes( (int)(step.sum / step.amount) ) : '-'
+        String meanRuntime = step.amount > 0 ? Misc.formatRuntimes( Duration.ofSeconds((long)(step.sum / step.amount)) ) : '-'
         String maxRuntime  = step.amount > 0 ? Misc.formatRuntimes( step.max ) : '-'
         println( String.format( '\t%-20s %4d | %4d | %4d \t %12s | %12s | %12s', "${abbr} steps:", step.suc, step.err, step.skip, minRuntime, meanRuntime, maxRuntime ) )
     } )
@@ -654,7 +652,7 @@ def printRuntime( config ) {
         AnalysesSteps.values().each{ it ->
             def analysis = config.analyses[ it.getAbbreviation() ]
             if( analysis != null  &&  analysis?.start != null  &&  analysis?.end != null ) {
-                int runtime = (int)( Date.parse( DATE_FORMAT, analysis.end ).getTime() - Date.parse( DATE_FORMAT, analysis.start ).getTime() )
+                Duration runtime = Duration.between( OffsetDateTime.parse( analysis.start ), OffsetDateTime.parse( analysis.end ) )
                 println( String.format( '\t%-16s %s, %s, (%s -> %s)', it.getName()+':', analysis.status, Misc.formatRuntimes( runtime ), analysis.start, analysis.end ) )
             } else
                 println( String.format( '\t%-16s %s', it.getName()+':', analysis?.status ?: '-' ) )
@@ -667,7 +665,8 @@ def printRuntime( config ) {
     println()
     println()
     if( config.dates.start  &&  config.dates.end ) {
-        totalRuntimes = Misc.formatRuntimes( (int)(Date.parse( DATE_FORMAT, config.dates.end ).getTime() - Date.parse( DATE_FORMAT, config.dates.start ).getTime()) )
+        Duration runtime = Duration.between( OffsetDateTime.parse( config.dates.start ), OffsetDateTime.parse( config.dates.end ) )
+        String totalRuntimes = Misc.formatRuntimes( runtime )
         println( "total runtime: ${totalRuntimes}" )
     } else
         println( 'total runtime:' )

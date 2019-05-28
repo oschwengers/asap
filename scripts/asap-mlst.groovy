@@ -6,6 +6,7 @@
 
 
 import java.nio.file.*
+import java.time.*
 import groovy.json.*
 import groovy.util.CliBuilder
 import org.slf4j.LoggerFactory
@@ -14,7 +15,6 @@ import bio.comp.jlu.asap.api.FileType
 
 import static groovy.io.FileType.FILES
 import static bio.comp.jlu.asap.api.GenomeSteps.*
-import static bio.comp.jlu.asap.api.MiscConstants.*
 import static bio.comp.jlu.asap.api.Paths.*
 
 
@@ -128,7 +128,7 @@ if( Files.isReadable( scaffoldsPath ) ) {
 // create info object
 def info = [
     time: [
-        start: (new Date()).format( DATE_FORMAT )
+        start: OffsetDateTime.now().toString()
     ],
     genome: [
         id: genome.id,
@@ -243,7 +243,7 @@ if( blastHits.size() > 1 ) {
 
 
 // store info.json
-info.time.end = (new Date()).format( DATE_FORMAT )
+info.time.end = OffsetDateTime.now().toString()
 File infoJson = mlstPath.resolve( "${genomeName}.json" ).toFile()
 infoJson << JsonOutput.prettyPrint( JsonOutput.toJson( info ) )
 

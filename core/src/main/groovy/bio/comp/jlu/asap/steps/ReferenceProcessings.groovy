@@ -3,6 +3,7 @@ package bio.comp.jlu.asap.steps
 
 
 import java.nio.file.*
+import java.time.*
 import groovy.util.logging.Slf4j
 import bio.comp.jlu.asap.api.FileFormat
 import bio.comp.jlu.asap.api.RunningStates
@@ -10,7 +11,6 @@ import bio.comp.jlu.asap.Step
 import bio.comp.jlu.asap.Misc
 
 import static bio.comp.jlu.asap.ASAPConstants.*
-import static bio.comp.jlu.asap.api.MiscConstants.*
 import static bio.comp.jlu.asap.api.RunningStates.*
 import static bio.comp.jlu.asap.api.Paths.*
 
@@ -76,7 +76,7 @@ class ReferenceProcessings extends Step {
     void run() {
 
         log.trace( "${stepName} running..." )
-        config.steps[ stepName ].start = (new Date()).format( DATE_FORMAT )
+        config.steps[ stepName ].start = OffsetDateTime.now().toString()
 
 
         try {
@@ -107,7 +107,7 @@ class ReferenceProcessings extends Step {
             config.steps[ stepName ].error = ex.getLocalizedMessage()
         }
 
-        config.steps[ stepName ].end = (new Date()).format( DATE_FORMAT )
+        config.steps[ stepName ].end = OffsetDateTime.now().toString()
 
     }
 

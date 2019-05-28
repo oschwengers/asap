@@ -2,13 +2,12 @@
 package bio.comp.jlu.asap.genomes
 
 
-import groovy.util.logging.Slf4j
 import java.nio.file.Path
 import java.nio.file.Paths
 import java.text.DateFormat
+import groovy.util.logging.Slf4j
 
 import static bio.comp.jlu.asap.api.GenomeSteps.*
-import static bio.comp.jlu.asap.api.MiscConstants.*
 import static bio.comp.jlu.asap.api.RunningStates.*
 
 
