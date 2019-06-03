@@ -6,27 +6,28 @@
 - [Description](#description)
 - [Features](#features)
 - [Availability](#availability)
-- [Input & Output](#input-output)
-- [FAQ](#faq)
+- [Input/Output](#inputoutput)
+- [Citation](#citation)
 - [License](#license)
-- [Bugs](#bugs)
+- [FAQ](#faq)
 
 
 ## Description
 ASA³P is an automatic and highly scalable assembly, annotation and higher-level
 analyses pipeline for closely related bacterial isolates.
 
-At its core it's a command line tool creating standard bioinformatics file
-formats as well as sophisticated HTML5 documents. Its main purpose is the
-automatic processing of NGS data of multiple closely related isolates, thus
+ASA³P is a fully automatic, locally executable and scalable assembly, annotation
+and higher-level analysis pipeline creating results in standard bioinformatics
+file formats as well as sophisticated HTML5 documents. Its main purpose is the
+automatic processing of NGS WGS data of multiple closely related isolates, thus
 transforming raw reads into assembled and annotated genomes and finally gathering
-as much information on every single bacterial genome as possible. Per-isolate
-analyses are finally complemented by first comparative insights. Therefore, the
+as much information on every single bacterial genome as possible.
+Per-isolate analyses are complemented by comparative insights. Therefore, the
 pipeline incorporates many best-in-class open source bioinformatics tools and
-thus minimizes the burden of ever repeating tasks. Envisaged as an upfront tool
-it provides comprehensive insights as well as a general overview and comparison
-of analysed genomes along with all necessary result files for subsequent deeper
-analyses. All results are presented via modern HTML5 documents comprising
+thus minimizes the burden of ever-repeating tasks. Envisaged as a
+preprocessing tool it provides comprehensive insights as well as a general overview
+and comparison of analysed genomes along with all necessary result files for subsequent
+deeper analyses. All results are presented via modern HTML5 documents comprising
 interactive visualizations.
 
 
@@ -142,10 +143,14 @@ and ASA³P therein, please have a look at our
 [manual](https://s3.computational.bio.uni-giessen.de/swift/v1/asap/manual.pdf).
 
 
-## Input & Output
+## Input/Output
 
 ### Input
-ASA³P expects all input files and information regarding a single batch run
+ASA³P is able to process raw sequencing reads from Illumina (SE/PE), PacBio (bax.h5/ubam) and ONT
+(basecalled as fastq) as well as assembled contigs (fasta) and annotated genomes
+(GenBank/EMBL/GFF).
+
+ASA³P expects all input files and information regarding a single execution
 (i.e. a "project") within a dedicated directory. All necessary information
 (meta information, reference genomes, isolate/sample names and files) are
 provided via an Excel config file named *config.xls*.
@@ -299,19 +304,11 @@ project-dir
 ```
 
 
-## FAQ
-* __Is there a public example project?__
-Just download this exemplary project containing a set of 4 public
-*Listeria monocytogenes* genomes from **SRA**:
-https://s3.computational.bio.uni-giessen.de/swift/v1/asap/example-lmonocytogenes-4.tar.gz
+## Citation
 
-* __How to cite ASA³P?__
-A manuscript is currently in preparation. Stay tuned!
+To cite our work, please transitionally refer to:
 
-* __Can I install ASA³P by myself?__
-Yes you can! Nevertheless, we highly encourage to use either the **Docker**
-container or the **OpenStack** images. As there are too many combinations of
-linux distributions and tool/database versions, we cannot give any support for this.
+> ASA3P: An automatic and scalable pipeline for the assembly, annotation and higher level analysis of closely related bacterial isolates. Oliver Schwengers, Andreas Hoek, Moritz Fritzenwanker, Linda Falgenhauer, Torsten Hain, Trinad Chakraborty, Alexander Goesmann. bioRxiv 654319; doi: https://doi.org/10.1101/654319
 
 
 ## License
@@ -329,9 +326,18 @@ To our best knowledge this is true for at least the following databases:
 - PubMLST: proprietary but free to use
 
 
-## Bugs
-If you face any problems using the pipeline please have a look at the manual.
-If the problems remain, please send us an email: <asap@computational.bio.uni-giessen.de>
+## FAQ
+* __Is there a public example project?__
+Just download and use this exemplary project containing a tiny set of 4 public
+*Listeria monocytogenes* genomes from **SRA**:
+https://s3.computational.bio.uni-giessen.de/swift/v1/asap/example-lmonocytogenes-4.tar.gz
 
-For technical issues or feature requests please submit an issue:
-https://github.com/oschwengers/asap/issues
+* __Why do I have to pre-basecall ONT reads?__
+Unfortunately, there are too many combinations of flow cells, sequencing kits, etc.
+We had to ask to put all these information in the config sheets which would blow them up.
+Therefore, we decided to outsource these very specifc pre-processing step.
+
+* __Can I install ASA³P by myself?__
+Yes you can! Nevertheless, we highly encourage to use either the **Docker**
+container or the **OpenStack** images. As there are too many possible combinations of
+linux distributions and software/database versions, we cannot give any support for this.
