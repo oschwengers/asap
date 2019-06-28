@@ -1,3 +1,10 @@
+[![DOI:10.1101/654319v1](https://zenodo.org/badge/DOI/10.1101/654319.svg)](https://www.biorxiv.org/content/10.1101/654319v1)
+[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-brightgreen.svg)](https://github.com/oschwengers/asap/blob/master/LICENSE)
+![Don't judge me](https://img.shields.io/badge/Language-Groovy-steelblue.svg)
+![GitHub release](https://img.shields.io/github/release/oschwengers/asap.svg)
+[![Docker Build Status](https://img.shields.io/docker/build/oschwengers/asap.svg)](https://hub.docker.com/r/oschwengers/asap)
+![Docker Pulls](https://img.shields.io/docker/pulls/oschwengers/asap.svg)
+
 # ASA³P - Automatic Bacterial Isolate Assembly, Annotation and Analyses Pipeline
 
 ![ASA³P Overview](asap.png)
@@ -12,7 +19,6 @@
 - [Citation](#citation)
 - [License](#license)
 - [FAQ](#faq)
-
 
 ## Description
 ASA³P is an automatic and highly scalable assembly, annotation and higher-level
@@ -32,7 +38,6 @@ and comparison of analysed genomes along with all necessary result files for sub
 deeper analyses. All results are presented via modern HTML5 documents comprising
 interactive visualizations.
 
-
 ## Features
 
 ### Per isolate
@@ -50,7 +55,6 @@ interactive visualizations.
 ### Comparative
 - calculation of core/pan genome and singleton genes
 - phylogenetic tree creation
-
 
 ## Availability
 Targeting different project sizes, i.e. number of genomes which should be
@@ -70,7 +74,6 @@ Additional files:
    - 4 public *L. monocytogenes* genomes: https://s3.computational.bio.uni-giessen.de/swift/v1/asap/example-lmonocytogenes-4.tar.gz
    - 32 public *L. monocytogenes* genomes: https://s3.computational.bio.uni-giessen.de/swift/v1/asap/example-lmonocytogenes-32.tar.gz
    - 8 *E. coli* project merely showing support of different input types: https://s3.computational.bio.uni-giessen.de/swift/v1/asap/example-ecoli-input.tar.gz
-
 
 ### Docker
 For small to medium projects (up to ~200 isolates) but also for the sake of
@@ -113,7 +116,6 @@ $ sudo asap/asap-docker.sh example-lmonocytogenes-4/
 
 For further information have a look at the Docker readme (DOCKER.md ).
 
-
 ### Cloud - OpenStack
 ASA³P's **OpenStack** based cloud version targets the analysis of hundreds to
 even thousands of bacterial isolates. Therefore, it features automatic creation,
@@ -143,7 +145,6 @@ Parameters:
 For a comprehensive and detailed description of how to setup an OpenStack project
 and ASA³P therein, please have a look at our
 [manual](https://s3.computational.bio.uni-giessen.de/swift/v1/asap/manual.pdf).
-
 
 ## Input/Output
 
@@ -305,13 +306,11 @@ project-dir
 ├── data
 ```
 
-
 ## Citation
 
 To cite our work, please transitionally refer to:
 
 > ASA3P: An automatic and scalable pipeline for the assembly, annotation and higher level analysis of closely related bacterial isolates. Oliver Schwengers, Andreas Hoek, Moritz Fritzenwanker, Linda Falgenhauer, Torsten Hain, Trinad Chakraborty, Alexander Goesmann. bioRxiv 654319; doi: https://doi.org/10.1101/654319
-
 
 ## License
 ASA³P itself is published and distributed under GPL3 license. In contradiction,
@@ -326,7 +325,6 @@ Please, notice that some bundled dependecies are published under a
 To our best knowledge this is true for at least the following databases:
 - CARD: free for academic usage
 - PubMLST: proprietary but free to use
-
 
 ## FAQ
 * __Is there a public example project?__
