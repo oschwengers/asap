@@ -35,10 +35,10 @@ KRAKEN_DB = "${ASAP_HOME}/db/kraken"
 RDP_DB   = "${ASAP_HOME}/db/rdp/rdp-bacteria.fasta"
 RFAM_CM_SSU_RRNA = "${ASAP_HOME}/db/RF00177.cm"
 
-
-NUM_THREADS       = 4
 MIN_FRAGMENT_SIZE = 100
 
+int noCores = Runtime.getRuntime().availableProcessors()
+NUM_THREADS = noCores < 8 ? Integer.toString( noCores ) : '8'
 
 
 /*********************
@@ -227,7 +227,7 @@ Path cmOutPath = tmpPath.resolve( 'cm.out' )
 pb = new ProcessBuilder( CMSEARCH,
     '--rfam',
     '--noali',
-    '--cpu', Integer.toString( NUM_THREADS ),
+    '--cpu', NUM_THREADS,
     '--tblout', cmOutPath.toString(),
     RFAM_CM_SSU_RRNA,
     genomeSequencePath.toString() )
@@ -279,7 +279,7 @@ seq16SPath << "${ribSequence}\n"
 pb = new ProcessBuilder( BLASTN,
     '-query', seq16SPath.toString(),
     '-db', RDP_DB,
-    '-num_threads', Integer.toString( NUM_THREADS ),
+    '-num_threads', NUM_THREADS,
     '-evalue', '1E-10',
     '-outfmt', '6 sseqid slen nident score stitle' )
     .directory( tmpPath.toFile() )

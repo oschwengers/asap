@@ -35,7 +35,9 @@ PBINDEX             = "${ASAP_HOME}/share/smrtlink/smrtcmds/bin/pbindex"
 ILLUMINA_ADAPTER_SE = "${ASAP_HOME}/db/sequences/adapters-illumina-se.fa"
 ILLUMINA_ADAPTER_PE = "${ASAP_HOME}/db/sequences/adapters-illumina-pe.fa"
 FILTER_PHIX         = "${ASAP_HOME}/db/sequences/phiX.fasta"
-NUM_THREADS = '8'
+
+int noCores = Runtime.getRuntime().availableProcessors()
+NUM_THREADS = noCores < 8 ? Integer.toString( noCores ) : '8'
 
 
 

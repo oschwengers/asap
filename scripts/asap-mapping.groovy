@@ -30,7 +30,9 @@ PBALIGN  = "${ASAP_HOME}/share/smrtlink/smrtcmds/bin/pbalign"
 MINIMAP2 = "${ASAP_HOME}/share/minimap2"
 
 SAMTOOLS_SORT_MEM = '1G' // max-ram usage until tmp-file is created during sorting (optimum 4G for avg. files)
-NUM_THREADS       = '8'
+
+int noCores = Runtime.getRuntime().availableProcessors()
+NUM_THREADS = noCores < 8 ? Integer.toString( noCores ) : '8'
 
 
 /*********************

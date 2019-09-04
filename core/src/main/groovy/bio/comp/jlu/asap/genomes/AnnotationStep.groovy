@@ -145,8 +145,11 @@ class AnnotationStep extends GenomeStep {
         env.put( 'PATH', pathEnv )
 
 
+        String noThreads = QSUB_SLOTS
         if( localMode ) {
             pb.redirectOutput( genomePath.resolve( 'std.log' ).toFile() )
+            int noCores = Runtime.getRuntime().availableProcessors()
+            noThreads  = noCores < 8 ? Integer.toString( noCores ) : '8'
         } else {
             pb.command( 'qsub',
                 '-b', 'y',
@@ -183,7 +186,7 @@ class AnnotationStep extends GenomeStep {
         cmd << '--centre' // workaround to shrink down long SPAdes contig names until bug in Prokka gets fixed
             cmd << 'JLU'
         cmd << '--cpus' // set custom sequencing centre
-            cmd << QSUB_SLOTS
+            cmd << noThreads
         cmd << '--outdir'
             cmd << genomePath.toString()
         cmd << '--proteins'
