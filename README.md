@@ -8,8 +8,6 @@
 
 ![ASA³P Overview](asap.png)
 
-> :exclamation: :exclamation: :exclamation: Attention: Due to a scheduled maintenance outage our S3 infrastructure (download of ASA³P volume, examples, etc) will not be available from Sep. 26th to 28th (Wed - Fri).
-
 ## Contents
 - [Description](#description)
 - [Features](#features)
