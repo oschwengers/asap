@@ -1,3 +1,11 @@
+# v1.1.3
+## Enhancements
+- Added a dynamic max cpu/core threshold for 3rd party executables (#2)
+- Fixed data table localization
+- Fixed scaffold table download file names
+- Removed unnecessary dependencies
+- updated source code library versions
+
 # v1.1.2
 ## Enhancements
 - Fixed calculation of contig coverages for hybrid assemblies
