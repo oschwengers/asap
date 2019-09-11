@@ -38,7 +38,7 @@ RFAM_CM_SSU_RRNA = "${ASAP_HOME}/db/RF00177.cm"
 MIN_FRAGMENT_SIZE = 100
 
 int noCores = Runtime.getRuntime().availableProcessors()
-NUM_THREADS = noCores < 8 ? Integer.toString( noCores ) : '8'
+NUM_THREADS = noCores < 4 ? Integer.toString( noCores ) : '4'
 
 
 /*********************
