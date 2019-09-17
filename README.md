@@ -55,14 +55,20 @@ interactive visualizations.
 
 ## Availability
 Targeting different project sizes, i.e. number of genomes which should be
-analysed as a single project, we offer ASA³P in two versions:
-- **Docker**: linux container for small to medium projects
+analysed as a single project, we distribute ASA³P in two versions:
+- **Docker**: linux container image for small to medium projects
 - **OpenStack**: highly scalable cloud version for (very) large projects
 
-For both you will need the following file:
-- ASA³P tarball (containing binaries, 3rd party executables and databases):
+For both the following file is necessary:
+- ASA³P tarball (asap.tar.gz) containing binaries, 3rd party executables and databases:
 https://s3.computational.bio.uni-giessen.de/swift/v1/asap/asap.tar.gz
 - configuration template: https://s3.computational.bio.uni-giessen.de/swift/v1/asap/config.xls
+
+Note:
+As the ASA³P tarball contains all databases and 3rd party executables necessary,
+it is rather huge (78 Gb zipped, 142 Gb unzipped) and thus, download times may be very long.
+To unzip the tarball a deflating tool supporting multithreadding might be beneficial,
+e.g. pigz on linux (`sudo apt install pigz` for Ubuntu).
 
 Additional files:
 - comprehensive manual: https://s3.computational.bio.uni-giessen.de/swift/v1/asap/manual.pdf
