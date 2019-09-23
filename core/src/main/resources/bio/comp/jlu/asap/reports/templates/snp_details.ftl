@@ -288,8 +288,8 @@
                                 <tbody>
                                     <tr><td># SNPs</td><td class="text-center">${noSNPs}</td></tr>
                                     <tr><td><abbr title="transitions / transversions ratio">TS/TV</abrr></td><td class="text-center">${tstv.tstv}</td></tr>
-                                    <tr><td><abbr title="SNPs per base pairs">Change Range</abrr></td><td class="text-center">${changeRate}</td></tr>
-                                    <tr><td><abbr title="high impact">HI</abrr> SNPs</td><td class="text-center">${highImpactSNPs?size}</td></tr>
+                                    <tr><td><abbr title="Base pairs per SNP (1 SNP every x base pairs">Change Range</abrr></td><td class="text-center">${changeRate}</td></tr>
+                                    <tr><td><abbr title="high impact SNPs">HI</abrr> SNPs</td><td class="text-center">${highImpactSNPs?size}</td></tr>
                                 </tbody>
                             </table>
                         </div>
