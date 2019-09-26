@@ -32,7 +32,7 @@ BLASTN       = "${ASAP_HOME}/share/blast/bin/blastn"
 CMSEARCH     = "${ASAP_HOME}/share/infernal/cmsearch"
 
 KRAKEN_DB = "${ASAP_HOME}/db/kraken"
-RDP_DB   = "${ASAP_HOME}/db/rdp/rdp-bacteria.fasta"
+SILVA_DB  = "${ASAP_HOME}/db/silva/silva-bacteria"
 RFAM_CM_SSU_RRNA = "${ASAP_HOME}/db/RF00177.cm"
 
 MIN_FRAGMENT_SIZE = 100
@@ -222,7 +222,7 @@ taxList.each( {
  *** ANI (nucmer) ***
 ********************/
 
-log.info( 'start 16S rRNA classification via blastn vs RDP db' )
+log.info( 'start 16S rRNA classification via blastn vs SILVA db' )
 Path cmOutPath = tmpPath.resolve( 'cm.out' )
 pb = new ProcessBuilder( CMSEARCH,
     '--rfam',
@@ -237,51 +237,77 @@ log.info( '---------------------------------------------------------------------
 if( pb.start().waitFor() != 0 ) terminate( 'could not exec cmsearch!', taxPath, genomeName )
 log.info( '----------------------------------------------------------------------------------------------' )
 
-def ssu = [ 'score': 0.0 ]
+def ssus = [:]
 cmOutPath.eachLine( { line ->
     if( line.charAt( 0 ) != '#' ) {
         def cols = line.split( '\\s+' )
-        if( Float.parseFloat( cols[14] ) > ssu.score ) {
-            ssu = [
-                contig: cols[0],
-                start: Integer.parseInt( cols[7] ),
-                end: Integer.parseInt( cols[8] ),
-                score: Float.parseFloat( cols[14] )
-            ]
-            if( ssu.start > ssu.end ) {
-                int tmp = ssu.start
-                ssu.start = ssu.end
-                ssu.end = tmp
-            }
-            log.info( "detected 16S rRNA: contig=${ssu.contig}, start=${ssu.start}, end=${ssu.end}, score=${ssu.score}" )
+        def ssu = [
+            contig: cols[0],
+            start: cols[7] as int,
+            end: cols[8] as int,
+            score: cols[14] as float,
+            complete: true ? cols[10] == 'no' : false // trunc(ated) 'no' -> complete
+        ]
+        if( ssu.start > ssu.end ) { // swap start/end if on '-' strand
+            int tmp = ssu.start
+            ssu.start = ssu.end
+            ssu.end = tmp
+        }
+        if( ssu.complete  &&  ssu.score >= 1000.0f ) {
+            if( ssus.containsKey(ssu.contig) )
+                ssus[ ssu.contig ] << ssu
+            else
+                ssus[ ssu.contig ] = [ ssu ]
+            log.info( "detected valid 16S rRNA: contig=${ssu.contig}, start=${ssu.start}, end=${ssu.end}, score=${ssu.score}, complete=${ssu.complete}" )
+        } else {
+            log.debug( "discard unvalid 16S rRNA: contig=${ssu.contig}, start=${ssu.start}, end=${ssu.end}, score=${ssu.score}, complete=${ssu.complete}" )
         }
     }
 } )
+log.debug("ssus raw: ${ssus.values()}")
+assert ssus.size() > 0
 
-String ribSequence = null
 def m = genomeSequencePath.text =~ /(?m)^>(.+)$\r?\n([ATGCNatgcn\r\n]+)$/ //include Windows line breaks (\r\n) as user provided scaffolds might be written on Windows systems
 m.each( { match ->
     String name = match[1].split(' ')[0].trim()
-    String contig = match[2].replaceAll( '[^ATGCNatgcn]', '' )
-    if( name == ssu.contig ) {
-        ribSequence = contig.substring( ssu.start - 1, ssu.end )
-        log.info( "extracted 16S rRNA: contig=${name}, seq=${ ribSequence.substring( 0, 50 ) }..." )
+    def ssuList = ssus[ name ]
+    if( ssuList != null ) {
+        String contig = match[2].replaceAll( '[^ATGCNatgcn]', '' )
+        ssuList.each( { it
+            it.sequence = contig.substring( it.start - 1, it.end )
+            log.info( "extracted 16S rRNA: contig=${name}, seq=${ it.sequence.substring( 0, 50 ) }..." )
+        } )
     }
 } )
-assert ribSequence != null
+
+
+// remove 100 % sequence duplicates
+ssuSequences = [:]
+ssus.values().flatten().each( {
+    ssuSequences[ it.sequence ] = it
+} )
+ssus = [:]
+ssuSequences.values().each( {
+    ssus[ it.contig ] = it
+} )
+log.info("ssus w/o dups: ${ssus.values()}")
+assert ssus.size() > 0
+
 
 Path seq16SPath = tmpPath.resolve( '16S.fasta' )
-seq16SPath << '>16S\n'
-seq16SPath << "${ribSequence}\n"
+ssus.values().each( {
+    seq16SPath << ">${it.contig}-${it.start}-${it.end}\n"
+    seq16SPath << "${it.sequence}\n"
+} )
 
 
-// blast genome vs RDP db
+// blast genome vs SILVA db
 pb = new ProcessBuilder( BLASTN,
     '-query', seq16SPath.toString(),
-    '-db', RDP_DB,
+    '-db', SILVA_DB,
     '-num_threads', NUM_THREADS,
     '-evalue', '1E-10',
-    '-outfmt', '6 sseqid slen nident score stitle' )
+    '-outfmt', '6 qseqid sseqid length nident bitscore stitle' )
     .directory( tmpPath.toFile() )
 log.info( "exec: ${pb.command()}" )
 log.info( '----------------------------------------------------------------------------------------------' )
@@ -296,80 +322,49 @@ if( proc.waitFor() != 0 ){
 log.info( '----------------------------------------------------------------------------------------------' )
 
 
-int highestScore = 0
+float highestScore = 0.0f
 taxList = []
 stdOut.toString().eachLine( { line ->
-
     def cols = line.split( '\t' )
-    int score = Integer.parseInt( cols[3] )
-    if( score >= highestScore ) {
-        highestScore = score
-        def desc = cols[4].split( '   ' )
-        String species = desc[0].substring( desc[0].indexOf( ' ' ) + 1 ).replaceAll( '"', '' ).replaceAll( ';', '' ).replaceAll( '\'', '' )
-        def tmp = desc[1].replaceAll( '"', '' ).split( '=' )[1].split(';')
-        def tax = []
-        for( int i=2; i<tmp.length-1; i+=2 ) {
-            tax << tmp[i]
-        }
-        /**
-        * Test if there is a splitted taxon (e.g. genus Escherichia/Shigella)
-        * -> split taxon and build 2 tax/lineage objects
-        */
-        boolean containsSplittedTaxon = false
-        tax.each { if( it.contains('/') ) containsSplittedTaxon = true }
-        if( containsSplittedTaxon ) {
-            def taxA = []
-            def taxB = []
-            tax.each( {
-                if( it.contains('/') ) {
-                    def taxon = it.split( '/' )
-                    taxA << taxon[0]
-                    taxB << taxon[1]
-                } else {
-                    taxA << it
-                    taxB << it
-                }
-            } )
-            taxA << species
-            taxB << species
-            taxList << taxA
-            taxList << taxB
-        } else {
-            tax << species
-            taxList << tax
-        }
-    }
-
-} )
-
-// add extra 'species' taxon build from 'strain'
-taxList.each( { tax ->
-    int size = tax.size()
-    def species = tax[ size - 1 ].replaceAll( '//s+', ' ' )
-    def taxa = species.split( ' ' )
-    if( taxa.size() > 2 ) {
-        tax[ size - 1 ] = taxa[0] + ' ' + taxa[1]
-        tax << species
+    def hit = [
+        contig: cols[0].split('-')[0],
+        id: cols[1],
+        alignmentLength: cols[2] as int,
+        nIdent: cols[3]as int,
+        bitscore: cols[4] as float,
+        desc: cols[5]
+    ]
+    log.debug( "raw hit: ${hit}" )
+    String rRNASequence = ssus[ hit.contig ]?.sequence
+    if( rRNASequence != null
+        &&  (hit.alignmentLength / rRNASequence.length()) >= 0.8
+        &&  (hit.nIdent / hit.alignmentLength) >= 0.8
+        &&  hit.bitscore >= highestScore ) {
+        log.debug( "valid hit: ${hit}" )
+        highestScore = hit.bitscore
+        def tax = hit.desc.split(';')
+        tax[0] = tax[0].split(' ')[1]
+        taxList << tax
     }
 } )
 
 // count abundances of lineages
-def taxaCounts = [:]
-taxList.collect( { it.join('-') } ).each( {
-    if( taxaCounts.containsKey( it ) ) {
-        taxaCounts[ it ] += 1
+def lineageBins = [:]
+taxList.each( {
+    def key = it.join('-')
+    if( lineageBins.containsKey( key ) ) {
+        def lineage = lineageBins.get( key )
+        lineage.freq += 1
     } else {
-        taxaCounts[ it ] = 1
+        lineageBins[ key ] = [
+            lineage: it,
+            freq: 1,
+            classification: it.last()
+        ]
     }
 } )
-info.rrna.lineages = taxList.toSet().collect( {
-    [
-        lineage: it,
-        freq: taxaCounts[ it.join('-') ],
-        classification: it.last()
-    ]
-} )
-info.rrna.classification = info.rrna.lineages.sort( { -it.freq } )[0]
+info.rrna.lineages = lineageBins.values().sort( { -it.freq } )
+info.rrna.classification = info.rrna.lineages[0]
 info.rrna.hits = taxList.size()
 
 

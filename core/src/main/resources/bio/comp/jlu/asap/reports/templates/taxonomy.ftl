@@ -89,7 +89,7 @@
 
                             <p>The first two methods are reference free solutions where the last one is reference based approach. Kmer profiles are analyzed via
                               the <code>Kraken</code> tool and subsequent kmer profile hits are extracted from a custom <code>RefSeq</code> based database.
-                              In order to search for 16S homology the pipeline uses <code>Infernal</code> to extract the best scoring 16S sequence and
+                              In order to search for 16S homology the pipeline uses <code>Infernal</code> to extract untruncated 16S sequences with a bitscore larger than 1,000 and
                               subsequently queries it against the <code>RDP</code> 16S database.</p>
 
                             <p>Finally, the pipeline uses a proprietary ANI implementation based on <code>Nucmer</code> to calculate whole genome sequence

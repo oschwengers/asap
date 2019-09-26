@@ -113,7 +113,7 @@
 
                             <h5>16S rRNA Classifications</h5>
 
-                            <p>Contains the set of 16S rRNA classification results of all contigs based on highest scoring 16S
+                            <p>Contains 16S rRNA classification results for all detected 16S sequences based on highest scoring 16S
                               RNA.</p>
 
                             <h3>Reference ANIs</h3>
