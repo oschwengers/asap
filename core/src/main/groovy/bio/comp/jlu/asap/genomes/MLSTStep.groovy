@@ -107,6 +107,11 @@ class MLSTStep extends GenomeStep {
             .redirectErrorStream( true )
 
 
+        def env = pb.environment() // set Java max heap space to 2 Gb
+        String pathEnv = env.get( '' )
+        env.put( 'JAVA_OPTS', '-Xmx2G')
+
+
         if( localMode ) {
             pb.redirectOutput( mlstPath.resolve( "${genomeName}.std.log" ).toFile() )
         } else {
