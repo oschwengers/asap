@@ -26,7 +26,7 @@ final def env = System.getenv()
 ASAP_HOME = env.ASAP_HOME
 
 CARD             = "${ASAP_HOME}/share/card"
-SINGULARITY_CARD = "${ASAP_HOME}/share/card-rgi-v4.2.2-3.0.0.simg"
+SINGULARITY_CARD = "${CARD}/card.simg"
 
 PERC_SEQ_IDENT = 0.4
 
@@ -171,7 +171,8 @@ ProcessBuilder pb = new ProcessBuilder( 'singularity',
     '--input_type', 'contig',
     '--num_threads', '1',
     '--input_sequence', localGenomeSequencePath.toString(),
-    '--output_file', cardOutput )
+    '--output_file', cardOutput,
+    '--exclude_nudge' )
     .redirectErrorStream( true )
     .redirectOutput( ProcessBuilder.Redirect.INHERIT )
     .directory( tmpPath.toFile() )

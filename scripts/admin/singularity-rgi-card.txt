@@ -5,7 +5,7 @@ From: ubuntu:16.04
 
 %labels
     Maintainer Oliver Schwengers
-    Version v4.2.2-3.0.0
+    Version v5.1.0-3.0.5
 
 %post
     apt-get -y update &&
@@ -16,8 +16,10 @@ From: ubuntu:16.04
     python3-setuptools \
     python3-pip \
 
-    pip3 install \
-    biopython \
+    python3 -m pip install --upgrade pip
+
+    python3 -m pip install \
+    biopython==1.72 \
     filetype \
     pytest \
     mock \
@@ -27,25 +29,25 @@ From: ubuntu:16.04
     pyfaidx \
     pyahocorasick
 
-    wget https://github.com/arpcard/rgi/archive/4.2.2.tar.gz
-    tar -xzf 4.2.2.tar.gz
+    wget https://github.com/arpcard/rgi/archive/5.1.0.tar.gz
+    tar -xzf 5.1.0.tar.gz
 
-    wget https://card.mcmaster.ca/download/0/broadstreet-v3.0.0.tar.gz
-    tar -xjf broadstreet-v3.0.0.tar.gz
-    rgi-4.2.2/rgi clean
-    rgi-4.2.2/rgi load --card_json card.json
+    wget https://card.mcmaster.ca/download/0/broadstreet-v3.0.5.tar.gz
+    tar -xjf broadstreet-v3.0.5.tar.gz
+    rgi-5.1.0/rgi clean
+    rgi-5.1.0/rgi load --card_json card.json
 
     echo -e ">fake\nATCG" > fake.fasta
-    rgi-4.2.2/rgi main --input_type contig -i fake.fasta -o test || true
+    rgi-5.1.0/rgi main --input_type contig -i fake.fasta -o test || true
 
     apt-get autoremove
     apt-get clean
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* *.gz *.fasta *.csv *.txt rm card.json
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* *.gz *.fasta *.csv *.txt card.json test.*
 
 
 %test
-    rgi-4.2.2/rgi main --version
-    rgi-4.2.2/rgi database --version
+    rgi-5.1.0/rgi main --version
+    rgi-5.1.0/rgi database --version
 
 %runscript
-    /rgi-4.2.2/rgi main "$@"
+    /rgi-5.1.0/rgi main "$@"
