@@ -24,15 +24,16 @@ import static bio.comp.jlu.asap.ASAPConstants.*
 
 // check options
 def cli = new CliBuilder( usage: "java -jar asap-${ASAP_VERSION}.jar --dir <project-directory> [-h|-i|-c|-r] [-n] [-l] [-s <#-slots>]" )
-    cli.d( longOpt: 'dir',       args: 1, argName: 'project directory', required: true,  'The path to a project directory.' )
-    cli.s( longOpt: 'slots',     args: 1, argName: '# grid slots',      required: false, 'Amount of grid slots ASA³P should use. Default: 50' )
-    cli.h( longOpt: 'help',      args: 0, argName: 'show help',         required: false, 'Show ASAP usage.' )
-    cli.i( longOpt: 'info',      args: 0, argName: 'info',              required: false, 'Show information about a certain project.' )
-    cli.r( longOpt: 'reports',   args: 0, argName: 'reports',           required: false, 'Only (re)create reports. Existing reports will be removed!' )
-    cli.c( longOpt: 'check',     args: 0, argName: 'check config',      required: false, 'Check a spreadsheet config file along with all corresponding project files. This does not start ASA³P!' )
-    cli.n( longOpt: 'clean',     args: 0, argName: 'clean project',     required: false, 'Clean project folder. Attention! This will delete all data from earlier ASA³P runs.' )
-    cli.l( longOpt: 'local',     args: 0, argName: 'local execution',   required: false, 'Carry out all computations locally on the current host. Use this option if no grid engine is available.' )
-    cli.k( longOpt: 'skip-comp', args: 0, argName: 'skip comparatives', required: false, 'Skip comparative analyses. Use this option to disable pan/core genome and phylogeny steps.' )
+    cli.d( longOpt: 'dir',       args: 1, argName: 'project directory',      required: true,  'The path to a project directory.' )
+    cli.s( longOpt: 'slots',     args: 1, argName: '# grid slots',           required: false, 'Amount of grid slots ASA³P should use. Default: 50' )
+    cli.h( longOpt: 'help',      args: 0, argName: 'show help',              required: false, 'Show ASAP usage.' )
+    cli.i( longOpt: 'info',      args: 0, argName: 'info',                   required: false, 'Show information about a certain project.' )
+    cli.r( longOpt: 'reports',   args: 0, argName: 'reports',                required: false, 'Only (re)create reports. Existing reports will be removed!' )
+    cli.c( longOpt: 'check',     args: 0, argName: 'check config',           required: false, 'Check a spreadsheet config file along with all corresponding project files. This does not start ASA³P!' )
+    cli.n( longOpt: 'clean',     args: 0, argName: 'clean project',          required: false, 'Clean project folder. Attention! This will delete all data from earlier ASA³P runs.' )
+    cli.l( longOpt: 'local',     args: 0, argName: 'local execution',        required: false, 'Carry out all computations locally on the current host. Use this option if no grid engine is available.' )
+    cli.k( longOpt: 'skip-comp', args: 0, argName: 'skip comparatives',      required: false, 'Skip comparative analyses. Use this option to disable pan/core genome and phylogeny steps.' )
+    cli.a( longOpt: 'skip-char', args: 0, argName: 'skip characterizations', required: false, 'Skip characterization analyses. Use this option to disable taxonomic classification, MLST, ABR, VF detection and mapping steps. WARNING: this also disables the comparative steps as those partially depend on the characterization steps!' )
 
 def opts = cli.parse( args )
 if( !opts )
@@ -204,6 +205,12 @@ if( opts.c ) { // only check config and data files
 
     // store comparative analyses option (opts.k disables comp. analyses)
     config.project.comp = !opts.k
+
+
+    // store characterization analyses option (opts.a disables char. analyses)
+    config.project.characterization = !opts.a
+    if( opts.a )
+        config.project.comp = false
 
 
     log.trace( 'write "state.running" file' )
@@ -429,30 +436,38 @@ def setupStepSelections( config ) {
             necessarySteps << ASSEMBLY
             necessarySteps << SCAFFOLDING
             necessarySteps << ANNOTATION
-            necessarySteps << MAPPING
-            necessarySteps << SNP_DETECTION
-            necessarySteps << TAXONOMY
-            necessarySteps << MLST
-            necessarySteps << ABR
-            necessarySteps << VF
+            if( config.project.characterization ) {
+                necessarySteps << MAPPING
+                necessarySteps << SNP_DETECTION
+                necessarySteps << TAXONOMY
+                necessarySteps << MLST
+                necessarySteps << ABR
+                necessarySteps << VF
+            }
         } else if( ft == FileType.CONTIGS ) {
             necessarySteps << SCAFFOLDING
             necessarySteps << ANNOTATION
-            necessarySteps << TAXONOMY
-            necessarySteps << MLST
-            necessarySteps << ABR
-            necessarySteps << VF
+            if( config.project.characterization ) {
+                necessarySteps << TAXONOMY
+                necessarySteps << MLST
+                necessarySteps << ABR
+                necessarySteps << VF
+            }
         } else if( ft == FileType.CONTIGS_ORDERED  ||  ft == FileType.CONTIGS_LINKED ) {
             necessarySteps << ANNOTATION
-            necessarySteps << TAXONOMY
-            necessarySteps << MLST
-            necessarySteps << ABR
-            necessarySteps << VF
+            if( config.project.characterization ) {
+                necessarySteps << TAXONOMY
+                necessarySteps << MLST
+                necessarySteps << ABR
+                necessarySteps << VF
+            }
         } else if( ft == FileType.GENOME ) {
-            necessarySteps << TAXONOMY
-            necessarySteps << MLST
-            necessarySteps << ABR
-            necessarySteps << VF
+            if( config.project.characterization ) {
+                necessarySteps << TAXONOMY
+                necessarySteps << MLST
+                necessarySteps << ABR
+                necessarySteps << VF
+            }
         }
 
         genome.stepselection = necessarySteps.collect( { it.getCharCode() } ).join( '' )
