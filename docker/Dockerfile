@@ -1,6 +1,6 @@
 FROM ubuntu:16.04
 
-LABEL version="1.1.0"
+LABEL version="1.2.0"
 LABEL maintainer="andreas.hoek@bio.uni-giessen.de"
 LABEL maintainer="oliver.schwengers@computational.bio.uni-giessen.de"
 
@@ -21,27 +21,22 @@ RUN apt-get -y update && apt-get -y install \
 
 RUN wget -O- http://neuro.debian.net/lists/xenial.de-md.libre | tee /etc/apt/sources.list.d/neurodebian.sources.list
 RUN apt-key adv --recv-keys --keyserver hkp://pool.sks-keyservers.net:80 0xA5D32F012649A5A9
-RUN apt-get -y update && apt-get -y install \
-    singularity-container
+RUN apt-get -y update && apt-get -y install singularity-container
 
 RUN pip3 install \
     biopython \
     networkx \
-    numpy \
-    filetype \
-    pytest \
-    mock \
-    pandas \
-    matplotlib \
-    seaborn \
-    pyfaidx \
-    pyahocorasick
+    numpy
 
-RUN apt-get autoremove && apt-get clean
+RUN apt-get -y remove wget \
+    python3-setuptools
+RUN apt-get -y autoremove && apt-get -y clean
 RUN rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 RUN mkdir /var/scratch/
+RUN mkdir /data/
 
+WORKDIR /data
 ENV ASAP_HOME=/asap
 
-CMD [ "java", "-jar", "/asap/asap.jar", "--dir", "/data/", "--local" ]
+ENTRYPOINT [ "java", "-jar", "/asap/asap.jar", "--dir", "/data", "--local" ]

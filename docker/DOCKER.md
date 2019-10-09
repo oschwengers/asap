@@ -6,10 +6,10 @@ on how to setup and run ASA³P using Docker.
 
 # Setup
 Due to the huge size of all necessary 3rd party software and database dependencies,
-the ASA³P container only contains system packages and top level binaries
-as for instance Python3, Java and Perl.
-Thus, before executing ASA³P one needs to download and extract the ASA³P directory
-containing everything else:
+the ASA³P container only contains system packages and top level binaries as for
+instance Python3, Java and Perl.
+Therefore, the ASA³P directory containing everything else must be downloaded
+and extracted before executing ASA³P:
 ```bash
 $ wget https://s3.computational.bio.uni-giessen.de/swift/v1/asap/asap.tar.gz
 $ tar -xzf asap.tar.gz
@@ -22,15 +22,27 @@ $ sudo docker pull oschwengers/asap
 ```
 
 # Running a container
-In order to hide all Docker related options and further simplify the process we
-offer a custom shell script within the ASA³P directory:
+For your convenience, hiding all Docker related options and further simplifing
+the process, we offer a custom shell script within the ASA³P directory:
 ```bash
-$ sudo asap/asap-docker.sh <PROJECT_DIR> [<SCRATCH_DIR>]
+$ asap/asap-docker.sh -d <PROJECT_DIR> [-a <ASAP_DIR>] [-s <SCRATCH_DIR>] [-z] [-c]
 ```
 
-Parameters:
-* `<PROJECT_DIR>`: path to the actual project directory (containing `config.xls` and `data` directory)
-* `<SCRATCH_DIR>`: optionally path to a distinct scratch/tmp dir
+Parameters & Options:
+* `-d <PROJECT_DIR>`: mandatory. path to the actual project directory (containing `config.xls` and `data` directory)
+* `-a <ASAP_DIR>`: optional: path to the ASA³P dir in case the script was moved/copied somewhere else
+* `-s <SCRATCH_DIR>`: optional: path to a distinct scratch/tmp dir
+* `-z`: optional: skip characterization steps
+* `-c`: optional: skip comparative analysis steps
+
+**Note**
+1. This shell wrapper script should remain within the ASA³P directory in order to
+correctly extract related paths. In case the script was moved/copied somewhere else,
+you have to provide the path via `-a <ASAP_DIR>`.
+2. The script gathers user:group ids and passes these to the Docker container thus,
+files created by ASA³P automatically have the correct user ownerships instead of sudo ones.
+3. The script will ask for the sudo password as Docker containers can currently only
+be executed as sudo. This is pure technical necessity unrelated to ASA³P itself.
 
 Example project:
 For demonstration purpose we offer an example project containing 4 Listeria monocytogenes genomes.
@@ -39,7 +51,7 @@ Just download and extract it:
 $ wget https://s3.computational.bio.uni-giessen.de/swift/v1/asap/example-lmonocytogenes.tar.gz
 $ tar -xzf example-lmonocytogenes.tar.gz
 $ rm example-lmonocytogenes.tar.gz
-$ sudo asap/asap-docker.sh example-lmonocytogenes/
+$ asap/asap-docker.sh -d example-lmonocytogenes/
 ```
 
 # Advanced usage
@@ -60,7 +72,7 @@ to use Singularity containers inside ASA³P as an additional abstraction layer
 in oder to isolate dependencies on a per-analysis basis, i.e. starting analyses
 bundled inside Singularity containers themselves. In order to bind/mount temporary
 directories from inside the Docker container into Singularity containers ASA³P does
-need this **security related** `--privileged` option
+need this **security related** `--privileged` option.
 
 Optional options/paramters:
 * `--rm` removes ephemeral storage (container & data within in)

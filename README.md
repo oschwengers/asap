@@ -94,16 +94,25 @@ $ rm asap.tar.gz
 
 Running an ASA³P Container using the `asap-docker.sh` shell wrapper script:
 ```bash
-$ sudo asap/asap-docker.sh <PROJECT_DIR> [<SCRATCH_DIR>]
+$ #<ASAP_DIR>/asap-docker.sh -d <PROJECT_DIR> [-s <SCRATCH_DIR>] [-a ASAP_DIR] [-z] [-c]
+$ asap/asap-docker.sh -d example-lmonocytogenes -s /tmp
 ```
 
 Parameters:
-* `<PROJECT_DIR>`: path to the actual project directory (containing `config.xls` and `data` directory)
-* `<SCRATCH_DIR>`: optionally path to a distinct scratch/tmp dir
+* `-d <PROJECT_DIR>`: mandatory. path to the actual project directory (containing `config.xls` and `data` directory)
+* `-a <ASAP_DIR>`: optional: path to the ASA³P dir in case the script was moved/copied somewhere else
+* `-s <SCRATCH_DIR>`: optional: path to a distinct scratch/tmp dir
+* `-z`: optional: skip characterization steps
+* `-c`: optional: skip comparative analysis steps
 
 **Note**
-Make sure to always leave the `asap-docker.sh` script within the ASA³P directory
-as by this the right internal paths will automatically be detected and forwarded.
+1. This shell wrapper script should remain within the ASA³P directory in order to
+correctly extract related paths. In case the script was moved/copied somewhere else,
+you have to provide the path via `-a <ASAP_DIR>`.
+2. The script gathers user:group ids and passes these to the Docker container thus,
+files created by ASA³P automatically have the correct user ownerships instead of sudo ones.
+3. The script will ask for the sudo password as Docker containers can currently only
+be executed as sudo. This is pure technical necessity unrelated to ASA³P itself.
 
 **Complete example**:
 ```bash
@@ -114,10 +123,10 @@ $ rm asap.tar.gz
 $ wget https://s3.computational.bio.uni-giessen.de/swift/v1/asap/example-lmonocytogenes-4.tar.gz
 $ tar -xzf example-lmonocytogenes-4.tar.gz
 $ rm example-lmonocytogenes-4.tar.gz
-$ sudo asap/asap-docker.sh example-lmonocytogenes-4/
+$ asap/asap-docker.sh -d example-lmonocytogenes-4/
 ```
 
-For further information have a look at the Docker readme (DOCKER.md ).
+For further information have a look at the Docker readme (docker/DOCKER.md ).
 
 ### Cloud - OpenStack
 ASA³P's **OpenStack** based cloud version targets the analysis of hundreds to
