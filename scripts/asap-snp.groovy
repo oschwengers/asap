@@ -165,15 +165,15 @@ Path variantsPath = snpDetectionPath.resolve( "${genomeName}.vcf" )
 ProcessBuilder pb
 if( hasReferenceAnnotation ) {
     pb = new ProcessBuilder( 'sh', '-c',
-    "${SAMTOOLS}/samtools mpileup -uRI -f ${fastaPath} ${bamFilePath} \
-    | ${SAMTOOLS}/bcftools call --variants-only --skip-variants indels --output-type v --ploidy 1 -c  \
+    "${SAMTOOLS}/bcftools mpileup --skip-indels --ignore-RG --output-type u -f ${fastaPath} ${bamFilePath} \
+    | ${SAMTOOLS}/bcftools call --consensus-caller --variants-only --skip-variants indels --ploidy 1 --output-type v  \
     | ${SNPSIFT} filter \"( QUAL >= 30 ) & (( na FILTER ) | (FILTER = 'PASS')) & ( DP >= 20 ) & ( MQ >= 20 )\" \
     | ${SNPEFF} ann -nodownload -no-intron -no-downstream -no SPLICE_SITE_REGION -upDownStreamLen 250 -config ${snpDetectionPath}/snpEff.config -csvStats ${genomeName}.csv ref - \
     > ${variantsPath}" )
 } else {
     pb = new ProcessBuilder( 'sh', '-c',
-    "${SAMTOOLS}/samtools mpileup -uRI -f ${fastaPath} ${bamFilePath} \
-    | ${SAMTOOLS}/bcftools call --variants-only --skip-variants indels --output-type v --ploidy 1 -c  \
+    "${SAMTOOLS}/bcftools mpileup --skip-indels --ignore-RG --output-type u -f ${fastaPath} ${bamFilePath} \
+    | ${SAMTOOLS}/bcftools call --consensus-caller --variants-only --skip-variants indels --ploidy 1 --output-type v  \
     | ${SNPSIFT} filter \"( QUAL >= 30 ) & (( na FILTER ) | (FILTER = 'PASS')) & ( DP >= 20 ) & ( MQ >= 20 )\" \
     > ${variantsPath}" )
 }
