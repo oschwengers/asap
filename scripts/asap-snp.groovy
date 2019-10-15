@@ -10,7 +10,9 @@ import java.time.*
 import groovy.util.CliBuilder
 import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
-import org.slf4j.LoggerFactory
+import org.slf4j.*
+import ch.qos.logback.classic.Level
+import ch.qos.logback.classic.Logger
 import bio.comp.jlu.asap.api.DataType
 import bio.comp.jlu.asap.api.FileType
 import bio.comp.jlu.asap.api.FileFormat
@@ -84,7 +86,7 @@ log.info( "genome-id: ${genomeId}" )
 
 Path rawProjectPath = Paths.get( opts.p )
 if( !Files.exists( rawProjectPath ) ) {
-    println( "Error: project directory (${rawProjectPath}) does not exist!" )
+    log.error( "Error: project directory (${rawProjectPath}) does not exist!" )
     System.exit(1)
 }
 final Path projectPath = rawProjectPath.toRealPath()
@@ -98,6 +100,12 @@ if( !Files.isReadable( configPath ) ) {
     System.exit( 1 )
 }
 def config = (new JsonSlurper()).parseText( projectPath.resolve( 'config.json' ).text )
+
+
+if( config.project.debugging ) { // set logging to debug upon user request
+    ch.qos.logback.classic.Logger rootLogger = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger( org.slf4j.Logger.ROOT_LOGGER_NAME )
+    rootLogger.setLevel( ch.qos.logback.classic.Level.DEBUG )
+}
 
 
 final def genome = config.genomes.find( { it.id == genomeId } )

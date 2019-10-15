@@ -11,7 +11,9 @@ import java.util.regex.Pattern
 import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
 import groovy.util.CliBuilder
-import org.slf4j.LoggerFactory
+import org.slf4j.*
+import ch.qos.logback.classic.Level
+import ch.qos.logback.classic.Logger
 import bio.comp.jlu.asap.api.DataType
 import bio.comp.jlu.asap.api.FileType
 
@@ -98,7 +100,7 @@ log.info( "genome-id: ${genomeId}" )
 
 Path rawProjectPath = Paths.get( opts.p )
 if( !Files.exists( rawProjectPath ) ) {
-    println( "Error: project directory (${rawProjectPath}) does not exist!" )
+    log.error( "Error: project directory (${rawProjectPath}) does not exist!" )
     System.exit(1)
 }
 final Path projectPath = rawProjectPath.toRealPath()
@@ -112,6 +114,13 @@ if( !Files.isReadable( configPath ) ) {
     System.exit( 1 )
 }
 final def config = (new JsonSlurper()).parseText( projectPath.resolve( 'config.json' ).toFile().text )
+
+
+if( config.project.debugging ) { // set logging to debug upon user request
+    ch.qos.logback.classic.Logger rootLogger = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger( org.slf4j.Logger.ROOT_LOGGER_NAME )
+    rootLogger.setLevel( ch.qos.logback.classic.Level.DEBUG )
+}
+
 
 final def genome = config.genomes.find( { it.id == genomeId } )
 if( !genome ) {
@@ -130,7 +139,7 @@ if( !Files.exists( genomeContigsPath ) ) {
         Files.createDirectory( genomeContigsPath )
         log.info( "create genome-contigs folder: ${genomeContigsPath}" )
     } catch( Throwable t ) {
-        log.error( "could create genome contigs dir! gid=${genomeId}, contigs-dir=${genomeContigsPath}" )
+        log.error( "could not create genome contigs dir! gid=${genomeId}, contigs-dir=${genomeContigsPath}" )
         System.exit( 1 )
     }
 }
@@ -142,7 +151,7 @@ try { // create tmp dir
     log.info( "tmp-folder: ${tmpPath}" )
     Files.createDirectory( tmpPath )
 } catch( Throwable t ) {
-    terminate( "could create tmp dir! gid=${genomeId}, tmp-dir=${tmpPath}", t, genomeContigsPath )
+    terminate( "could not create tmp dir! gid=${genomeId}, tmp-dir=${tmpPath}", t, genomeContigsPath )
 }
 
 
@@ -388,9 +397,9 @@ private void runUnicycler( def config, def genome, Path genomeContigsPath, Path 
         log.debug( "contig depths: ${contigDepths}" )
         log.debug( 'calc contig coverage:' )
         contigDepths.each( { key, val ->
-            log.trace( "\tkey=${key}, val=${val}")
+            log.debug( "\tkey=${key}, val=${val}")
             def contig = preFilterStatistics.contigs.find( {
-                log.trace( "\t\tcontigs=${it}" )
+                log.debug( "\t\tcontigs=${it}" )
                 it.name == key
             } )
             assert contig != null
@@ -413,9 +422,9 @@ private void runUnicycler( def config, def genome, Path genomeContigsPath, Path 
         // calc contig coverage based on summed contig depths and contig length
         log.debug( 'calc contig coverage:' )
         contigDepths.each( { key, val ->
-            log.trace( "\tkey=${key}, val=${val}")
+            log.debug( "\tkey=${key}, val=${val}")
             def contig = info.contigs.find( {
-                log.trace( "\t\tcontigs=${it}" )
+                log.debug( "\t\tcontigs=${it}" )
                 it.name == key
             } )
             if( contig != null ) {
@@ -619,9 +628,9 @@ private void runHGap( def config, def genome, Path genomeContigsPath, Path tmpPa
 
         log.debug( 'calc contig coverage:' )
         contigDepths.each( { key, val ->
-            log.trace( "\tkey=${key}, val=${val}")
+            log.debug( "\tkey=${key}, val=${val}")
             def contig = preFilterStatistics.contigs.find( {
-                log.trace( "\t\tcontigs=${it}" )
+                log.debug( "\t\tcontigs=${it}" )
                 it.name == key
             } )
             assert contig != null
@@ -643,9 +652,9 @@ private void runHGap( def config, def genome, Path genomeContigsPath, Path tmpPa
         // calc contig coverage based on summed contig depths and contig length
         log.debug( 'calc contig coverage:' )
         contigDepths.each( { key, val ->
-            log.trace( "\tkey=${key}, val=${val}")
+            log.debug( "\tkey=${key}, val=${val}")
             def contig = info.contigs.find( {
-                log.trace( "\t\tcontigs=${it}" )
+                log.debug( "\t\tcontigs=${it}" )
                 it.name == key
             } )
             if( contig != null ) {

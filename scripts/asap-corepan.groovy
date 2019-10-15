@@ -10,7 +10,9 @@ import java.time.*
 import groovy.util.CliBuilder
 import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
-import org.slf4j.LoggerFactory
+import org.slf4j.*
+import ch.qos.logback.classic.Level
+import ch.qos.logback.classic.Logger
 
 import static bio.comp.jlu.asap.api.Paths.*
 
@@ -68,7 +70,7 @@ log.info( "file.encoding: ${props['file.encoding']}" )
 
 Path rawProjectPath = Paths.get( opts.p )
 if( !Files.exists( rawProjectPath ) ) {
-    println( "Error: project directory (${rawProjectPath}) does not exist!" )
+    log.error( "Error: project directory (${rawProjectPath}) does not exist!" )
     System.exit(1)
 }
 final Path projectPath = rawProjectPath.toRealPath()
@@ -82,6 +84,12 @@ if( !Files.isReadable( configPath ) ) {
     System.exit( 1 )
 }
 def config = (new JsonSlurper()).parseText( projectPath.resolve( 'config.json' ).toFile().text )
+
+
+if( config.project.debugging ) { // set logging to debug upon user request
+    ch.qos.logback.classic.Logger rootLogger = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger( org.slf4j.Logger.ROOT_LOGGER_NAME )
+    rootLogger.setLevel( ch.qos.logback.classic.Level.DEBUG )
+}
 
 
 
@@ -214,7 +222,7 @@ tmpPath.resolve( 'gene_presence_absence.csv' ).eachLine( { line ->
         ]
         genes << gene
         for( int i=14; i<cols.size(); i++ ) { // store gene availability for each genome
-            log.trace( "gene: ${cols[i]}" )
+            log.debug( "gene: ${cols[i]}" )
             if( cols[ i ] ) { // if column is not empty, genome contains gene
                 String genomeName = genomeNames[ i - 14 ]
                 assert genomeName != null

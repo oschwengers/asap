@@ -9,7 +9,9 @@ import java.nio.file.*
 import java.time.*
 import groovy.json.*
 import groovy.util.CliBuilder
-import org.slf4j.LoggerFactory
+import org.slf4j.*
+import ch.qos.logback.classic.Level
+import ch.qos.logback.classic.Logger
 import bio.comp.jlu.asap.api.DataType
 import bio.comp.jlu.asap.api.FileType
 
@@ -82,7 +84,7 @@ log.info( "genome-id: ${genomeId}" )
 
 Path rawProjectPath = Paths.get( opts.p )
 if( !Files.exists( rawProjectPath ) ) {
-    println( "Error: project directory (${rawProjectPath}) does not exist!" )
+    log.error( "Error: project directory (${rawProjectPath}) does not exist!" )
     System.exit(1)
 }
 final Path projectPath = rawProjectPath.toRealPath()
@@ -96,6 +98,12 @@ if( !Files.isReadable( configPath ) ) {
     System.exit( 1 )
 }
 final def config = (new JsonSlurper()).parseText( projectPath.resolve( 'config.json' ).text )
+
+
+if( config.project.debugging ) { // set logging to debug upon user request
+    ch.qos.logback.classic.Logger rootLogger = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger( org.slf4j.Logger.ROOT_LOGGER_NAME )
+    rootLogger.setLevel( ch.qos.logback.classic.Level.DEBUG )
+}
 
 
 final def genome = config.genomes.find( { it.id == genomeId } )
@@ -118,7 +126,7 @@ try { // create tmp dir
     log.info( "tmp-folder: ${tmpPath}" )
     Files.createDirectory( tmpPath )
 } catch( Throwable t ) {
-    terminate( "could create tmp dir! gid=${genomeId}, tmp-dir=${tmpPath}", t, vfPath, genomeName )
+    terminate( "could not create tmp dir! gid=${genomeId}, tmp-dir=${tmpPath}", t, vfPath, genomeName )
 }
 
 
@@ -190,9 +198,7 @@ fhInput.close()
         if( exitCode != 0 )  throw new IllegalStateException( "exitCode = ${exitCode}" )
         log.info( '----------------------------------------------------------------------------------------------' )
     } catch( Throwable t ) {
-        log.error( 'genbank->fasta conversion failed!', t )
-        println( 'genbank->fasta conversion failed!' )
-        System.exit( 1 )
+        terminate( 'genbank->fasta conversion failed!', t, vfPath, genomeName )
     }
 } else if( Files.isReadable( sequencePath ) ) { // user provided (converted) gff file -> run prodigal, write aa sequences
     aaSequencePath = tmpPath.resolve( "${genomeName}.faa" )
@@ -209,9 +215,7 @@ fhInput.close()
         if( exitCode != 0 )  throw new IllegalStateException( "exitCode = ${exitCode}" )
         log.info( '----------------------------------------------------------------------------------------------' )
     } catch( Throwable t ) {
-        log.error( 'prodigal AA sequence extraction failed!', t )
-        println( 'prodigal AA sequence extraction failed!' )
-        System.exit( 1 )
+        terminate( 'prodigal AA sequence extraction failed!', t, vfPath, genomeName )
     }
 } else {
     terminate( 'neither GenBank nor Fasta file found!', vfPath, genomeName )

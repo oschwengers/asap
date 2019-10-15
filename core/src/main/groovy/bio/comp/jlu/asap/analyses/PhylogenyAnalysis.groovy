@@ -76,7 +76,6 @@ class PhylogenyAnalysis extends AnalysisStep {
         log.trace( 'run' )
 
         // build process
-        log.trace( 'build phylo tree process...' )
         ProcessBuilder pb = new ProcessBuilder()
             .directory( projectPath.toFile() )
             .redirectErrorStream( true )
@@ -105,7 +104,7 @@ class PhylogenyAnalysis extends AnalysisStep {
 
 
         // start process
-        log.trace( "start phylo tree process, exec: ${pb.command()}" )
+        log.debug( "start phylo tree process, exec: ${pb.command()}" )
         Process ps = pb.start()
 
 

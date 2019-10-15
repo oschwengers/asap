@@ -75,7 +75,6 @@ class CorePanGenomeAnalysis extends AnalysisStep {
         log.trace( 'run' )
 
         // build process
-        log.trace( 'build corepan process...' )
         ProcessBuilder pb = new ProcessBuilder()
             .directory( projectPath.toFile() )
             .redirectErrorStream( true )
@@ -110,7 +109,7 @@ class CorePanGenomeAnalysis extends AnalysisStep {
 
 
         // start process
-        log.trace( "start core/pan genome process, exec: ${pb.command()}" )
+        log.debug( "start core/pan genome process, exec: ${pb.command()}" )
         Process ps = pb.start()
 
 

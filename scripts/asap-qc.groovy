@@ -9,7 +9,9 @@ import java.nio.file.*
 import java.time.*
 import groovy.json.*
 import groovy.util.CliBuilder
-import org.slf4j.LoggerFactory
+import org.slf4j.*
+import ch.qos.logback.classic.Level
+import ch.qos.logback.classic.Logger
 import bio.comp.jlu.asap.api.DataType
 import bio.comp.jlu.asap.api.FileType
 
@@ -91,7 +93,7 @@ log.info( "genome-id: ${genomeId}" )
 
 Path rawProjectPath = Paths.get( opts.p )
 if( !Files.exists( rawProjectPath ) ) {
-    println( "Error: project directory (${rawProjectPath}) does not exist!" )
+    log.error( "Error: project directory (${rawProjectPath}) does not exist!" )
     System.exit(1)
 }
 final Path projectPath = rawProjectPath.toRealPath()
@@ -105,6 +107,12 @@ if( !Files.isReadable( configPath ) ) {
     System.exit( 1 )
 }
 final def config = (new JsonSlurper()).parseText( projectPath.resolve( 'config.json' ).text )
+
+
+if( config.project.debugging ) { // set logging to debug upon user request
+    ch.qos.logback.classic.Logger rootLogger = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger( org.slf4j.Logger.ROOT_LOGGER_NAME )
+    rootLogger.setLevel( ch.qos.logback.classic.Level.DEBUG )
+}
 
 
 final def genome = config.genomes.find( { it.id == genomeId } )
@@ -124,7 +132,7 @@ try { // create tmp dir
         log.info( "create genome-filtered-reads folder: ${genomeQCReadsPath}" )
     }
 } catch( Throwable t ) {
-    log.error( "could create genome filtered read dir! gid=${genomeId}, filtered-read-dir=${genomeQCReadsPath}" )
+    log.error( "could not create genome filtered read dir! gid=${genomeId}, filtered-read-dir=${genomeQCReadsPath}" )
     System.exit( 1 )
 }
 Files.createFile( genomeQCReadsPath.resolve( 'state.running' ) ) // create state.running
@@ -139,7 +147,7 @@ try { // create tmp dir
     log.debug( "create tmp-trimmed folder: ${tmpTrimmedPath}" )
     Files.createDirectory( tmpTrimmedPath )
 } catch( Throwable t ) {
-    terminate( "could create tmp dir! gid=${genomeId}, tmp-dir=${tmpPath}, trimmed-tmp-dir=${tmpTrimmedPath}", t, genomeQCReadsPath )
+    terminate( "could not create tmp dir! gid=${genomeId}, tmp-dir=${tmpPath}, trimmed-tmp-dir=${tmpTrimmedPath}", t, genomeQCReadsPath )
 }
 
 
@@ -616,7 +624,7 @@ private def runFastQC( Path readsPath, Path tmpPath, Path destinationPath ) {
 
 private def parseFastQCStats( Path fastQCDataPath ) {
 
-    log.trace( "parse ${fastQCDataPath}" )
+    log.debug( "parse ${fastQCDataPath}" )
     def stats = [:]
 
     String data = fastQCDataPath.toFile().text

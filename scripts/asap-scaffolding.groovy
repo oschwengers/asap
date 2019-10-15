@@ -11,7 +11,9 @@ import groovy.io.FileType
 import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
 import groovy.util.CliBuilder
-import org.slf4j.LoggerFactory
+import org.slf4j.*
+import ch.qos.logback.classic.Level
+import ch.qos.logback.classic.Logger
 
 import static bio.comp.jlu.asap.api.Paths.*
 import static bio.comp.jlu.asap.api.GenomeSteps.*
@@ -82,7 +84,7 @@ log.info( "genome-id: ${genomeId}" )
 
 Path rawProjectPath = Paths.get( opts.p )
 if( !Files.exists( rawProjectPath ) ) {
-    println( "Error: project directory (${rawProjectPath}) does not exist!" )
+    log.error( "Error: project directory (${rawProjectPath}) does not exist!" )
     System.exit(1)
 }
 final Path projectPath = rawProjectPath.toRealPath()
@@ -96,6 +98,12 @@ if( !Files.isReadable( configPath ) ) {
     System.exit( 1 )
 }
 final def config = (new JsonSlurper()).parseText( projectPath.resolve( 'config.json' ).toFile().text )
+
+
+if( config.project.debugging ) { // set logging to debug upon user request
+    ch.qos.logback.classic.Logger rootLogger = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger( org.slf4j.Logger.ROOT_LOGGER_NAME )
+    rootLogger.setLevel( ch.qos.logback.classic.Level.DEBUG )
+}
 
 
 final def genome = config.genomes.find( { it.id == genomeId } )
@@ -115,7 +123,7 @@ try { // create tmp dir
         log.info( "create genome-ordered-alignments folder: ${genomeScaffoldsPath}" )
     }
 } catch( Throwable t ) {
-    log.error( "could create genome ordered alignments dir! gid=${genomeId}, ordered-alignments-dir=${genomeScaffoldsPath}" )
+    log.error( "could not create genome ordered alignments dir! gid=${genomeId}, ordered-alignments-dir=${genomeScaffoldsPath}" )
     System.exit( 1 )
 }
 Files.createFile( genomeScaffoldsPath.resolve( 'state.running' ) ) // create state.running
