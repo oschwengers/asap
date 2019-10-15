@@ -219,7 +219,7 @@ taxList.each( {
 
 /********************
  *** Script Logic ***
- *** ANI (nucmer) ***
+ *** 16S (infernal/blast) ***
 ********************/
 
 log.info( 'start 16S rRNA classification via blastn vs SILVA db' )
@@ -237,7 +237,7 @@ log.info( '---------------------------------------------------------------------
 if( pb.start().waitFor() != 0 ) terminate( 'could not exec cmsearch!', taxPath, genomeName )
 log.info( '----------------------------------------------------------------------------------------------' )
 
-def ssus = [:]
+def ssuContigMapList = [:]
 cmOutPath.eachLine( { line ->
     if( line.charAt( 0 ) != '#' ) {
         def cols = line.split( '\\s+' )
@@ -254,49 +254,65 @@ cmOutPath.eachLine( { line ->
             ssu.end = tmp
         }
         if( ssu.complete  &&  ssu.score >= 1000.0f ) {
-            if( ssus.containsKey(ssu.contig) )
-                ssus[ ssu.contig ] << ssu
+            if( ssuContigMapList.containsKey(ssu.contig) )
+                ssuContigMapList[ ssu.contig ] << ssu
             else
-                ssus[ ssu.contig ] = [ ssu ]
+                ssuContigMapList[ ssu.contig ] = [ ssu ]
             log.info( "detected valid 16S rRNA: contig=${ssu.contig}, start=${ssu.start}, end=${ssu.end}, score=${ssu.score}, complete=${ssu.complete}" )
         } else {
             log.debug( "discard unvalid 16S rRNA: contig=${ssu.contig}, start=${ssu.start}, end=${ssu.end}, score=${ssu.score}, complete=${ssu.complete}" )
         }
     }
 } )
-log.debug("ssus raw: ${ssus.values()}")
+def ssus = ssuContigMapList.values().flatten()
+log.debug("ssus raw: ${ssus.size()}")
+ssus.each( {
+    log.debug("ssu: contig=${it.contig}, start=${it.start}, end=${it.end}, score=${it.score}, complete=${it.complete}")
+} )
 assert ssus.size() > 0
 
 def m = genomeSequencePath.text =~ /(?m)^>(.+)$\r?\n([ATGCNatgcn\r\n]+)$/ //include Windows line breaks (\r\n) as user provided scaffolds might be written on Windows systems
 m.each( { match ->
-    String name = match[1].split(' ')[0].trim()
-    def ssuList = ssus[ name ]
+    String contig = match[1].split(' ')[0].trim()
+    def ssuList = ssuContigMapList[ contig ]
     if( ssuList != null ) {
-        String contig = match[2].replaceAll( '[^ATGCNatgcn]', '' )
+        String sequence = match[2].replaceAll( '[^ATGCNatgcn]', '' )
         ssuList.each( { it
-            it.sequence = contig.substring( it.start - 1, it.end )
-            log.info( "extracted 16S rRNA: contig=${name}, seq=${ it.sequence.substring( 0, 50 ) }..." )
+            it.sequence = sequence.substring( it.start - 1, it.end )
+            log.info( "extracted 16S rRNA: contig=${contig}, seq=${ it.sequence.substring( 0, 50 ) }..." )
         } )
     }
+} )
+log.debug("ssus full: ${ssus.size()}")
+ssus.each( {
+    log.debug("ssu: contig=${it.contig}, start=${it.start}, end=${it.end}, score=${it.score}, complete=${it.complete}, seq=${it.sequence}")
 } )
 
 
 // remove 100 % sequence duplicates
-ssuSequences = [:]
-ssus.values().flatten().each( {
-    ssuSequences[ it.sequence ] = it
+ssuContigMapList = [:]
+ssuSequences = new HashSet()
+ssus.each( {
+    if( !ssuSequences.contains( it.sequence ) ) {
+        if( ssuContigMapList.containsKey( it.contig ) )
+            ssuContigMapList[ it.contig ] << it
+        else
+            ssuContigMapList[ it.contig ] = [ it ]
+        log.debug("ssu-added: contig=${it.contig}, start=${it.start}, end=${it.end}, score=${it.score}, complete=${it.complete}, seq=${it.sequence}")
+        ssuSequences << it.sequence
+    }
 } )
-ssus = [:]
-ssuSequences.values().each( {
-    ssus[ it.contig ] = it
-} )
-log.info("ssus w/o dups: ${ssus.values()}")
-assert ssus.size() > 0
+ssus = ssuContigMapList.values().flatten()
+log.info("ssus w/o dups: # ${ssus.size()}")
+ssus.each( {
+    log.debug("ssu: contig=${it.contig}, start=${it.start}, end=${it.end}, score=${it.score}, complete=${it.complete}, seq=${it.sequence}")
+})
 
 
 Path seq16SPath = tmpPath.resolve( '16S.fasta' )
-ssus.values().each( {
-    seq16SPath << ">${it.contig}-${it.start}-${it.end}\n"
+seq16SPath << '' // if no 16S sequence was found Blast will still run though, without results
+ssus.each( {
+    seq16SPath << ">${it.contig}-|-${it.start}-|-${it.end}\n"
     seq16SPath << "${it.sequence}\n"
 } )
 
@@ -326,8 +342,11 @@ float highestScore = 0.0f
 taxList = []
 stdOut.toString().eachLine( { line ->
     def cols = line.split( '\t' )
+    def headerCols = cols[0].split('-\\|-')
     def hit = [
-        contig: cols[0].split('-')[0],
+        contig: headerCols[0],
+        contigStart: headerCols[1] as int,
+        contigEnd: headerCols[2] as int,
         id: cols[1],
         alignmentLength: cols[2] as int,
         nIdent: cols[3]as int,
@@ -335,7 +354,7 @@ stdOut.toString().eachLine( { line ->
         desc: cols[5]
     ]
     log.debug( "raw hit: ${hit}" )
-    String rRNASequence = ssus[ hit.contig ]?.sequence
+    String rRNASequence = ssus.find( { it.contig == hit.contig  &&  it.start == hit.contigStart  &&  it.end == hit.contigEnd } )?.sequence
     if( rRNASequence != null
         &&  (hit.alignmentLength / rRNASequence.length()) >= 0.8
         &&  (hit.nIdent / hit.alignmentLength) >= 0.8
