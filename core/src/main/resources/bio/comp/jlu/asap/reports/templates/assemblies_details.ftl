@@ -39,11 +39,11 @@
                 ]);
                 const chartDataContigCoverage = google.visualization.arrayToDataTable( [
                     ['Name', 'Value'],
-                    <#list chartData.contigCoverage as c> ['${c.name}', ${c.coverage?round}],</#list>
+                    <#list chartData.contigCoverage as c> ['${c.name}', ${c.coverage?round?c}],</#list>
                 ]);
                 const chartDataContigGC = google.visualization.arrayToDataTable( [
                     ['Name', 'Value'],
-                    <#list chartData.contigGC as c> ['${c.name}', ${c.gc?round}],</#list>
+                    <#list chartData.contigGC as c> ['${c.name}', ${c.gc?round?c}],</#list>
                 ]);
 
                 const options = {
