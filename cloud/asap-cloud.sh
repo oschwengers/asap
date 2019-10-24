@@ -118,7 +118,7 @@ ssh-keygen -f "/home/ubuntu/.ssh/known_hosts" -R $BIBIGRID_IP
 echo "#############################################"
 echo "Starting ASA³P"
 echo "#############################################"
-ssh -l ubuntu $BIBIGRID_IP "export ASAP_HOME=/asap/ && java -jar /asap/asap.jar -d $PROJECT_DIR/"
+ssh -l ubuntu $BIBIGRID_IP "export ASAP_HOME=/asap/ && java -jar /asap/asap.jar -p $PROJECT_DIR/"
 
 # Enable StrictHostKeyChecking
 echo "#############################################"

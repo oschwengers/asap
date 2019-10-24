@@ -15,10 +15,10 @@ DATA=""
 SCRATCH=""
 SKIP_CHAR=false
 SKIP_COMP=false
-
+DEBUG=false
 
 usage() {
-  echo "Usage: $0 -d <PROJECT_DIR> [-a <ASAP_DIR>] [-s <SCRATCH_DIR>] [-z] [-c] [-h]" 1>&2
+  echo "Usage: $0 -p <PROJECT_DIR> [-a <ASAP_DIR>] [-s <SCRATCH_DIR>] [-z] [-c] [-h] [-d]" 1>&2
 }
 
 
@@ -33,7 +33,7 @@ while getopts ":d:a:s:zch" options; do
         d)
             if [[ "$OPTARG" == -* ]]; then
                 usage
-                echo "Error: -d requires an argument!"
+                echo "Error: -p requires an argument!"
                 exit_abnormal
             else
                 DATA=${OPTARG}
@@ -62,6 +62,9 @@ while getopts ":d:a:s:zch" options; do
             ;;
         c)
             SKIP_COMP=true
+            ;;
+        d)
+            DEBUG=true
             ;;
         h)
             usage && exit 0;;
@@ -157,6 +160,12 @@ fi
 if [ $SKIP_COMP = true ]; then
     OPT_ARGS="$OPT_ARGS --skip-comp"
     echo "Skip comparative steps: $SKIP_COMP"
+fi
+
+
+if [ $DEBUG = true ]; then
+    OPT_ARGS="$OPT_ARGS --debug"
+    echo "Enable debugging output: $DEBUG"
 fi
 
 

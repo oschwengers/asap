@@ -8,7 +8,9 @@ import java.util.concurrent.*
 import groovy.json.JsonSlurper
 import groovy.util.CliBuilder
 import ch.qos.logback.classic.*
-import org.slf4j.LoggerFactory
+import org.slf4j.*
+import ch.qos.logback.classic.Level
+import ch.qos.logback.classic.Logger
 import bio.comp.jlu.asap.api.*
 import bio.comp.jlu.asap.analyses.AnalysesRunner
 import bio.comp.jlu.asap.genomes.GenomeRunner
@@ -24,7 +26,7 @@ import static bio.comp.jlu.asap.ASAPConstants.*
 
 // check options
 def cli = new CliBuilder( usage: "java -jar asap-${ASAP_VERSION}.jar --dir <project-directory> [-h|-i|-c|-r] [-n] [-l] [-s <#-slots>]" )
-    cli.d( longOpt: 'dir',       args: 1, argName: 'project directory',      required: true,  'The path to a project directory.' )
+    cli.p( longOpt: 'project-dir', args: 1, argName: 'project directory',      required: true,  'The path to a project directory.' )
     cli.s( longOpt: 'slots',     args: 1, argName: '# grid slots',           required: false, 'Amount of grid slots ASA³P should use. Default: 50' )
     cli.h( longOpt: 'help',      args: 0, argName: 'show help',              required: false, 'Show ASAP usage.' )
     cli.i( longOpt: 'info',      args: 0, argName: 'info',                   required: false, 'Show information about a certain project.' )
@@ -34,6 +36,7 @@ def cli = new CliBuilder( usage: "java -jar asap-${ASAP_VERSION}.jar --dir <proj
     cli.l( longOpt: 'local',     args: 0, argName: 'local execution',        required: false, 'Carry out all computations locally on the current host. Use this option if no grid engine is available.' )
     cli.k( longOpt: 'skip-comp', args: 0, argName: 'skip comparatives',      required: false, 'Skip comparative analyses. Use this option to disable pan/core genome and phylogeny steps.' )
     cli.a( longOpt: 'skip-char', args: 0, argName: 'skip characterizations', required: false, 'Skip characterization analyses. Use this option to disable taxonomic classification, MLST, ABR, VF detection and mapping steps. WARNING: this also disables the comparative steps as those partially depend on the characterization steps!' )
+    cli.d( longOpt: 'debug',     args: 0, argName: 'debug',                  required: false, 'Activate intensive logging for debugging purposes.' )
 
 def opts = cli.parse( args )
 if( !opts )
@@ -50,7 +53,6 @@ if( !ASAP_HOME ) {
 }
 
 
-
 // check project dir and config file
 Path rawProjectPath = Paths.get( opts.dir )
 if( !Files.isWritable( rawProjectPath )  ||  !Files.isExecutable( rawProjectPath ) ) {
@@ -60,9 +62,12 @@ if( !Files.isWritable( rawProjectPath )  ||  !Files.isExecutable( rawProjectPath
 Path projectPath = rawProjectPath.toRealPath()
 
 
-//set project path for logging output
-System.setProperty( 'PROJECT_PATH', projectPath.toString() )
+System.setProperty( 'PROJECT_PATH', projectPath.toString() ) // set project path for logging output
 log = LoggerFactory.getLogger( getClass().getName() )
+if( opts.b ) { // set logging to debug upon user request
+    ch.qos.logback.classic.Logger rootLogger = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger( org.slf4j.Logger.ROOT_LOGGER_NAME )
+    rootLogger.setLevel( ch.qos.logback.classic.Level.DEBUG )
+}
 
 
 // clear project folder
@@ -109,13 +114,13 @@ if( opts.n ) {
 log.info( "version: ${ASAP_VERSION}" )
 log.info( "project-path: ${projectPath}" )
 def env = System.getenv()
-log.info( "USER: ${env.USER}" )
-log.info( "CWD: ${env.PWD}" )
-log.info( "HOSTNAME: ${env.HOSTNAME}" )
-log.info( "ASAP_HOME: ${env.ASAP_HOME}" )
-log.info( "PATH: ${env.PATH}" )
+log.debug( "USER: ${env.USER}" )
+log.debug( "CWD: ${env.PWD}" )
+log.debug( "HOSTNAME: ${env.HOSTNAME}" )
+log.debug( "ASAP_HOME: ${env.ASAP_HOME}" )
+log.debug( "PATH: ${env.PATH}" )
 def props = System.getProperties()
-log.info( "file.encoding: ${props['file.encoding']}" )
+log.debug( "file.encoding: ${props['file.encoding']}" )
 
 
 // convert spreadsheet config into JSON config
@@ -131,7 +136,8 @@ if( !Files.exists( configPath ) )
 
 // parse config.json
 def config = (new JsonSlurper()).parseText( configPath.toFile().text )
-config.project.path = projectPath.toString() // store project path into config.json
+config.project.path = projectPath.toString() // store project path
+config.project.debugging = opts.b // store debbuging state
 
 
 if( opts.c ) { // only check config and data files
@@ -213,7 +219,7 @@ if( opts.c ) { // only check config and data files
         config.project.comp = false
 
 
-    log.trace( 'write "state.running" file' )
+    log.debug( 'write "state.running" file' )
     if( Files.exists( projectPath.resolve( 'state.finished' ) ) )
         Files.move( projectPath.resolve( 'state.finished' ), projectPath.resolve( 'state.running' ) )
     else if( Files.exists( projectPath.resolve( 'state.running' ) ) ) {
@@ -303,7 +309,7 @@ if( opts.c ) { // only check config and data files
     printRuntime( config )
 
 
-    log.trace( 'move "state.running" into "state.finished"' )
+    log.debug( 'move "state.running" into "state.finished"' )
     Files.move( projectPath.resolve( 'state.running' ), projectPath.resolve( 'state.finished' ) )
 
 }
@@ -313,9 +319,9 @@ if( opts.c ) { // only check config and data files
 
 def checkConfig( def config, Path projectPath ) {
 
-    log.trace( 'check config file...' )
+    log.debug( 'check config file...' )
 
-    log.trace( 'check user info' )
+    log.debug( 'check user info' )
     if( !config.user  ||  !config.user.name  ||  !config.user.surname  || !config.user.email )
         Misc.exit( log, 'config contains no / wrong user information!', null )
 
@@ -326,7 +332,7 @@ def checkConfig( def config, Path projectPath ) {
     config.user.surname = config.user.surname.trim()
     config.user.email = config.user.email.trim()
 
-    log.trace( 'check project info' )
+    log.debug( 'check project info' )
     if( !config.project  ||  !config.project.name  ||  !config.project.description  ||  !config.project.genus  ||  !config.project.path )
         Misc.exit( log, 'config contains no / wrong project information!', null )
 
@@ -339,7 +345,7 @@ def checkConfig( def config, Path projectPath ) {
     config.project.path = config.project.path.trim()
 
     Path dataPath = projectPath.resolve( PROJECT_PATH_DATA )
-    log.trace( 'check genomes' )
+    log.debug( 'check genomes' )
     if( !config.genomes ) {
         Misc.exit( log, 'config contains no / wrong project information!', null )
     } else {
@@ -404,7 +410,7 @@ def checkConfig( def config, Path projectPath ) {
     }
 
 
-    log.trace( 'check references' )
+    log.debug( 'check references' )
     if( config.references ) {
         Path referencePath = projectPath.resolve( PROJECT_PATH_REFERENCES )
         config.references.each( { ref ->

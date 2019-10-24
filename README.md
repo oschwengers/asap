@@ -94,16 +94,17 @@ $ rm asap.tar.gz
 
 Running an ASA³P Container using the `asap-docker.sh` shell wrapper script:
 ```bash
-$ #<ASAP_DIR>/asap-docker.sh -d <PROJECT_DIR> [-s <SCRATCH_DIR>] [-a ASAP_DIR] [-z] [-c]
-$ asap/asap-docker.sh -d example-lmonocytogenes -s /tmp
+$ #<ASAP_DIR>/asap-docker.sh -p <PROJECT_DIR> [-s <SCRATCH_DIR>] [-a ASAP_DIR] [-z] [-c] [-d]
+$ asap/asap-docker.sh -p example-lmonocytogenes -s /tmp
 ```
 
 Parameters:
-* `-d <PROJECT_DIR>`: mandatory. path to the actual project directory (containing `config.xls` and `data` directory)
+* `-p <PROJECT_DIR>`: mandatory. path to the actual project directory (containing `config.xls` and `data` directory)
 * `-a <ASAP_DIR>`: optional: path to the ASA³P dir in case the script was moved/copied somewhere else
 * `-s <SCRATCH_DIR>`: optional: path to a distinct scratch/tmp dir
 * `-z`: optional: skip characterization steps
 * `-c`: optional: skip comparative analysis steps
+* `-d`: optional: enable verbose debugging logs
 
 **Note**
 1. This shell wrapper script should remain within the ASA³P directory in order to
@@ -123,7 +124,7 @@ $ rm asap.tar.gz
 $ wget https://s3.computational.bio.uni-giessen.de/swift/v1/asap/example-lmonocytogenes-4.tar.gz
 $ tar -xzf example-lmonocytogenes-4.tar.gz
 $ rm example-lmonocytogenes-4.tar.gz
-$ asap/asap-docker.sh -d example-lmonocytogenes-4/
+$ asap/asap-docker.sh -p example-lmonocytogenes-4/
 ```
 
 For further information have a look at the Docker readme (docker/DOCKER.md ).
