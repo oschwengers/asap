@@ -77,11 +77,6 @@ while getopts ":d:a:s:zch" options; do
             ;;
     esac
 done
-echo "DEBUG: GETOPTS: ASAP=${ASAP}"
-echo "DEBUG: GETOPTS: DATA=${DATA}"
-echo "DEBUG: GETOPTS: SCRATCH=${SCRATCH}"
-echo "DEBUG: GETOPTS: SKIP_CHAR=${SKIP_CHAR}"
-echo "DEBUG: GETOPTS: SKIP_COMP=${SKIP_COMP}"
 
 
 # set ASAP_DIR to default path and/or normalize path
@@ -150,7 +145,6 @@ fi
 
 export USER_ID=$(id -u)
 export GROUP_ID=$(id -g)
-echo "DEBUG: USER:GROUP: $USER_ID:$GROUP_ID"
 
 
 OPT_ARGS=""
@@ -164,7 +158,6 @@ if [ $SKIP_COMP = true ]; then
     OPT_ARGS="$OPT_ARGS --skip-comp"
     echo "Skip comparative steps: $SKIP_COMP"
 fi
-echo "DEBUG: OPT_ARGS=$OPT_ARGS"
 
 
 if [ "$SCRATCH" != "" ]; then
@@ -177,8 +170,7 @@ if [ "$SCRATCH" != "" ]; then
         --volume="$SCRATCH:/var/scratch" \
         --volume="/etc/group:/etc/group:ro" \
         --volume="/etc/passwd:/etc/passwd:ro" \
-        --volume="/etc/shadow:/etc/shadow:ro" \
-        oschwengers/asap:v1.2.0-SNAPSHOT \
+        oschwengers/asap:v1.2.0 \
         "$OPT_ARGS"
 else
     sudo docker run \
@@ -189,8 +181,7 @@ else
     --volume="$DATA:/data" \
     --volume="/etc/group:/etc/group:ro" \
     --volume="/etc/passwd:/etc/passwd:ro" \
-    --volume="/etc/shadow:/etc/shadow:ro" \
-    oschwengers/asap:v1.2.0-SNAPSHOT \
+    oschwengers/asap:v1.2.0 \
     "$OPT_ARGS"
 fi
 

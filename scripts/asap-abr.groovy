@@ -174,6 +174,7 @@ String cardOutput = 'card'
 Path cardOutputPath = tmpPath.resolve( "${cardOutput}.json" )
 ProcessBuilder pb = new ProcessBuilder( 'singularity',
     'run',
+    '--no-home',
     '--bind', tmpPath.toString(), // mount tmp (cwd) directory
     SINGULARITY_CARD.toString(), // path to Singularity container file
     '--input_type', 'contig',
