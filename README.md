@@ -98,13 +98,13 @@ $ #<ASAP_DIR>/asap-docker.sh -p <PROJECT_DIR> [-s <SCRATCH_DIR>] [-a ASAP_DIR] [
 $ asap/asap-docker.sh -p example-lmonocytogenes -s /tmp
 ```
 
-Parameters:
-* `-p <PROJECT_DIR>`: mandatory. path to the actual project directory (containing `config.xls` and `data` directory)
+Parameters & Options:
+* `-p <PROJECT_DIR>`: mandatory: path to the actual project directory (containing `config.xls` and `data` directory)
 * `-a <ASAP_DIR>`: optional: path to the ASA³P dir in case the script was moved/copied somewhere else
 * `-s <SCRATCH_DIR>`: optional: path to a distinct scratch/tmp dir
 * `-z`: optional: skip characterization steps
 * `-c`: optional: skip comparative analysis steps
-* `-d`: optional: enable verbose debugging logs
+* `-d`: optional: enable verbose logs for debugging purposes
 
 **Note**
 1. This shell wrapper script should remain within the ASA³P directory in order to
@@ -323,7 +323,7 @@ project-dir
 
 To cite our work, please transitionally refer to:
 
-> ASA3P: An automatic and scalable pipeline for the assembly, annotation and higher level analysis of closely related bacterial isolates. Oliver Schwengers, Andreas Hoek, Moritz Fritzenwanker, Linda Falgenhauer, Torsten Hain, Trinad Chakraborty, Alexander Goesmann. bioRxiv 654319; doi: https://doi.org/10.1101/654319
+> ASA³P: An automatic and scalable pipeline for the assembly, annotation and higher level analysis of closely related bacterial isolates. Oliver Schwengers, Andreas Hoek, Moritz Fritzenwanker, Linda Falgenhauer, Torsten Hain, Trinad Chakraborty, Alexander Goesmann. bioRxiv 654319; doi: https://doi.org/10.1101/654319
 
 ## License
 ASA³P itself is published and distributed under GPL3 license. In contradiction,
@@ -354,3 +354,9 @@ Therefore, we decided to outsource these very specifc pre-processing step.
 Yes you can! Nevertheless, we highly encourage to use either the **Docker**
 container or the **OpenStack** images. As there are too many possible combinations of
 linux distributions and software/database versions, we cannot give any support for this.
+
+* __I'm facing an error/bug. What shall I do?__
+Please start the pipeline with `-d` (verbose debugging logs) and file an issue
+here on GitHub describing the issue and providing the `asap.log` file within your
+project/data directory. If you can already pinpoint the error, please also provide
+the log file of the failed subanalysis.

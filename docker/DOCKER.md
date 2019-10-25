@@ -25,15 +25,18 @@ $ sudo docker pull oschwengers/asap
 For your convenience, hiding all Docker related options and further simplifing
 the process, we offer a custom shell script within the ASA³P directory:
 ```bash
-$ asap/asap-docker.sh -d <PROJECT_DIR> [-a <ASAP_DIR>] [-s <SCRATCH_DIR>] [-z] [-c]
+$ #<ASAP_DIR>/asap-docker.sh -p <PROJECT_DIR> [-s <SCRATCH_DIR>] [-a ASAP_DIR] [-z] [-c] [-d]
+$ asap/asap-docker.sh -p example-lmonocytogenes -s /tmp
 ```
 
 Parameters & Options:
-* `-d <PROJECT_DIR>`: mandatory. path to the actual project directory (containing `config.xls` and `data` directory)
+* `-p <PROJECT_DIR>`: mandatory: path to the actual project directory (containing `config.xls` and `data` directory)
 * `-a <ASAP_DIR>`: optional: path to the ASA³P dir in case the script was moved/copied somewhere else
 * `-s <SCRATCH_DIR>`: optional: path to a distinct scratch/tmp dir
 * `-z`: optional: skip characterization steps
 * `-c`: optional: skip comparative analysis steps
+* `-d`: optional: enable verbose logs for debugging purposes
+
 
 **Note**
 1. This shell wrapper script should remain within the ASA³P directory in order to
@@ -51,18 +54,43 @@ Just download and extract it:
 $ wget https://s3.computational.bio.uni-giessen.de/swift/v1/asap/example-lmonocytogenes.tar.gz
 $ tar -xzf example-lmonocytogenes.tar.gz
 $ rm example-lmonocytogenes.tar.gz
-$ asap/asap-docker.sh -d example-lmonocytogenes/
+$ asap/asap-docker.sh -p example-lmonocytogenes/
 ```
 
 # Advanced usage
 Alternatively, if you would like to gain further control you can start ASA³P directly using Docker:
 ```bash
-$ #sudo docker run --rm --privileged -v <ASAP_DIR>:/asap:ro -v <PROJECT_DIR>:/data oschwengers/asap
-$ sudo docker run --rm --privileged -v /home/ubuntu/asap:/asap:ro -v /home/ubuntu/example-lmonocytogenes:/data --name asap-example oschwengers/asap
+$ USER=$(id -u)
+$ GROUP=$(id -g)
+$ sudo docker run \
+    --rm \
+    --privileged \
+    --user $USER:$GROUP \
+    -v <asap-dir>:/asap/:ro \
+    -v <project-dir>:/data/ \
+    [-v <scratch-dir>:/var/scratch/] \
+    --volume="/etc/group:/etc/group:ro” \
+    --volume="/etc/passwd:/etc/passwd:ro" \
+    oschwengers/asap
+
+#example
+$ USER=$(id -u)
+$ GROUP=$(id -g)
+$ sudo docker run \
+    --rm \
+    --privileged \
+    --user $USER:$GROUP \
+    -v /home/ubuntu/asap:/asap/:ro \
+    -v /home/ubuntu/example-lmonocytogenes:/data/ \
+    [-v /tmp:/var/scratch/] \
+    --volume="/etc/group:/etc/group:ro” \
+    --volume="/etc/passwd:/etc/passwd:ro" \
+    oschwengers/asap
 ```
 
 Necessary options/paramters:
 * `--privileged` provide the Docker container with additional permissions
+* `--user $(id -u):$(id -g)`: passes user and group ids to the Docker container
 * `-v` mounts directories from the host system inside the container. Inside the
 container ASA³P expects the following mount points: /asap, /data, /var/scratch
 
@@ -74,6 +102,13 @@ bundled inside Singularity containers themselves. In order to bind/mount tempora
 directories from inside the Docker container into Singularity containers ASA³P does
 need this **security related** `--privileged` option.
 
+Mounted volumes:
+* `<asap-dir>`: absolute path to downloaded and extracted ASA3P directory (asap.tar.gz)
+* `<project-dir>`: absolute path to local ASA3P project directory (containing config.xls and data subdirectory)
+* `<scratch-dir>`: optionally path to a distinct scratch/tmp dir
+* `/etc/group`: necessary to execute ASA3P as the current user instead of root within the Docker container
+* `/etc/passwd`: necessary to execute ASA3P as the current user instead of root within the Docker container
+
 Optional options/paramters:
 * `--rm` removes ephemeral storage (container & data within in)
 * `--name` specifies a name for this container instance
@@ -83,4 +118,4 @@ Put the Dockerfile into a new directory and build the container:
 ```
 $ docker build <DOCKERFILE> --tag <IMAGE_NAME>
 ```
-This was tested with **Ubuntu 16.04 LTS (Xenial Xerus)** and **Docker version 17.03.1-ce**.
+This was tested on **Ubuntu 16.04 LTS** and **Ubuntu 18.04 LTS** with **Docker version 17.03.1-ce**.
