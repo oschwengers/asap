@@ -47,7 +47,7 @@ class AnalysesRunner extends AnalysisStep {
     @Override
     void setup() throws Throwable {
 
-        log.trace( 'setup' )
+//        log.debug( 'setup' )
 
     }
 
@@ -55,7 +55,7 @@ class AnalysesRunner extends AnalysisStep {
     @Override
     void runStep() throws Throwable {
 
-        log.trace( 'run' )
+        log.debug( 'run' )
 
         // create instances of all available analyses steps
         def analysesSteps = [
@@ -81,7 +81,7 @@ class AnalysesRunner extends AnalysisStep {
     @Override
     void clean() throws Throwable {
 
-        log.trace( 'clean' )
+//        log.debug( 'clean' )
 
     }
 

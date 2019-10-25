@@ -50,7 +50,7 @@ class SNPDetectionStep extends GenomeStep {
     @Override
     boolean check() {
 
-        log.trace( "check: genome.id=${genome.id}" )
+        log.debug( "check: genome.id=${genome.id}" )
         long waitingTime = System.currentTimeMillis()
         while( shouldWait() ) {
             if( System.currentTimeMillis() - waitingTime > MAX_STEP_WAITING_PERIOD ) {
@@ -84,7 +84,7 @@ class SNPDetectionStep extends GenomeStep {
     @Override
     void setup() throws Throwable {
 
-        log.trace( 'setup' )
+//        log.debug( "setup: genome-id=${genome.id}" )
 
     }
 
@@ -92,8 +92,7 @@ class SNPDetectionStep extends GenomeStep {
     @Override
     void runStep() throws Throwable {
 
-        log.trace( 'run' )
-
+        log.debug( "run: genome.id=${genome.id}" )
 
         // submit SNP detection job
         ProcessBuilder pb = new ProcessBuilder()
@@ -158,7 +157,8 @@ class SNPDetectionStep extends GenomeStep {
     @Override
     void clean() throws Throwable  {
 
-        log.trace( 'clean' )
+        log.debug( "clean: genome.id=${genome.id}" )
+        
         snpDetectionPath.eachFileMatch( FileType.FILES, ~/${genomeName}\..+\.log/, {
             if( it.toFile().length() == 0 ) {
                 try{

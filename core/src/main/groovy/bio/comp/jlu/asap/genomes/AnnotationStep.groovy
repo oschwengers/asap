@@ -52,7 +52,7 @@ class AnnotationStep extends GenomeStep {
     @Override
     boolean check() {
 
-        log.trace( "check: genome.id=${genome.id}" )
+        log.debug( "check: genome.id=${genome.id}" )
         if( genome?.stepselection.contains( STEP_DEPENDENCY.getCharCode() ) ) { // draft genome should get scaffolded
 
             // wait for scaffolding step
@@ -107,7 +107,7 @@ class AnnotationStep extends GenomeStep {
     @Override
     void setup() throws Throwable {
 
-        log.trace( "setup genome-id=${genome.id}" )
+        log.debug( "setup: genome-id=${genome.id}" )
 
         // build names, files, directories...
         genomePath = Paths.get( projectPath.toString(), PROJECT_PATH_ANNOTATIONS, genomeName )
@@ -129,7 +129,7 @@ class AnnotationStep extends GenomeStep {
     @Override
     void runStep() throws Throwable {
 
-        log.trace( "run genome-id=${genome.id}" )
+        log.debug( "run: genome.id=${genome.id}" )
 
         // build process
         setStatus( SUBMITTING )
@@ -294,7 +294,8 @@ class AnnotationStep extends GenomeStep {
     @Override
     void clean() throws Throwable  {
 
-        log.trace( "clean genome-id=${genome.id}" )
+        log.debug( "clean: genome.id=${genome.id}" )
+        
         genomePath.eachFile( groovy.io.FileType.FILES, {
             File file = it.toFile()
             if( file.name.endsWith( '.log' )  &&  file.length() == 0 ) {

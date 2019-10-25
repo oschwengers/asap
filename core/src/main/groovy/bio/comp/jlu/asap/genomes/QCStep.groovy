@@ -49,7 +49,7 @@ class QCStep extends GenomeStep {
     @Override
     boolean check() {
 
-        log.trace( "check: genome.id=${genome.id}" )
+        log.debug( "check: genome.id=${genome.id}" )
         boolean readsProvided = false
         genome.data.each( { read ->
             if( FileType.getEnum( read.type )?.getDataType() == DataType.READS ) {
@@ -65,7 +65,7 @@ class QCStep extends GenomeStep {
     @Override
     void setup() throws Throwable {
 
-        log.trace( "setup genome-id=${genome.id}" )
+        log.debug( "setup: genome-id=${genome.id}" )
 
         // build names, files, directories...
         genomePath = Paths.get( projectPath.toString(), PROJECT_PATH_READS_QC, genomeName )
@@ -87,7 +87,7 @@ class QCStep extends GenomeStep {
     @Override
     void runStep() throws Throwable {
 
-        log.trace( "genome.id=${genome.id}: run" )
+        log.debug( "run: genome.id=${genome.id}" )
 
         // build process
         setStatus( SUBMITTING )
@@ -155,7 +155,8 @@ class QCStep extends GenomeStep {
     @Override
     void clean() throws Throwable  {
 
-        log.trace( "genome.id=${genome.id}: clean" )
+        log.debug( "clean: genome.id=${genome.id}" )
+        
         genomePath.eachFile( groovy.io.FileType.FILES, {
             File file = it.toFile ()
             if( file.name.endsWith( '.log' )  &&  file.length() == 0 ) {

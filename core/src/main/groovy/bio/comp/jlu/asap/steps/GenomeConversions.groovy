@@ -73,7 +73,7 @@ class GenomeConversions extends Step {
     @Override
     void run() {
 
-        log.trace( "${stepName} running..." )
+//        log.debug( 'run' )
         config.steps[ stepName ].start = OffsetDateTime.now().toString()
 
 
@@ -91,6 +91,7 @@ class GenomeConversions extends Step {
 
                 setStatus( FINISHED )
                 success = true
+                log.info( "finished ${stepName} step" )
 
             } else {
                 log.warn( "skip ${stepName} step upon failed check!" )
@@ -115,7 +116,7 @@ class GenomeConversions extends Step {
     @Override
     boolean check() {
 
-        log.trace( 'check' )
+//        log.debug( 'check' )
         return true
 
     }
@@ -124,7 +125,7 @@ class GenomeConversions extends Step {
     @Override
     void setup() throws Throwable {
 
-        log.trace( 'setup' )
+        log.debug( 'setup' )
         sequencesPath = projectPath.resolve( PROJECT_PATH_SEQUENCES )
 
     }
@@ -133,7 +134,7 @@ class GenomeConversions extends Step {
     @Override
     void runStep() throws Throwable {
 
-        log.trace( 'run' )
+        log.debug( 'run' )
 
         config.genomes.findAll( { FileType.getEnum( it.data[0].type ) == FileType.GENOME } ).each( { genome ->
 
@@ -157,11 +158,11 @@ SeqIO.convert( "${genbankPath}", "${Format.genbank}", "${fastaPath}", "${Format.
                                 .redirectErrorStream( true )
                                 .redirectOutput( ProcessBuilder.Redirect.INHERIT )
                                 .directory( sequencesPath.toFile() )
-                            log.info( "exec: ${pb.command()}" )
-                            log.info( '----------------------------------------------------------------------------------------------' )
+                            log.debug( "exec: ${pb.command()}" )
+                            log.debug( '----------------------------------------------------------------------------------------------' )
                             int exitCode = pb.start().waitFor()
                             if( exitCode != 0 )  throw new IllegalStateException( "exitCode = ${exitCode}" )
-                            log.info( '----------------------------------------------------------------------------------------------' )
+                            log.debug( '----------------------------------------------------------------------------------------------' )
                         } catch( Throwable t ) {
                             Misc.exit( log, 'genbank->fasta conversion failed!', t )
                         }
@@ -180,11 +181,11 @@ SeqIO.convert( "${emblPath}", "${Format.embl}", "${fastaPath}", "${Format.fasta}
                                 .redirectErrorStream( true )
                                 .redirectOutput( ProcessBuilder.Redirect.INHERIT )
                                 .directory( sequencesPath.toFile() )
-                            log.info( "exec: ${pb.command()}" )
-                            log.info( '----------------------------------------------------------------------------------------------' )
+                            log.debug( "exec: ${pb.command()}" )
+                            log.debug( '----------------------------------------------------------------------------------------------' )
                             int exitCode = pb.start().waitFor()
                             if( exitCode != 0 )  throw new IllegalStateException( "exitCode = ${exitCode}" )
-                            log.info( '----------------------------------------------------------------------------------------------' )
+                            log.debug( '----------------------------------------------------------------------------------------------' )
                         } catch( Throwable t ) {
                             Misc.exit( log, 'embl->fasta conversion failed!', t )
                         }
@@ -202,11 +203,11 @@ SeqIO.convert( "${emblPath}", "${Format.embl}", "${genbankPath}", "${Format.genb
                                 .redirectErrorStream( true )
                                 .redirectOutput( ProcessBuilder.Redirect.INHERIT )
                                 .directory( sequencesPath.toFile() )
-                            log.info( "exec: ${pb.command()}" )
-                            log.info( '----------------------------------------------------------------------------------------------' )
+                            log.debug( "exec: ${pb.command()}" )
+                            log.debug( '----------------------------------------------------------------------------------------------' )
                             int exitCode = pb.start().waitFor()
                             if( exitCode != 0 )  throw new IllegalStateException( "exitCode = ${exitCode}" )
-                            log.info( '----------------------------------------------------------------------------------------------' )
+                            log.debug( '----------------------------------------------------------------------------------------------' )
                         } catch( Throwable t ) {
                             Misc.exit( log, 'embl->genbank conversion failed!', t )
                         }
@@ -253,7 +254,7 @@ SeqIO.convert( "${emblPath}", "${Format.embl}", "${genbankPath}", "${Format.genb
     @Override
     void clean() throws Throwable {
 
-        log.trace( 'clean' )
+//        log.debug( 'clean' )
 
     }
 

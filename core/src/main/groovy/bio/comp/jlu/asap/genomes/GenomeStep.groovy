@@ -73,7 +73,7 @@ abstract class GenomeStep extends Step {
     @Override
     void run() {
 
-        log.trace( "${stepName} running..." )
+//        log.debug( "start ${stepName}: genome.id=${genome.id}" )
         try {
 
             if( check() ) {
@@ -89,6 +89,7 @@ abstract class GenomeStep extends Step {
                 genome.steps[ stepName ].end = OffsetDateTime.now().toString()
                 setStatus( FINISHED )
                 success = true
+                log.info( "finished ${stepName} step" )
 
             } else {
                 log.warn( "skip ${stepName} genome step for genome id=${genome.id} upon failed check!" )

@@ -43,7 +43,7 @@ class MLSTReportStep extends ReportStep {
     @Override
     protected void setup() throws Throwable {
 
-        log.trace( 'setup' )
+        log.debug( "setup" )
         Files.createDirectory( mlstReportPath )
 
     }
@@ -52,7 +52,7 @@ class MLSTReportStep extends ReportStep {
     @Override
     protected void runStep() throws Throwable {
 
-        log.trace( 'run' )
+        log.debug( "run" )
 
         def steps = [
             finished : [],
@@ -109,7 +109,6 @@ class MLSTReportStep extends ReportStep {
 
         // sort and aggregate STs, CCs and lineages
         profileSTs = profileSTs.sort( { a, b -> (b.value as int) <=> (a.value as int) } )
-        log.debug( "st: ${profileSTs}" )
         if( profileSTs.keySet().size() > 10 ) {
             int i = 0
             def tmp = [misc:0]
@@ -118,13 +117,11 @@ class MLSTReportStep extends ReportStep {
                 else tmp.misc += profileSTs[ st ]
                 i++
             }
-            log.debug( "st after: ${profileSTs}" )
             profileSTs = tmp
         }
         model.profileSTs = profileSTs
 
         profileCCs = profileCCs.sort( { a, b -> (b.value as int) <=> (a.value as int) } )
-        log.debug( "cc: ${profileCCs}" )
         if( profileCCs.keySet().size() > 10 ) {
             int i = 0
             def tmp = [misc:0]
@@ -133,7 +130,6 @@ class MLSTReportStep extends ReportStep {
                 else tmp.misc += profileCCs[ cc ]
                 i++
             }
-            log.debug( "cc after: ${profileCCs}" )
             profileCCs = tmp
         }
         if( profileCCs[ '-' ] ) {
@@ -143,7 +139,6 @@ class MLSTReportStep extends ReportStep {
         model.profileCCs = profileCCs
 
         profileLineages = profileLineages.sort( { a, b -> (b.value as int) <=> (a.value as int) } )
-        log.debug( "st: ${profileLineages}" )
         if( profileLineages.keySet().size() > 10 ) {
             int i = 0
             def tmp = [misc:0]
@@ -152,7 +147,6 @@ class MLSTReportStep extends ReportStep {
                 else tmp.misc += profileLineages[ ll ]
                 i++
             }
-            log.debug( "ll after: ${profileLineages}" )
             profileLineages = tmp
         }
         if( profileLineages[ '-' ] ) {
@@ -176,7 +170,7 @@ class MLSTReportStep extends ReportStep {
     @Override
     protected void clean() throws Throwable {
 
-        log.trace( 'clean' )
+//        log.debug( "clean" )
 
     }
 

@@ -52,7 +52,7 @@ class CorePanReportStep extends ReportStep {
     @Override
     protected void setup() throws Throwable {
 
-        log.trace( 'setup' )
+        log.debug( "setup" )
 
         // Perform any init logic here
         Files.createDirectory( corePanReportsPath )
@@ -71,7 +71,7 @@ class CorePanReportStep extends ReportStep {
     @Override
     protected void runStep() throws Throwable {
 
-        log.trace( 'run' )
+        log.debug( "run" )
 
         model.status = config.analyses[ CORE_PAN.getAbbreviation() ]?.status
 
@@ -181,7 +181,7 @@ class CorePanReportStep extends ReportStep {
     @Override
     protected void clean() throws Throwable {
 
-        log.trace( 'clean' )
+//        log.debug( "clean" )
     }
 
 }

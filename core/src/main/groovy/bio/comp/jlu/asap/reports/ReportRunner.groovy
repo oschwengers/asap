@@ -53,7 +53,7 @@ class ReportRunner extends ReportStep {
     @Override
     void setup() throws Throwable {
 
-        log.trace( 'setup' )
+        log.debug( 'setup' )
 
         // delete & recreate reports dir (deleting all prior content!
         boolean deleted = new File( reportsPath.toString() ).deleteDir()
@@ -92,7 +92,7 @@ class ReportRunner extends ReportStep {
 
     void runStep() throws Throwable {
 
-        log.trace( 'run' )
+        log.debug( 'run' )
 
         // create reporting steps
         def reportSteps = [
@@ -133,7 +133,7 @@ class ReportRunner extends ReportStep {
     @Override
     void clean() throws Throwable {
 
-        log.trace( 'clean' )
+        log.debug( 'clean' )
 
     }
 

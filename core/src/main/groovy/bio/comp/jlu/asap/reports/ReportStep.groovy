@@ -107,6 +107,7 @@ abstract class ReportStep extends Step {
 
                 setStatus( FINISHED )
                 success = true
+                log.info( "finished ${stepName} report step" )
 
             } else {
                 log.warn( "skip ${stepName} report step upon failed check!" )

@@ -49,7 +49,7 @@ class ScaffoldingStep extends GenomeStep {
     @Override
     boolean check() {
 
-        log.trace( "check: genome.id=${genome.id}" )
+        log.debug( "check: genome.id=${genome.id}" )
         if( genome?.stepselection.contains( STEP_DEPENDENCY.getCharCode() ) ) {
             // wait for assembly step
             long waitingTime = System.currentTimeMillis()
@@ -88,7 +88,7 @@ class ScaffoldingStep extends GenomeStep {
     @Override
     void setup() throws Throwable {
 
-        log.trace( "setup genome-id=${genome.id}" )
+        log.debug( "setup: genome-id=${genome.id}" )
 
         // build names, files, directories...
         genomePath = Paths.get( projectPath.toString(), PROJECT_PATH_SCAFFOLDS, genomeName )
@@ -110,7 +110,7 @@ class ScaffoldingStep extends GenomeStep {
     @Override
     void runStep() throws Throwable {
 
-        log.trace( "run genome-id=${genome.id}" )
+        log.debug( "run: genome.id=${genome.id}" )
 
         // build process
         setStatus( SUBMITTING )
@@ -176,7 +176,8 @@ class ScaffoldingStep extends GenomeStep {
     @Override
     void clean() throws Throwable  {
 
-        log.trace( "genome.id=${genome.id}: clean" )
+        log.debug( "clean: genome.id=${genome.id}" )
+        
         genomePath.eachFile( groovy.io.FileType.FILES, {
             File file = it.toFile()
             if( file.name.endsWith( '.log' )  &&  file.length() == 0 ) {

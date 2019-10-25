@@ -69,9 +69,8 @@ class SNPAnnotationSetup extends Step {
     @Override
     void run() {
 
-        log.trace( "${stepName} running..." )
+//        log.debug( 'run' )
         config.steps[ stepName ].start = OffsetDateTime.now().toString()
-
 
         try {
 
@@ -87,6 +86,7 @@ class SNPAnnotationSetup extends Step {
 
                 setStatus( FINISHED )
                 success = true
+                log.info( "finished ${stepName} step" )
 
             } else {
                 log.warn( "skip ${stepName} step upon failed check!" )
@@ -111,7 +111,7 @@ class SNPAnnotationSetup extends Step {
     @Override
     boolean check() {
 
-        log.trace( 'check' )
+        log.debug( 'check' )
 
         // if reference genome is provided as fasta we have no annotation to setup
         if( FileFormat.FASTA == FileFormat.getEnum( config.references[0] ) )
@@ -151,7 +151,7 @@ class SNPAnnotationSetup extends Step {
     @Override
     void setup() throws Throwable {
 
-        log.trace( 'setup' )
+//        log.debug( 'setup' )
 
     }
 
@@ -159,7 +159,7 @@ class SNPAnnotationSetup extends Step {
     @Override
     void runStep() throws Throwable {
 
-        log.trace( 'run' )
+        log.debug( 'run' )
 
         // setup snpEff reference dirs / files
         String ref = config.references[0]
@@ -213,7 +213,7 @@ codon.Bacterial_and_Plant_Plastid			: TTT/F, TTC/F, TTA/L, TTG/L+, TCT/S, TCC/S,
     @Override
     void clean() throws Throwable {
 
-        log.trace( 'clean' )
+//        log.debug( 'clean' )
 
     }
 

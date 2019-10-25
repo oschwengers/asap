@@ -56,7 +56,7 @@ class GenomeRunner extends GenomeStep {
     @Override
     void runStep() throws Throwable {
 
-        log.info( "genome-id=${genome.id}: running..." )
+        log.info( "genome-id=${genome.id}: start analysis" )
 
         // create instances of all available analyses steps
         def genomeSteps = [

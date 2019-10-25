@@ -81,7 +81,8 @@ class ABRReportStep extends ReportStep {
     @Override
     protected void setup() throws Throwable {
 
-        log.trace( 'setup' )
+        log.debug( "setup" )
+
         Files.createDirectory( abrReportPath )
         Path jsPath = reportsPath.resolve( 'js' )
         String packagePrefix = '/bio/comp/jlu/asap/reports/templates'
@@ -98,7 +99,7 @@ class ABRReportStep extends ReportStep {
     @Override
     protected void runStep() throws Throwable {
 
-        log.trace( 'run' )
+        log.debug( "run" )
 
         def steps = [
             finished : [],
@@ -169,7 +170,7 @@ class ABRReportStep extends ReportStep {
     @Override
     protected void clean() throws Throwable {
 
-        log.trace( 'clean' )
+//        log.debug( "clean" )
 
     }
 

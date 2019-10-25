@@ -70,8 +70,36 @@ if( opts.b ) { // set logging to debug upon user request
 }
 
 
-// clear project folder
-if( opts.n ) {
+log.info( "version: ${ASAP_VERSION}" )
+def env = System.getenv()
+log.debug( "USER: ${env.USER}" )
+log.debug( "CWD: ${env.PWD}" )
+log.debug( "HOSTNAME: ${env.HOSTNAME}" )
+log.debug( "ASAP_HOME: ${env.ASAP_HOME}" )
+log.debug( "PATH: ${env.PATH}" )
+def props = System.getProperties()
+log.debug( "user.name: ${props['user.name']}" )
+log.debug( "user.dir: ${props['user.dir']}" )
+log.debug( "user.home: ${props['user.home']}" )
+log.debug( "os.name: ${props['os.name']}" )
+log.debug( "os.version: ${props['os.version']}" )
+log.debug( "file.encoding: ${props['file.encoding']}" )
+log.info( "project-path: ${projectPath}" )
+log.info( "command line: ${args}" )
+log.debug( "option -s/--slots: ${opts.s}" )
+log.debug( "option -i/--info: ${opts.i}" )
+log.debug( "option -r/--reports: ${opts.r}" )
+log.debug( "option -c/--check: ${opts.c}" )
+log.debug( "option -n/--clean: ${opts.n}" )
+log.debug( "option -l/--local: ${opts.l}" )
+log.debug( "option -k/--skip-comp: ${opts.k}" )
+log.debug( "option -a/--skip-char: ${opts.a}" )
+log.debug( "option -d/--debug: ${opts.d}" )
+
+
+if( opts.n ) { // clear project folder
+
+    log.info( "option: -n/--clean" )
     [
         PROJECT_PATH_SEQUENCES,
         PROJECT_PATH_ABR,
@@ -111,18 +139,6 @@ if( opts.n ) {
 }
 
 
-log.info( "version: ${ASAP_VERSION}" )
-log.info( "project-path: ${projectPath}" )
-def env = System.getenv()
-log.debug( "USER: ${env.USER}" )
-log.debug( "CWD: ${env.PWD}" )
-log.debug( "HOSTNAME: ${env.HOSTNAME}" )
-log.debug( "ASAP_HOME: ${env.ASAP_HOME}" )
-log.debug( "PATH: ${env.PATH}" )
-def props = System.getProperties()
-log.debug( "file.encoding: ${props['file.encoding']}" )
-
-
 // convert spreadsheet config into JSON config
 try {
     ConfigWriterThread.convertConfig( log, projectPath )
@@ -142,6 +158,8 @@ config.project.debugging = opts.b // store debbuging state
 
 if( opts.c ) { // only check config and data files
 
+    log.info( "option: -c/--check" )
+
     checkConfig( config, projectPath )
     log.info( 'checked spreadsheet config and project data files.' )
     println( 'checked spreadsheet config and project data files.' )
@@ -149,6 +167,7 @@ if( opts.c ) { // only check config and data files
 
 } else if( opts.i ) { // only show info and statistics about current pipeline
 
+    log.info( "option: -i/--info" )
 
     // print config.json
     printInfo( config )
@@ -157,8 +176,9 @@ if( opts.c ) { // only check config and data files
     if( Files.exists( projectPath.resolve( 'state.finished' ) ) )
         printRuntime( config )
 
-
 } else if( opts.r ) { // (re)create reports
+
+    log.info( "option: -r/--reports" )
 
     if( !Files.exists( projectPath.resolve( 'state.finished' ) ) )
         Misc.exit( log, 'couldn\'t detect a former pipeline run! (no state.finished)', null )
@@ -171,14 +191,13 @@ if( opts.c ) { // only check config and data files
         reportRunner.start()
         reportRunner.waitFor()
 
-
     // shutdown config writer thread
     configWriterThread.finish()
     configWriterThread.join()
 
-
 } else { // normal setup, start pipeline
 
+    log.info( "option: none -> normal execution" )
 
     /* perform initialization code
      * before pipeline steps start

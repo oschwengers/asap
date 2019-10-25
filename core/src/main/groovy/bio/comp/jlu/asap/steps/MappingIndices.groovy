@@ -63,7 +63,7 @@ class MappingIndices extends Step {
     @Override
     void run() {
 
-        log.trace( "${stepName} running..." )
+//        log.debug( 'run' )
         config.steps[ stepName ].start = OffsetDateTime.now().toString()
 
 
@@ -81,6 +81,7 @@ class MappingIndices extends Step {
 
                 setStatus( FINISHED )
                 success = true
+                log.info( "finished ${stepName} step" )
 
             } else {
                 log.warn( "skip ${stepName} step upon failed check!" )
@@ -105,7 +106,7 @@ class MappingIndices extends Step {
     @Override
     boolean check() {
 
-        log.trace( 'check' )
+        log.debug( 'check' )
         // wait for mapping step
         long waitingTime = System.currentTimeMillis()
         while( shouldWait() ) {
@@ -140,7 +141,7 @@ class MappingIndices extends Step {
     @Override
     void setup() throws Throwable {
 
-        log.trace( 'setup' )
+//        log.debug( 'setup' )
 
     }
 
@@ -148,7 +149,7 @@ class MappingIndices extends Step {
     @Override
     void runStep() throws Throwable {
 
-        log.trace( 'run' )
+        log.debug( 'run' )
 
         // build bowtie2 indices
         Path referencesPath = projectPath.resolve( PROJECT_PATH_REFERENCES )
@@ -159,11 +160,11 @@ class MappingIndices extends Step {
             log.debug( "reference-file: ${ref}, fileName: ${fileName}, fasta: ${fastaPath}" )
             ProcessBuilder pb = new ProcessBuilder( BOWTIE2_BUILD, "${fastaPath}", "${fileName}" )
                 pb.directory( referencesPath.toFile() )
-            log.info( "exec: ${pb.command()}" )
-            log.info( '----------------------------------------------------------------------------------------------' )
+            log.debug( "exec: ${pb.command()}" )
+            log.debug( '----------------------------------------------------------------------------------------------' )
             int exitCode = pb.start().waitFor()
             if( exitCode != 0 )  throw new IllegalStateException( "exitCode = ${exitCode}" )
-            log.info( '----------------------------------------------------------------------------------------------' )
+            log.debug( '----------------------------------------------------------------------------------------------' )
 
         } )
 
@@ -173,7 +174,7 @@ class MappingIndices extends Step {
     @Override
     void clean() throws Throwable {
 
-        log.trace( 'clean' )
+//        log.debug( 'clean' )
 
     }
 

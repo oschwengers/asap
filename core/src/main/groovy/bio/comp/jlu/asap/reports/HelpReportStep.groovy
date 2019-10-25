@@ -40,9 +40,7 @@ class HelpReportStep extends ReportStep {
     @Override
     protected void setup() throws Throwable {
 
-        log.trace( 'setup' )
-
-        // Perform any init logic here
+//        log.debug( 'setup' )
 
     }
 
@@ -50,7 +48,7 @@ class HelpReportStep extends ReportStep {
     @Override
     protected void runStep() throws Throwable {
 
-        log.trace( 'run' )
+//        log.debug( 'run' )
 
         Template template = templateConfiguration.getTemplate( 'help.ftl' )
         Writer writer = new StringWriter()
@@ -63,7 +61,7 @@ class HelpReportStep extends ReportStep {
     @Override
     protected void clean() throws Throwable {
 
-        log.trace( 'clean' )
+//        log.debug( 'clean' )
 
     }
 

@@ -41,7 +41,7 @@ class PhylogenyAnalysis extends AnalysisStep {
     @Override
     boolean check() {
 
-        log.trace( 'check' )
+//        log.debug( 'check' )
 
         return true
 
@@ -51,10 +51,9 @@ class PhylogenyAnalysis extends AnalysisStep {
     @Override
     void setup() throws Throwable {
 
-        log.trace( 'setup' )
+        log.debug( 'setup' )
 
         // check analyes/phylotree directory
-        log.debug( 'check analyses/phylotree dir...' )
         try {
             if( Files.exists( phylogenyPath ) ) {
                 phylogenyPath.deleteDir()
@@ -73,7 +72,7 @@ class PhylogenyAnalysis extends AnalysisStep {
     @Override
     void runStep() throws Throwable {
 
-        log.trace( 'run' )
+        log.debug( 'run' )
 
         // build process
         ProcessBuilder pb = new ProcessBuilder()
@@ -119,7 +118,8 @@ class PhylogenyAnalysis extends AnalysisStep {
     @Override
     void clean() throws Throwable  {
 
-        log.trace( 'clean' )
+        log.debug( 'clean' )
+        
         phylogenyPath.eachFile( FileType.FILES, {
             File file = it.toFile()
             if( file.name.endsWith( '.log' )  &&  file.length() == 0 ) {

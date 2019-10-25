@@ -40,7 +40,7 @@ class CorePanGenomeAnalysis extends AnalysisStep {
     @Override
     boolean check() {
 
-        log.trace( 'check' )
+//        log.debug( 'check' )
 
         return true
 
@@ -50,10 +50,9 @@ class CorePanGenomeAnalysis extends AnalysisStep {
     @Override
     void setup() throws Throwable {
 
-        log.trace( 'setup' )
+        log.debug( 'setup' )
 
         // check analyes/phylotree directory
-        log.debug( 'check corepan dir...' )
         try {
             if( Files.exists( corePanPath ) ) {
                 corePanPath.deleteDir()
@@ -72,7 +71,7 @@ class CorePanGenomeAnalysis extends AnalysisStep {
     @Override
     void runStep() throws Throwable {
 
-        log.trace( 'run' )
+        log.debug( 'run' )
 
         // build process
         ProcessBuilder pb = new ProcessBuilder()
@@ -124,12 +123,12 @@ class CorePanGenomeAnalysis extends AnalysisStep {
     @Override
     void clean() throws Throwable  {
 
-        log.trace( 'clean' )
+        log.debug( 'clean' )
+
         corePanPath.eachFile( FileType.FILES, {
             File file = it.toFile()
             if( file.name.endsWith( '.log' )  &&  file.length() == 0 ) {
                 try{
-                    log.debug( "remove empty log file: ${file}" )
                     Files.delete( it )
                 } catch( Exception ex ) {
                     log.warn( "could not delete file: ${file}", ex )

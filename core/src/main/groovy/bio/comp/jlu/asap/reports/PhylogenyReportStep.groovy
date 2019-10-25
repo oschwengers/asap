@@ -34,7 +34,7 @@ class PhylogenyReportStep extends ReportStep {
     @Override
     protected void setup() throws Throwable {
 
-        log.trace( 'setup' )
+        log.debug( 'setup' )
 
         if( config?.analyses[ PHYLOGENY.getAbbreviation() ]?.status == FINISHED.toString() ) {
 
@@ -54,7 +54,7 @@ class PhylogenyReportStep extends ReportStep {
     @Override
     protected void runStep() throws Throwable {
 
-        log.trace( 'run' )
+        log.debug( 'run' )
 
         // build pyholgeny.html
         model.status = config.analyses[ PHYLOGENY.getAbbreviation() ]?.status
@@ -91,7 +91,7 @@ class PhylogenyReportStep extends ReportStep {
     @Override
     protected void clean() throws Throwable {
 
-        log.trace( 'clean' )
+//        log.debug( 'clean' )
 
     }
 

@@ -51,7 +51,7 @@ class MappingStep extends GenomeStep {
     @Override
     boolean check() {
 
-        log.trace( "check: genome.id=${genome.id}" )
+        log.debug( "check: genome.id=${genome.id}" )
         long waitingTime = System.currentTimeMillis()
         while( shouldWait() ) {
             if( System.currentTimeMillis() - waitingTime > MAX_STEP_WAITING_PERIOD ) {
@@ -85,7 +85,7 @@ class MappingStep extends GenomeStep {
     @Override
     void setup() throws Throwable {
 
-        log.trace( 'setup' )
+        log.debug( "setup: genome-id=${genome.id}" )
 
     }
 
@@ -93,8 +93,7 @@ class MappingStep extends GenomeStep {
     @Override
     void runStep() throws Throwable {
 
-        log.trace( 'run' )
-
+        log.debug( "run: genome.id=${genome.id}" )
 
         // submit mapping job
         ProcessBuilder pb = new ProcessBuilder()
@@ -160,7 +159,8 @@ class MappingStep extends GenomeStep {
     @Override
     void clean() throws Throwable  {
 
-        log.trace( 'clean' )
+        log.debug( "clean: genome.id=${genome.id}" )
+        
         mappingsPath.eachFileMatch( FileType.FILES, ~/${genomeName}\..+\.log/, {
             File file = it.toFile()
             if( file.name.endsWith( '.log' )  &&  file.length() == 0 ) {

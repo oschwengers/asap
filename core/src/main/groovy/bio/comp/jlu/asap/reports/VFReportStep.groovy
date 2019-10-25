@@ -44,7 +44,7 @@ class VFReportStep extends ReportStep {
     @Override
     protected void setup() throws Throwable {
 
-        log.trace( 'setup' )
+        log.debug( 'setup' )
         Files.createDirectory( vfReportPath )
 
     }
@@ -53,7 +53,7 @@ class VFReportStep extends ReportStep {
     @Override
     protected void runStep() throws Throwable {
 
-        log.trace( 'run' )
+        log.debug( 'run' )
 
         def steps = [
             finished : [],
@@ -123,7 +123,7 @@ class VFReportStep extends ReportStep {
     @Override
     protected void clean() throws Throwable {
 
-        log.trace( 'clean' )
+//        log.debug( 'clean' )
 
     }
 

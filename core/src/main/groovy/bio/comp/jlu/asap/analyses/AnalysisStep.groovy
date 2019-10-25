@@ -66,7 +66,7 @@ abstract class AnalysisStep extends Step {
     @Override
     void run() {
 
-        log.trace( "${stepName} running..." )
+//        log.debug( "start ${stepName}" )
         try {
 
             if( check() ) {
@@ -82,6 +82,7 @@ abstract class AnalysisStep extends Step {
                 config.analyses[ stepName ].end = OffsetDateTime.now().toString()
                 setStatus( FINISHED )
                 success = true
+                log.info( "finished ${stepName} step" )
 
             } else {
                 log.warn( "skip ${stepName} analysis step upon failed check!" )
