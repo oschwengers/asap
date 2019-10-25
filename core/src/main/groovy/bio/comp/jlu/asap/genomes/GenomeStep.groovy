@@ -89,16 +89,16 @@ abstract class GenomeStep extends Step {
                 genome.steps[ stepName ].end = OffsetDateTime.now().toString()
                 setStatus( FINISHED )
                 success = true
-                log.info( "finished ${stepName} step" )
+                log.info( "finished ${stepName} step: genome.id=${genome.id}" )
 
             } else {
-                log.warn( "skip ${stepName} genome step for genome id=${genome.id} upon failed check!" )
+                log.warn( "skip ${stepName} step! check failed: genome.id=${genome.id}" )
                 success = false
                 setStatus( SKIPPED )
             }
 
         } catch( Throwable ex ) {
-            log.error( "${stepName} genome step for genome id=${genome.id} aborted!", ex )
+            log.error( "${stepName} step aborted! genome.id=${genome.id}", ex )
             success = false
             setStatus( FAILED )
             genome.steps[ stepName ].error = ex.getLocalizedMessage()

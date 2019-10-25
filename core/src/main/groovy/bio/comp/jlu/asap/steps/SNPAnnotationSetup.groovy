@@ -89,7 +89,7 @@ class SNPAnnotationSetup extends Step {
                 log.info( "finished ${stepName} step" )
 
             } else {
-                log.warn( "skip ${stepName} step upon failed check!" )
+                log.warn( "skip ${stepName} step! check failed!" )
                 success = false
                 setStatus( SKIPPED )
             }

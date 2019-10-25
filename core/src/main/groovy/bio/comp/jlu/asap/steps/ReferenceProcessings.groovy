@@ -92,7 +92,7 @@ class ReferenceProcessings extends Step {
 
                 setStatus( FINISHED )
                 success = true
-                log.info( "finished ${stepName} step" )
+                log.warn( "skip ${stepName} step! check failed!" )
 
             } else {
                 log.warn( "skip ${stepName} step upon failed check!" )
