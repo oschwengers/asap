@@ -41,7 +41,7 @@ def cli = new CliBuilder( usage: "java -jar asap-${ASAP_VERSION}.jar --dir <proj
 def opts = cli.parse( args )
 if( !opts )
     return
-else if( opts.h  ||  !opts.dir )
+else if( opts.h  ||  !opts.p )
     cli.usage()
 
 
@@ -54,7 +54,7 @@ if( !ASAP_HOME ) {
 
 
 // check project dir and config file
-Path rawProjectPath = Paths.get( opts.dir )
+Path rawProjectPath = Paths.get( opts.p )
 if( !Files.isWritable( rawProjectPath )  ||  !Files.isExecutable( rawProjectPath ) ) {
     println( "Error: project directory (${rawProjectPath}) does not exist or wrong permissions (read/write/execute) set!" )
     System.exit(1)
