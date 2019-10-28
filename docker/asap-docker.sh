@@ -18,7 +18,7 @@ SKIP_COMP=false
 DEBUG=false
 
 usage() {
-  echo "Usage: $0 -p <PROJECT_DIR> [-a <ASAP_DIR>] [-s <SCRATCH_DIR>] [-z] [-c] [-h] [-d]" 1>&2
+  echo "Usage: $0 -p <PROJECT_DIR> [-a <ASAP_DIR>] [-s <SCRATCH_DIR>] [-z] [-c] [-d] [-h]" 1>&2
 }
 
 
@@ -28,9 +28,9 @@ exit_abnormal() {
 }
 
 
-while getopts ":d:a:s:zch" options; do
+while getopts ":p:a:s:zcdh" options; do
     case "${options}" in
-        d)
+        p)
             if [[ "$OPTARG" == -* ]]; then
                 usage
                 echo "Error: -p requires an argument!"
