@@ -173,14 +173,10 @@ class AnnotationReportStep extends ReportStep {
         def genomeSizes = (model.steps.finished*.genomeSize).findAll( { it != null } ).collect { (it as double) / 1000000 }
         def noGenes = (model.steps.finished*.noGenes).findAll( { it != null } )
         def noHypGenes = (model.steps.finished*.noHypProt).findAll( { it != null } )
-        log.debug( "genomeSizes: ${genomeSizes}" )
-        log.debug( "noGenes: ${noGenes}" )
-        log.debug( "noHypGenes: ${noHypGenes}" )
         assert genomeSizes.size() == noGenes.size()
         assert noGenes.size() == noHypGenes.size()
         def sumAnnotations = []
         noGenes.eachWithIndex( { it, i -> sumAnnotations << (it as long) - (noHypGenes[i] as long) } )
-        log.debug( "sumAnnotation: ${sumAnnotations}" )
         model << [
             genomeSizes: genomeSizes.join( ',' ),
             noPredictions: noGenes.join( ',' ),
