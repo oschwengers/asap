@@ -39,4 +39,4 @@ RUN mkdir /data/
 WORKDIR /data
 ENV ASAP_HOME=/asap
 
-ENTRYPOINT [ "java", "-jar", "/asap/asap.jar", "--dir", "/data", "--local" ]
+ENTRYPOINT [ "java", "-jar", "/asap/asap.jar", "--project-dir", "/data", "--local" ]
