@@ -13,9 +13,9 @@ set -e
 ASAP=""
 DATA=""
 SCRATCH=""
-SKIP_CHAR=false
-SKIP_COMP=false
-DEBUG=false
+SKIP_CHAR=""
+SKIP_COMP=""
+DEBUG=""
 
 usage() {
   echo "Usage: $0 -p <PROJECT_DIR> [-a <ASAP_DIR>] [-s <SCRATCH_DIR>] [-z] [-c] [-d] [-h]" 1>&2
@@ -58,13 +58,16 @@ while getopts ":p:a:s:zcdh" options; do
             fi
             ;;
         z)
-            SKIP_CHAR=true
+            SKIP_CHAR="--skip-char"
+            echo "Skip characterization steps"
             ;;
         c)
-            SKIP_COMP=true
+            SKIP_COMP="--skip-comp"
+            echo "Skip comparative steps"
             ;;
         d)
-            DEBUG=true
+            DEBUG="--debug"
+            echo "Enable debugging output: $DEBUG"
             ;;
         h)
             usage && exit 0;;
@@ -150,25 +153,6 @@ export USER_ID=$(id -u)
 export GROUP_ID=$(id -g)
 
 
-OPT_ARGS=""
-if [ $SKIP_CHAR = true ]; then
-    OPT_ARGS="--skip-char"
-    echo "Skip characterization steps: $SKIP_CHAR"
-fi
-
-
-if [ $SKIP_COMP = true ]; then
-    OPT_ARGS="$OPT_ARGS --skip-comp"
-    echo "Skip comparative steps: $SKIP_COMP"
-fi
-
-
-if [ $DEBUG = true ]; then
-    OPT_ARGS="$OPT_ARGS --debug"
-    echo "Enable debugging output: $DEBUG"
-fi
-
-
 if [ "$SCRATCH" != "" ]; then
     sudo docker run \
         --privileged \
@@ -180,7 +164,8 @@ if [ "$SCRATCH" != "" ]; then
         --volume="/etc/group:/etc/group:ro" \
         --volume="/etc/passwd:/etc/passwd:ro" \
         oschwengers/asap:v1.2.0 \
-        "$OPT_ARGS"
+        $SKIP_CHAR $SKIP_COMP $DEBUG
+
 else
     sudo docker run \
     --privileged \
@@ -191,7 +176,7 @@ else
     --volume="/etc/group:/etc/group:ro" \
     --volume="/etc/passwd:/etc/passwd:ro" \
     oschwengers/asap:v1.2.0 \
-    "$OPT_ARGS"
+    $SKIP_CHAR $SKIP_COMP $DEBUG
 fi
 
 
