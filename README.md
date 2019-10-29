@@ -59,7 +59,7 @@ analysed as a single project, we distribute ASA³P in two versions:
 - **Docker**: linux container image for small to medium projects
 - **OpenStack**: highly scalable cloud version for (very) large projects
 
-For both the following file is necessary:
+For both the following files are necessary:
 - ASA³P tarball (asap.tar.gz) containing binaries, 3rd party executables and databases:
 https://s3.computational.bio.uni-giessen.de/swift/v1/asap/asap.tar.gz
 - configuration template: https://s3.computational.bio.uni-giessen.de/swift/v1/asap/config.xls
@@ -82,7 +82,8 @@ Additional files:
 For small to medium projects (up to ~200 isolates) but also for the sake of
 simplicity, reproducibility and easy distribution, we offer ASA³P as a
 **Docker** image hosted at:
-**Docker Hub** (https://hub.docker.com/r/oschwengers/asap/).
+**Docker Hub** (https://hub.docker.com/r/oschwengers/asap/). Please, follow the
+official instructions (https://docs.docker.com/install) to install Docker.
 
 Setup:
 ```bash
