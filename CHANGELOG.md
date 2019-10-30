@@ -1,10 +1,25 @@
+# v1.2.0
+## Features
+- Added an option to skip characterization/comparative analysis steps
+- Enhanced the Docker shell script (asap-docker.sh) (more options, use user:group file ownerships)
+- Replaced RDP 16S db by SILVA
+- Added classification of all detected and valid 16S sequences in taxonomic classification
+- Added a 'debug' option for better on-site/remote debugging
+
+## Enhancements
+- Updated PubMLST to 2019-10-02
+- Updated CARD db to 3.0.5 and RGI to 5.1.0
+- Updated VFDB to 2019-10-02
+- Discarded unnecessary dependencies from Docker image
+- Applied several bugfixes and minor improvements to report pages
+
 # v1.1.3
 ## Enhancements
 - Added a dynamic max cpu/core threshold for 3rd party executables (#2)
 - Fixed data table localization
 - Fixed scaffold table download file names
 - Removed unnecessary dependencies
-- updated source code library versions
+- Updated source code library versions
 
 # v1.1.2
 ## Enhancements

@@ -61,7 +61,7 @@ analysed as a single project, we distribute ASA³P in two versions:
 
 For both the following files are necessary:
 - ASA³P tarball (asap.tar.gz) containing binaries, 3rd party executables and databases:
-https://s3.computational.bio.uni-giessen.de/swift/v1/asap/asap.tar.gz
+https://s3.computational.bio.uni-giessen.de/swift/v1/asap/asap.tar.gz (md5 sum: 2953627f543667d19166e77c86573e81)
 - configuration template: https://s3.computational.bio.uni-giessen.de/swift/v1/asap/config.xls
 
 Note:
@@ -74,9 +74,9 @@ Additional files:
 - comprehensive manual: https://s3.computational.bio.uni-giessen.de/swift/v1/asap/manual.pdf
 - configuration example: https://s3.computational.bio.uni-giessen.de/swift/v1/asap/config-example.xls
 - example projects:
-   - 4 public *L. monocytogenes* genomes: https://s3.computational.bio.uni-giessen.de/swift/v1/asap/example-lmonocytogenes-4.tar.gz
-   - 32 public *L. monocytogenes* genomes: https://s3.computational.bio.uni-giessen.de/swift/v1/asap/example-lmonocytogenes-32.tar.gz
-   - 8 *E. coli* project merely showing support of different input types: https://s3.computational.bio.uni-giessen.de/swift/v1/asap/example-ecoli-input.tar.gz
+   - 4 public *L. monocytogenes* genomes: https://s3.computational.bio.uni-giessen.de/swift/v1/asap/example-lmonocytogenes-4.tar.gz (md5sum: 3da5858e62a3c8a836dfa91e58a9983e)
+   - 32 public *L. monocytogenes* genomes: https://s3.computational.bio.uni-giessen.de/swift/v1/asap/example-lmonocytogenes-32.tar.gz (md5sum: 4e64aa96f24dff518dead76f150a936c)
+   - 8 *E. coli* project merely showing support of different input types: https://s3.computational.bio.uni-giessen.de/swift/v1/asap/example-ecoli-input.tar.gz (md5sum: 1da85ab18f9afae98cf176ef88c6c214)
 
 ### Docker
 For small to medium projects (up to ~200 isolates) but also for the sake of
@@ -144,7 +144,7 @@ information please have a look at our user manual.
 In order to trigger an **OpenStack** based cloud project, you need the following
 additional cloud related files:
 - ASA³P cloud tarball (containing binaries, property files and a customized BiBiGrid version):
-https://s3.computational.bio.uni-giessen.de/swift/v1/asap/asap-cloud.tar.gz
+https://s3.computational.bio.uni-giessen.de/swift/v1/asap/asap-cloud.tar.gz (md5sum: c584dedcaf17963a240dbabfad95f608)
 
 Once ASA³P is properly setup you can start it by executing a single shell script:
 ```bash
