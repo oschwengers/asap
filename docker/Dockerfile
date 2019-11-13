@@ -1,6 +1,6 @@
 FROM ubuntu:16.04
 
-LABEL version="1.2.0"
+LABEL version="1.2.1"
 LABEL maintainer="andreas.hoek@bio.uni-giessen.de"
 LABEL maintainer="oliver.schwengers@computational.bio.uni-giessen.de"
 
@@ -34,6 +34,7 @@ RUN apt-get -y autoremove && apt-get -y clean
 RUN rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 RUN mkdir /var/scratch/
+RUN chmod 777 /var/scratch/
 RUN mkdir /data/
 
 WORKDIR /data
