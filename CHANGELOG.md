@@ -1,3 +1,7 @@
+# v1.2.1
+## Enhancements
+- Fixed a "permission denied error" in the Docker container
+
 # v1.2.0
 ## Features
 - Added an option to skip characterization/comparative analysis steps
