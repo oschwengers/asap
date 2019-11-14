@@ -266,134 +266,142 @@ cmOutPath.eachLine( { line ->
                 ssuContigMapList[ ssu.contig ] << ssu
             else
                 ssuContigMapList[ ssu.contig ] = [ ssu ]
-            log.info( "detected valid 16S rRNA: contig=${ssu.contig}, start=${ssu.start}, end=${ssu.end}, score=${ssu.score}, complete=${ssu.complete}" )
+            log.info( "detected valid 16S rRNA: contig=${ssu.contig}, start=${ssu.start}, end=${ssu.end}, length=${ssu.end-ssu.start+1}, score=${ssu.score}, complete=${ssu.complete}" )
         } else {
-            log.debug( "discard unvalid 16S rRNA: contig=${ssu.contig}, start=${ssu.start}, end=${ssu.end}, score=${ssu.score}, complete=${ssu.complete}" )
+            log.debug( "discard unvalid 16S rRNA: contig=${ssu.contig}, start=${ssu.start}, end=${ssu.end}, length=${ssu.end-ssu.start+1}, score=${ssu.score}, complete=${ssu.complete}" )
         }
     }
 } )
 def ssus = ssuContigMapList.values().flatten()
 log.debug("ssus raw: ${ssus.size()}")
-ssus.each( {
-    log.debug("ssu: contig=${it.contig}, start=${it.start}, end=${it.end}, score=${it.score}, complete=${it.complete}")
-} )
 
 
-def m = genomeSequencePath.text =~ /(?m)^>(.+)$\r?\n([ATGCNatgcn\r\n]+)$/ //include Windows line breaks (\r\n) as user provided scaffolds might be written on Windows systems
-m.each( { match ->
-    String contig = match[1].split(' ')[0].trim()
-    def ssuList = ssuContigMapList[ contig ]
-    if( ssuList != null ) {
-        String sequence = match[2].replaceAll( '[^ATGCNatgcn]', '' )
-        ssuList.each( { it
-            it.sequence = sequence.substring( it.start - 1, it.end )
-            log.info( "extracted 16S rRNA: contig=${contig}, seq=${ it.sequence.substring( 0, 50 ) }..." )
-        } )
+if( ssus.size() > 0 ) {
+    ssus.each( {
+        log.debug("ssu: contig=${it.contig}, start=${it.start}, end=${it.end}, length=${it.end-it.start+1}, score=${it.score}, complete=${it.complete}")
+    } )
+
+
+    def m = genomeSequencePath.text =~ /(?m)^>(.+)$\r?\n([ATGCNatgcn\r\n]+)$/ //include Windows line breaks (\r\n) as user provided scaffolds might be written on Windows systems
+    m.each( { match ->
+        String contig = match[1].split(' ')[0].trim()
+        def ssuList = ssuContigMapList[ contig ]
+        if( ssuList != null ) {
+            String sequence = match[2].replaceAll( '[^ATGCNatgcn]', '' )
+            ssuList.each( { it
+                it.sequence = sequence.substring( it.start - 1, it.end )
+                log.info( "extracted 16S rRNA: contig=${contig}, seq=${ it.sequence.substring( 0, 50 ) }..." )
+            } )
+        }
+    } )
+    log.debug("ssus full: ${ssus.size()}")
+    ssus.each( {
+        log.debug("ssu: contig=${it.contig}, start=${it.start}, end=${it.end}, length=${it.end-it.start+1}, score=${it.score}, complete=${it.complete}, seq=${it.sequence}")
+    } )
+
+
+    // remove 100 % sequence duplicates
+    ssuContigMapList = [:]
+    ssuSequences = new HashSet()
+    ssus.each( {
+        if( !ssuSequences.contains( it.sequence ) ) {
+            if( ssuContigMapList.containsKey( it.contig ) )
+                ssuContigMapList[ it.contig ] << it
+            else
+                ssuContigMapList[ it.contig ] = [ it ]
+            log.debug("ssu-added: contig=${it.contig}, start=${it.start}, end=${it.end}, length=${it.end-it.start+1}, score=${it.score}, complete=${it.complete}, seq=${it.sequence}")
+            ssuSequences << it.sequence
+        }
+    } )
+    ssus = ssuContigMapList.values().flatten()
+    log.info("ssus w/o dups: # ${ssus.size()}")
+    ssus.each( {
+        log.debug("ssu: contig=${it.contig}, start=${it.start}, end=${it.end}, length=${it.end-it.start+1}, score=${it.score}, complete=${it.complete}, seq=${it.sequence}")
+    })
+
+
+    Path seq16SPath = tmpPath.resolve( '16S.fasta' )
+    seq16SPath << '' // if no 16S sequence was found Blast will still run though, without results
+    ssus.each( {
+        seq16SPath << ">${it.contig}-|-${it.start}-|-${it.end}\n"
+        seq16SPath << "${it.sequence}\n"
+    } )
+
+
+    // blast genome vs SILVA db
+    pb = new ProcessBuilder( BLASTN,
+        '-query', seq16SPath.toString(),
+        '-db', SILVA_DB,
+        '-num_threads', NUM_THREADS,
+        '-evalue', '1E-10',
+        '-outfmt', '6 qseqid sseqid length nident bitscore stitle' )
+        .directory( tmpPath.toFile() )
+    log.info( "exec: ${pb.command()}" )
+    log.info( '----------------------------------------------------------------------------------------------' )
+    proc = pb.start()
+    stdOut = new StringBuilder()
+    stdErr = new StringBuilder()
+    proc.consumeProcessOutput( stdOut, stdErr )
+    if( proc.waitFor() != 0 ){
+        log.error( stdErr.toString() )
+        terminate( 'could not exec blastn!', taxPath, genomeName )
     }
-} )
-log.debug("ssus full: ${ssus.size()}")
-ssus.each( {
-    log.debug("ssu: contig=${it.contig}, start=${it.start}, end=${it.end}, score=${it.score}, complete=${it.complete}, seq=${it.sequence}")
-} )
+    log.info( '----------------------------------------------------------------------------------------------' )
 
 
-// remove 100 % sequence duplicates
-ssuContigMapList = [:]
-ssuSequences = new HashSet()
-ssus.each( {
-    if( !ssuSequences.contains( it.sequence ) ) {
-        if( ssuContigMapList.containsKey( it.contig ) )
-            ssuContigMapList[ it.contig ] << it
-        else
-            ssuContigMapList[ it.contig ] = [ it ]
-        log.debug("ssu-added: contig=${it.contig}, start=${it.start}, end=${it.end}, score=${it.score}, complete=${it.complete}, seq=${it.sequence}")
-        ssuSequences << it.sequence
-    }
-} )
-ssus = ssuContigMapList.values().flatten()
-log.info("ssus w/o dups: # ${ssus.size()}")
-ssus.each( {
-    log.debug("ssu: contig=${it.contig}, start=${it.start}, end=${it.end}, score=${it.score}, complete=${it.complete}, seq=${it.sequence}")
-})
-
-
-Path seq16SPath = tmpPath.resolve( '16S.fasta' )
-seq16SPath << '' // if no 16S sequence was found Blast will still run though, without results
-ssus.each( {
-    seq16SPath << ">${it.contig}-|-${it.start}-|-${it.end}\n"
-    seq16SPath << "${it.sequence}\n"
-} )
-
-
-// blast genome vs SILVA db
-pb = new ProcessBuilder( BLASTN,
-    '-query', seq16SPath.toString(),
-    '-db', SILVA_DB,
-    '-num_threads', NUM_THREADS,
-    '-evalue', '1E-10',
-    '-outfmt', '6 qseqid sseqid length nident bitscore stitle' )
-    .directory( tmpPath.toFile() )
-log.info( "exec: ${pb.command()}" )
-log.info( '----------------------------------------------------------------------------------------------' )
-proc = pb.start()
-stdOut = new StringBuilder()
-stdErr = new StringBuilder()
-proc.consumeProcessOutput( stdOut, stdErr )
-if( proc.waitFor() != 0 ){
-    log.error( stdErr.toString() )
-    terminate( 'could not exec blastn!', taxPath, genomeName )
-}
-log.info( '----------------------------------------------------------------------------------------------' )
-
-
-float highestScore = 0.0f
-taxList = []
-stdOut.toString().eachLine( { line ->
-    def cols = line.split( '\t' )
-    def headerCols = cols[0].split('-\\|-')
-    def hit = [
-        contig: headerCols[0],
-        contigStart: headerCols[1] as int,
-        contigEnd: headerCols[2] as int,
-        id: cols[1],
-        alignmentLength: cols[2] as int,
-        nIdent: cols[3]as int,
-        bitscore: cols[4] as float,
-        desc: cols[5]
-    ]
-    log.debug( "raw hit: ${hit}" )
-    String rRNASequence = ssus.find( { it.contig == hit.contig  &&  it.start == hit.contigStart  &&  it.end == hit.contigEnd } )?.sequence
-    if( rRNASequence != null
-        &&  (hit.alignmentLength / rRNASequence.length()) >= 0.8
-        &&  (hit.nIdent / hit.alignmentLength) >= 0.8
-        &&  hit.bitscore >= highestScore ) {
-        log.debug( "valid hit: ${hit}" )
-        highestScore = hit.bitscore
-        def tax = hit.desc.split(';')
-        tax[0] = tax[0].split(' ')[1]
-        taxList << tax
-    }
-} )
-
-// count abundances of lineages
-def lineageBins = [:]
-taxList.each( {
-    def key = it.join('-')
-    if( lineageBins.containsKey( key ) ) {
-        def lineage = lineageBins.get( key )
-        lineage.freq += 1
-    } else {
-        lineageBins[ key ] = [
-            lineage: it,
-            freq: 1,
-            classification: it.last()
+    float highestScore = 0.0f
+    taxList = []
+    stdOut.toString().eachLine( { line ->
+        def cols = line.split( '\t' )
+        def headerCols = cols[0].split('-\\|-')
+        def hit = [
+            contig: headerCols[0],
+            contigStart: headerCols[1] as int,
+            contigEnd: headerCols[2] as int,
+            id: cols[1],
+            alignmentLength: cols[2] as int,
+            nIdent: cols[3]as int,
+            bitscore: cols[4] as float,
+            desc: cols[5]
         ]
-    }
-} )
-info.rrna.lineages = lineageBins.values().sort( { -it.freq } )
-info.rrna.classification = info.rrna.lineages[0]
-info.rrna.hits = taxList.size()
+        log.debug( "raw hit: ${hit}" )
+        String rRNASequence = ssus.find( { it.contig == hit.contig  &&  it.start == hit.contigStart  &&  it.end == hit.contigEnd } )?.sequence
+        if( rRNASequence != null
+            &&  (hit.alignmentLength / rRNASequence.length()) >= 0.8
+            &&  (hit.nIdent / hit.alignmentLength) >= 0.8
+            &&  hit.bitscore >= highestScore ) {
+            log.debug( "valid hit: ${hit}" )
+            highestScore = hit.bitscore
+            def tax = hit.desc.split(';')
+            tax[0] = tax[0].split(' ')[1]
+            taxList << tax
+        }
+    } )
 
+    // count abundances of lineages
+    def lineageBins = [:]
+    taxList.each( {
+        def key = it.join('-')
+        if( lineageBins.containsKey( key ) ) {
+            def lineage = lineageBins.get( key )
+            lineage.freq += 1
+        } else {
+            lineageBins[ key ] = [
+                lineage: it,
+                freq: 1,
+                classification: it.last()
+            ]
+        }
+    } )
+    info.rrna.lineages = lineageBins.values().sort( { -it.freq } )
+    info.rrna.classification = info.rrna.lineages[0]
+    info.rrna.hits = taxList.size()
+} else {
+    log.warning( "no valid 16S ssu sequence detected!" )
+    info.rrna.lineages = []
+    info.rrna.classification = null
+    info.rrna.hits = 0
+}
 
 
 /********************
