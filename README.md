@@ -88,7 +88,7 @@ official instructions (https://docs.docker.com/install) to install Docker.
 Setup:
 ```bash
 $ sudo docker pull oschwengers/asap
-$ wget https://s3.computational.bio.uni-giessen.de/swift/v1/asap/asap.tar.gz
+$ wget https://s3.computational.bio.uni-giessen.de/swift/v1/asap/v1.2.1/asap.tar.gz
 $ tar -xzf asap.tar.gz
 $ rm asap.tar.gz
 ```
@@ -119,7 +119,7 @@ be executed as sudo. This is pure technical necessity unrelated to ASA³P itself
 **Complete example**:
 ```bash
 $ sudo docker pull oschwengers/asap
-$ wget https://s3.computational.bio.uni-giessen.de/swift/v1/asap/asap.tar.gz
+$ wget https://s3.computational.bio.uni-giessen.de/swift/v1/asap/v1.2.1/asap.tar.gz
 $ tar -xzf asap.tar.gz
 $ rm asap.tar.gz
 $ wget https://s3.computational.bio.uni-giessen.de/swift/v1/asap/example-lmonocytogenes-4.tar.gz
