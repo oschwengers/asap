@@ -277,7 +277,7 @@ log.debug("ssus raw: ${ssus.size()}")
 ssus.each( {
     log.debug("ssu: contig=${it.contig}, start=${it.start}, end=${it.end}, score=${it.score}, complete=${it.complete}")
 } )
-assert ssus.size() > 0
+
 
 def m = genomeSequencePath.text =~ /(?m)^>(.+)$\r?\n([ATGCNatgcn\r\n]+)$/ //include Windows line breaks (\r\n) as user provided scaffolds might be written on Windows systems
 m.each( { match ->
