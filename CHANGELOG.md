@@ -1,3 +1,8 @@
+# v1.2.2
+## Enhancements
+- Improved the `-c/--check` logic and error messages
+- Replaced the configuration example by a more versatile one
+
 # v1.2.1
 ## Enhancements
 - Fixed a "permission denied error" in the Docker container

@@ -61,7 +61,7 @@ analysed as a single project, we distribute ASA³P in two versions:
 
 For both the following files are necessary:
 - ASA³P tarball (asap.tar.gz) containing binaries, 3rd party executables and databases:
-https://s3.computational.bio.uni-giessen.de/swift/v1/asap/v1.2.1/asap.tar.gz (md5 sum: 55366b9bdb7cf7c165e72b1ccb7670b8)
+https://s3.computational.bio.uni-giessen.de/swift/v1/asap/v1.2.2/asap.tar.gz (md5 sum: deb0ac8eede0ef03028c10e53402a145)
 - configuration template: https://s3.computational.bio.uni-giessen.de/swift/v1/asap/config.xls
 
 Note:
@@ -88,7 +88,7 @@ official instructions (https://docs.docker.com/install) to install Docker.
 Setup:
 ```bash
 $ sudo docker pull oschwengers/asap
-$ wget https://s3.computational.bio.uni-giessen.de/swift/v1/asap/v1.2.1/asap.tar.gz
+$ wget https://s3.computational.bio.uni-giessen.de/swift/v1/asap/v1.2.2/asap.tar.gz
 $ tar -xzf asap.tar.gz
 $ rm asap.tar.gz
 ```
@@ -119,7 +119,7 @@ be executed as sudo. This is pure technical necessity unrelated to ASA³P itself
 **Complete example**:
 ```bash
 $ sudo docker pull oschwengers/asap
-$ wget https://s3.computational.bio.uni-giessen.de/swift/v1/asap/v1.2.1/asap.tar.gz
+$ wget https://s3.computational.bio.uni-giessen.de/swift/v1/asap/v1.2.2/asap.tar.gz
 $ tar -xzf asap.tar.gz
 $ rm asap.tar.gz
 $ wget https://s3.computational.bio.uni-giessen.de/swift/v1/asap/example-lmonocytogenes-4.tar.gz
