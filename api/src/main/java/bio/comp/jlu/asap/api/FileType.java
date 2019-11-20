@@ -58,6 +58,12 @@ public enum FileType {
 
     public static FileType getEnum( String str ) {
 
+        if( str == null )
+            return null;
+
+        if( str.isEmpty() )
+            return null;
+
         for( FileType ft : FileType.values() ) {
             if( str.equals( ft.toString() ) )
                 return ft;

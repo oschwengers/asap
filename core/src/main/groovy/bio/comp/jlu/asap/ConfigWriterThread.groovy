@@ -106,15 +106,15 @@ class ConfigWriterThread extends Thread {
         } )
 
         if( spreadsheetFilePath == null ) // test for valid spreadsheet config file
-            Misc.exit( log, 'no valid spreadsheet config file available!', null )
+            Misc.exit( log, "Project directory (${projectPath}) does not contain a valid spreadsheet configuration file (config.xls)!", null )
 
         final TableBookAdapter tba = new ExcelTableBookAdapter()
         if( !tba.acceptFile( spreadsheetFilePath.toFile() ) )
-            Misc.exit( log, "wrong config file suffix (${spreadsheetFilePath})! Please, provide a valid Excel config file using the Excel '97 format (.xls).", null )
+            Misc.exit( log, "Configuration file has a wrong file suffix (${spreadsheetFilePath})! Please, provide a valid Excel configuration file using the Excel '97 format (.xls).", null )
 
         final TableBook tableBook = tba.importTableBook( spreadsheetFilePath.toFile() )
         if( tableBook.getNoTables() < 2 )
-            Misc.exit( log, "wrong number of tables (${tableBook.getNoTables()})!", null )
+            Misc.exit( log, "Configuration file has a wrong number of tables (${tableBook.getNoTables()})! There must be 2 tables. Please, use the provided Excel template.", null )
 
         final def config = [:]
         final Table projectTable = tableBook.getTable( 0 )
@@ -179,7 +179,10 @@ class ConfigWriterThread extends Thread {
             ]
 
             FileType ft = FileType.getEnum( datum.type )
-            if( ft == FileType.READS_NANOPORE_PAIRED_END ) {
+            if( ft == null ) {
+                datum.type = null
+                genome.data << datum
+            } else if( ft == FileType.READS_NANOPORE_PAIRED_END ) {
                 datum.type = FileType.READS_NANOPORE.toString()
                 String file1 = genomeTable.getCellContent( rowIdx, ConfigTemplate.COLUMN_ID_FILE_1 );
                 if( file1  &&  !file1.isEmpty() )
@@ -190,11 +193,11 @@ class ConfigWriterThread extends Thread {
                     files: []
                 ]
                 String file2 = genomeTable.getCellContent( rowIdx, ConfigTemplate.COLUMN_ID_FILE_2 );
-                if( file2  &&  !file2.isEmpty() )
-                    datum.files << file2
                 String file3 = genomeTable.getCellContent( rowIdx, ConfigTemplate.COLUMN_ID_FILE_3 );
-                if( file3  &&  !file3.isEmpty() )
+                if( file2  &&  !file2.isEmpty()  &&  file3  &&  !file3.isEmpty() ) {
+                    datum.files << file2
                     datum.files << file3
+                }
                 genome.data << datum
             } else {
                 String file1 = genomeTable.getCellContent( rowIdx, ConfigTemplate.COLUMN_ID_FILE_1 );

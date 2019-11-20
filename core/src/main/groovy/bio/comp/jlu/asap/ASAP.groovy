@@ -55,8 +55,12 @@ if( !ASAP_HOME ) {
 
 // check project dir and config file
 Path rawProjectPath = Paths.get( opts.p )
-if( !Files.isWritable( rawProjectPath )  ||  !Files.isExecutable( rawProjectPath ) ) {
-    println( "Error: project directory (${rawProjectPath}) does not exist or wrong permissions (read/write/execute) set!" )
+if( !Files.exists( rawProjectPath ) ) {
+    println( "Error: Project directory (${rawProjectPath}) does not exist!" )
+    System.exit(1)
+}
+if( !Files.isReadable( rawProjectPath )  ||  !Files.isWritable( rawProjectPath )  ||  !Files.isExecutable( rawProjectPath ) ) {
+    println( "Error: Wrong project directory (${rawProjectPath}) file permissions! The directory is either not readable, accessible or writable. Please, check the read/write/execute flags." )
     System.exit(1)
 }
 Path projectPath = rawProjectPath.toRealPath()
@@ -139,15 +143,26 @@ if( opts.n ) { // clear project folder
 }
 
 
+// remove existing config.json for proper config checks
+Path configPath = projectPath.resolve( 'config.json' )
+if( opts.c ) {
+    // Remove config.json only for new/emtpy empty project.
+    if( !Files.exists( projectPath.resolve( 'state.finished' ) )  &&  !Files.exists( projectPath.resolve( 'state.running' ) ) )
+        try{
+            log.debug( "delete pre-existing config.json: ${configPath.toString()}" )
+            Files.delete( configPath )
+        } catch( Exception ex ) {}
+}
+
+
 // convert spreadsheet config into JSON config
 try {
     ConfigWriterThread.convertConfig( log, projectPath )
 } catch( Exception ex ) {
-    Misc.exit( log, "couldn't convert configuration file!", ex )
+    Misc.exit( log, "Could not convert configuration file to JSON! Please, check the configuration file and test it via the '-c/--check' option.", ex )
 }
-Path configPath = projectPath.resolve( 'config.json' )
 if( !Files.exists( configPath ) )
-    Misc.exit( log, 'config.json file does not exist!', null )
+    Misc.exit( log, "Configuration file (${configPath}) does not exist!", null )
 
 
 // parse config.json
@@ -162,7 +177,10 @@ if( opts.c ) { // only check config and data files
 
     checkConfig( config, projectPath )
     log.info( 'checked spreadsheet config and project data files.' )
-    println( 'checked spreadsheet config and project data files.' )
+    println( "Checked project directory: ${projectPath.toString()}" )
+    println( "Checked configuration file: ${projectPath.resolve( 'config.xls' ).toString()}" )
+    println( "All checks successfully passed. " )
+
     System.exit( 0 )
 
 } else if( opts.i ) { // only show info and statistics about current pipeline
@@ -341,90 +359,108 @@ def checkConfig( def config, Path projectPath ) {
     log.debug( 'check config file...' )
 
     log.debug( 'check user info' )
-    if( !config.user  ||  !config.user.name  ||  !config.user.surname  || !config.user.email )
-        Misc.exit( log, 'config contains no / wrong user information!', null )
+    if( !config.user )
+        Misc.exit( log, 'User information is missing in configuration file!', null )
 
-    if( !(config.user.email ==~ /[\w-_\.]+@(?:[\w+-]+\.)+[a-z]{2,4}/) )
-        Misc.exit( log, 'wrong user email!', null )
-
+    if( !config.user.name )
+        Misc.exit( log, 'User name is missing or empty in configuration file!', null )
     config.user.name = config.user.name.trim()
+
+    if( !config.user.surname )
+        Misc.exit( log, 'User surname is missing or empty in configuration file!', null )
     config.user.surname = config.user.surname.trim()
+
+    if( !config.user.email )
+        Misc.exit( log, 'User email is missing or empty in configuration file!', null )
     config.user.email = config.user.email.trim()
+    if( !(config.user.email ==~ /[\w-_\.]+@(?:[\w+-]+\.)+[a-z]{2,20}/) )
+        Misc.exit( log, "Unvalid user email (${config.user.email}) in configuration file!\nThe provided email seems to be unvalid.\nIf this is not the case, please do not hesitate to file an issue at GitHub.", null )
+
 
     log.debug( 'check project info' )
-    if( !config.project  ||  !config.project.name  ||  !config.project.description  ||  !config.project.genus  ||  !config.project.path )
-        Misc.exit( log, 'config contains no / wrong project information!', null )
+    if( !config.project )
+        Misc.exit( log, 'Project information is missing!', null )
 
-    if( !(config.project.genus.trim() ==~ /[a-zA-Z]{5,20}/) )
-        Misc.exit( log, 'wrong genus!', null )
-
+    if( !config.project.name )
+        Misc.exit( log, 'Project name in configuration file is missing or empty!', null )
     config.project.name = config.project.name.trim()
+
+    if( !config.project.description )
+        Misc.exit( log, 'Project description in configuration file is missing or empty!', null )
     config.project.description = config.project.description.trim()
-    config.project.genus = config.project.genus.trim().toLowerCase().capitalize()
-    config.project.path = config.project.path.trim()
+
+    if( !config.project.genus )
+        Misc.exit( log, 'Project genus designation in configuration file is missing or empty!', null )
+    String genus = config.project.genus.trim()
+    if( !(genus ==~ /[a-zA-Z]{5,30}/) )
+        Misc.exit( log, "Genus designation (${genus}) in configuration file contains unvalid characters!\nOnly alphabetical characters are allowed. It should contain at least 5 and a maximum of 30 characters.\nJust in case, this is not enough, please do not hesitate to file an issue at GitHub.", null )
+    config.project.genus = genus.toLowerCase().capitalize()
+
 
     Path dataPath = projectPath.resolve( PROJECT_PATH_DATA )
     log.debug( 'check genomes' )
     if( !config.genomes ) {
-        Misc.exit( log, 'config contains no / wrong project information!', null )
+        Misc.exit( log, 'Configuration file contains no genome(s)/strain(s) information!\nPlease, check the configuration file\'s strain table', null )
     } else {
         def idList = []
         def sampleList = []
         config.genomes.each( { genome ->
-            if( !genome.id  ||  !genome.species  ||  !genome.strain )
-                Misc.exit( log, "config contains no / wrong genome information!\n(${genome})", null )
+            if( !genome )
+                Misc.exit( log, "Genome information in configuration file is missing!", null )
+
+            if( !genome.id )
+                Misc.exit( log, "Genome id designation in configuration file is missing!", null )
+            if( idList.contains( genome.id ) )
+                Misc.exit( log, "Duplicated genome id in configuration file! (${genome.id})", null )
+            idList << genome.id
+
+            if( !genome.species )
+                Misc.exit( log, "Genome species designation in configuration file for genome (${genome}) is empty!", null )
             String species = genome.species.trim().toLowerCase()
             if( species != 'sp.'  &&  !(species ==~ /[a-z]{2,50}/) )
-                Misc.exit( log, "wrong species (${species})!", null )
+                Misc.exit( log, "Species designation (${species}) in configuration file contains unvalid characters!\nOnly alphabetical characters or 'sp.' are allowed. It should contain at least 2 and a maximum of 50 characters.\nJust in case, this is not enough, please do not hesitate to file an issue at GitHub.", null )
             genome.species = species
+
+            if( !genome.strain )
+                Misc.exit( log, "Genome strain designation in configuration file for genome (${genome}) is empty!", null )
             String strain = genome.strain.trim()
-            if( !(strain ==~ /([\w-\.]){2,50}/) )
-                Misc.exit( log, "wrong characters in strain (${strain})!", null )
+            if( !(strain ==~ /[a-zA-Z0-9\.-]{2,50}/) )
+                Misc.exit( log, "Strain designation (${strain}) in configuration file contains unvalid characters!\nOnly alpha-numerics, '-' and '.' are allowed. It should contain at least 2 and a maximum of 50 characters.\nJust in case, this is not enough, please do not hesitate to file an issue at GitHub.", null )
             genome.strain = strain
 
             String genomeName = "${config.project.genus}_${genome.species}_${genome.strain}"
             if( sampleList.contains( genomeName ) )
-                Misc.exit( log, "duplicated genome name in config! (${genomeName})", null )
+                Misc.exit( log, "Duplicated genome name (${genomeName}) in configuration file!\nThe combination of <genus>, <species> and <strain> designations of each genome must be unique within this project as ASA³P uses this for as an identifier within the project directory.", null )
             sampleList << genomeName
 
-            if( idList.contains( genome.id ) )
-                Misc.exit( log, "duplicated genome id in config! (${genome.id})", null )
-            idList << genome.id
+            if( !genome.data  &&  genome.data.size() == 0 )
+                Misc.exit( log, "Input data in configuration file for genome (${genome}) is missing!", null )
+            genome.data.each( { datum ->
+                if( !datum.type )
+                    Misc.exit( log, "Input data type information for genome (${genome}) in configuration file is missing!", null )
 
-            def data = genome.data[0]
-//            genome.data.each( { data ->
-            if( !data.type )
-                Misc.exit( log, "read file without type information!\n(${genome})", null )
-
-            FileType ft = FileType.getEnum( data.type )
-            try {
-                if( (ft?.getDataType() == DataType.READS)  ||  (ft == FileType.GENOME) ) {
-                    //Path destPath = projectPath.resolve( PROJECT_PATH_READS_RAW )
-                    data.files.each( {
-                        if( !Files.isReadable( dataPath.resolve( it ) ) ) {// &&  !Files.isReadable( destPath.resolve( it ) ) ) {
-                            throw new IOException( "could not read file ${it}" )
+                FileType ft = FileType.getEnum( datum.type )
+                try {
+                    if( datum.files.size() == 0 )
+                        Misc.exit( log, "Input data file/s in configuration file for genome (${genome}) is/are missing!", null )
+                    if( (ft?.getDataType() == DataType.READS)  ||  (ft == FileType.GENOME) ) {
+                        datum.files.each( {
+                            if( !Files.isReadable( dataPath.resolve( it ) ) ) {
+                                Misc.exit( log, "Could not read input data file (${fileName}) for genome (${genomeName}) in project data subdirectory!", null )
+                            }
+                        } )
+                    } else {
+                        if( !(ft in [FileType.CONTIGS, FileType.CONTIGS_ORDERED] ) )
+                            Misc.exit( log, "Wrong input data file type (${ft}) for genome (${genomeName}) detected! ", null )
+                        String fileName = datum.files[0]
+                        if( !Files.isReadable( dataPath.resolve( fileName ) ) ) {
+                            Misc.exit( log, "Could not read input data file (${fileName}) for genome (${genomeName}) in project data subdirectory!", null )
                         }
-                    } )
-                } else {
-//                        Path destPath
-//                        if( ft == FileType.CONTIGS ) {
-//                            destPath = Paths.get( projectPath.toString(), PROJECT_PATH_ASSEMBLIES, genomeName, "${genomeName}.fasta" )
-//                        } else if( ft == FileType.CONTIGS_ORDERED ) {
-//                            destPath = Paths.get( projectPath.toString(), PROJECT_PATH_SCAFFOLDS, genomeName, "${genomeName}.fasta" )
-//                        } else if( ft == FileType.GENOME ) {
-//
-//                        } else {
-                    if( !(ft in [FileType.CONTIGS, FileType.CONTIGS_ORDERED] ) )
-                        Misc.exit( log, "wrong file type detected! (${ft})", null )
-                    String fileName = data.files[0]
-                    if( !Files.isReadable( dataPath.resolve( fileName ) ) ) {// &&  !Files.isReadable( destPath ) ) {
-                        throw new IOException( "could not read file ${fileName}" )
                     }
+                } catch( IOException ex ) {
+                    Misc.exit( log, "Input data files for genome (${genomeName}) are not readable! (${datum.files})", ex )
                 }
-            } catch( IOException ex ) {
-                Misc.exit( log, "file does not exist or is not readable! (${data.files})", ex )
-            }
-//            } )
+            } )
         } )
     }
 
@@ -434,15 +470,15 @@ def checkConfig( def config, Path projectPath ) {
         Path referencePath = projectPath.resolve( PROJECT_PATH_REFERENCES )
         config.references.each( { ref ->
             if( !(ref ==~ /[a-zA-Z0-9\._-]{2,}/) ) {
-                Misc.exit( log, "wrong reference file name (${ref})!", null )
-            } else if( !Files.isReadable( dataPath.resolve( ref ) )  &&  !Files.isReadable( referencePath.resolve( ref ) ) ) {
-                Misc.exit( log, "reference file does not exist or is not readable! (${ref})", null )
-            } else if( !ref.contains( '.' )  ||  FileFormat.getEnum( ref.substring( ref.lastIndexOf( '.' ) + 1 ) ) == null ) {
-                Misc.exit( log, "reference file has wrong file suffix! (${ref})", null )
+                Misc.exit( log, "Wrong reference file name (${ref}) in configuration file!\nOnly alpha-numerics, '_', '-' and '.' are allowed. It should contain at least 2 characters.", null )
+            } else if( !Files.isReadable( dataPath.resolve( ref ) ) ) {
+                Misc.exit( log, "Reference file (${ref}) does not exist or is not readable in project data subdirectory!", null )
+            } else if( !ref.contains( '.' )  ||  FileFormat.getEnum( ref ) == null ) {
+                Misc.exit( log, "Missing or wrong reference file suffix (${ref})!\nThe following file suffices are supported:\nFasta: '.fa', '.fas', '.fsa', '.fna', '.fasta'\nGenBank: '.gb', '.gbk', '.gbff', '.genbank'\nGFF: '.gff', '.gff3'\nEMBL: '.el', '.ebl', '.embl'", null )
             }
         } )
     } else {
-        Misc.exit( log, "empty reference list! Please, specify at least 1 reference genome.", null )
+        Misc.exit( log, "Empty reference list in configuration file! Please, specify at least 1 reference genome.", null )
     }
 
 }
