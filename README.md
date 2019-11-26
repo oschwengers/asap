@@ -61,7 +61,7 @@ analysed as a single project, we distribute ASA³P in two versions:
 
 For both the following files are necessary:
 - ASA³P tarball (asap.tar.gz) containing binaries, 3rd party executables and databases:
-https://s3.computational.bio.uni-giessen.de/swift/v1/asap/v1.2.2/asap.tar.gz (md5 sum: deb0ac8eede0ef03028c10e53402a145)
+https://s3.computational.bio.uni-giessen.de/swift/v1/asap/v1.2.2/asap.tar.gz (md5 sum: a2dcb3465bcbace5930eb278e91bf395)
 - configuration template: https://s3.computational.bio.uni-giessen.de/swift/v1/asap/config.xls
 
 Note:
