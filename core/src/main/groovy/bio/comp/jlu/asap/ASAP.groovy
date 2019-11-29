@@ -424,8 +424,8 @@ def checkConfig( def config, Path projectPath ) {
             if( !genome.strain )
                 Misc.exit( log, "Genome strain designation in configuration file for genome (${genome}) is empty!", null )
             String strain = genome.strain.trim()
-            if( !(strain ==~ /[a-zA-Z0-9\.-]{2,50}/) )
-                Misc.exit( log, "Strain designation (${strain}) in configuration file contains unvalid characters!\nOnly alpha-numerics, '-' and '.' are allowed. It should contain at least 2 and a maximum of 50 characters.\nJust in case, this is not enough, please do not hesitate to file an issue at GitHub.", null )
+            if( !(strain ==~ /[a-zA-Z0-9\.-_]{2,50}/) )
+                Misc.exit( log, "Strain designation (${strain}) in configuration file contains unvalid characters!\nOnly alpha-numerics, '-', '_' and '.' are allowed. It should contain at least 2 and a maximum of 50 characters.\nJust in case, this is not enough, please do not hesitate to file an issue at GitHub.", null )
             genome.strain = strain
 
             String genomeName = "${config.project.genus}_${genome.species}_${genome.strain}"
