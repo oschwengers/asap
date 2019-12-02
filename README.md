@@ -357,7 +357,9 @@ container or the **OpenStack** images. As there are too many possible combinatio
 linux distributions and software/database versions, we cannot give any support for this.
 
 * __I'm facing an error/bug. What shall I do?__
-Please start the pipeline with `-d` (verbose debugging logs) and file an issue
-here on GitHub describing the issue and providing the `asap.log` file within your
-project/data directory. If you can already pinpoint the error, please also provide
-the log file of the failed subanalysis.
+If you run into any issues with ASA³P, we'd be happy to hear about it!
+Please, start the pipeline with `-d` (verbose debugging logs) and do not hesitate
+to file an issue including as much of the following as possible:
+- a deteiled description of the issue
+- the `asap.log` file within your project/data directory
+- in case you can already pinpoint the error: the log file of the failed subanalysis
