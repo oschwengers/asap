@@ -397,7 +397,7 @@ if( ssus.size() > 0 ) {
     info.rrna.classification = info.rrna.lineages[0]
     info.rrna.hits = taxList.size()
 } else {
-    log.warning( "no valid 16S ssu sequence detected!" )
+    log.warn( "no valid 16S ssu sequence detected!" )
     info.rrna.lineages = []
     info.rrna.classification = null
     info.rrna.hits = 0
