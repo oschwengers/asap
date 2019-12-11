@@ -8,6 +8,8 @@
 
 ![ASA³P Overview](asap.png)
 
+> **WARNING**: S3 offline! Due to a cyber attack hitting the entire JLU Giessen IT infrastructure, all files hosted at our S3 object storage is currently unavailable. This might last for weeks. We're looking for alternatives meanwhile. For further information, please have a look at https://twitter.com/hashtag/JLUoffline?src=hashtag_click&f=live
+
 ## Contents
 - [Description](#description)
 - [Features](#features)
