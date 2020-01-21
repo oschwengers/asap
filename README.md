@@ -8,8 +8,6 @@
 
 ![ASA³P Overview](asap.png)
 
-> **WARNING**: S3 offline! Due to a cyber attack hitting the entire JLU Giessen IT infrastructure, all files hosted at our S3 object storage is currently unavailable. This might last for weeks. We're looking for alternatives meanwhile. For further information, please have a look at https://twitter.com/hashtag/JLUoffline?src=hashtag_click&f=live
-
 ## Contents
 - [Description](#description)
 - [Features](#features)
@@ -56,15 +54,16 @@ interactive visualizations.
 - phylogenetic tree creation
 
 ## Availability
+All necessary files are hostet at Zenodo: [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3606299.svg)](https://doi.org/10.5281/zenodo.3606299)
+
 Targeting different project sizes, i.e. number of genomes which should be
 analysed as a single project, we distribute ASA³P in two versions:
 - **Docker**: linux container image for small to medium projects
 - **OpenStack**: highly scalable cloud version for (very) large projects
 
 For both the following files are necessary:
-- ASA³P tarball (asap.tar.gz) containing binaries, 3rd party executables and databases:
-https://s3.computational.bio.uni-giessen.de/swift/v1/asap/v1.2.2/asap.tar.gz (md5 sum: a2dcb3465bcbace5930eb278e91bf395)
-- configuration template: https://s3.computational.bio.uni-giessen.de/swift/v1/asap/config.xls
+- ASA³P tarball containing binaries, 3rd party executables and databases: asap.tar.gz (md5 sum: a2dcb3465bcbace5930eb278e91bf395)
+- configuration template: config.xls
 
 Note:
 As the ASA³P tarball contains all databases and 3rd party executables necessary,
@@ -73,12 +72,13 @@ To unzip the tarball a deflating tool supporting multithreadding might be benefi
 e.g. pigz on linux (`sudo apt install pigz` for Ubuntu).
 
 Additional files:
-- comprehensive manual: https://s3.computational.bio.uni-giessen.de/swift/v1/asap/manual.pdf
-- configuration example: https://s3.computational.bio.uni-giessen.de/swift/v1/asap/config-example.xls
-- example projects:
-   - 4 public *L. monocytogenes* genomes: https://s3.computational.bio.uni-giessen.de/swift/v1/asap/example-lmonocytogenes-4.tar.gz (md5sum: 3da5858e62a3c8a836dfa91e58a9983e)
-   - 32 public *L. monocytogenes* genomes: https://s3.computational.bio.uni-giessen.de/swift/v1/asap/example-lmonocytogenes-32.tar.gz (md5sum: 4e64aa96f24dff518dead76f150a936c)
-   - 8 *E. coli* project merely showing support of different input types: https://s3.computational.bio.uni-giessen.de/swift/v1/asap/example-ecoli-input.tar.gz (md5sum: 1da85ab18f9afae98cf176ef88c6c214)
+- comprehensive manual: manual.pdf
+- configuration example: config-example.xls
+
+Additional example and benchmark projects are hostet in a distinct repository at Zenodo: [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3606760.svg)](https://doi.org/10.5281/zenodo.3606760)
+   - 4 public *L. monocytogenes* genomes: example-lmonocytogenes-4.tar.gz (md5sum: 3da5858e62a3c8a836dfa91e58a9983e)
+   - 32 public *L. monocytogenes* genomes: example-lmonocytogenes-32.tar.gz (md5sum: 4e64aa96f24dff518dead76f150a936c)
+   - 8 *E. coli* project merely showing support of different input types: example-ecoli-input.tar.gz (md5sum: 1da85ab18f9afae98cf176ef88c6c214)
 
 ### Docker
 For small to medium projects (up to ~200 isolates) but also for the sake of
@@ -90,7 +90,7 @@ official instructions (https://docs.docker.com/install) to install Docker.
 Setup:
 ```bash
 $ sudo docker pull oschwengers/asap
-$ wget https://s3.computational.bio.uni-giessen.de/swift/v1/asap/v1.2.2/asap.tar.gz
+$ wget https://zenodo.org/record/3606300/files/asap.tar.gz?download=1
 $ tar -xzf asap.tar.gz
 $ rm asap.tar.gz
 ```
@@ -121,10 +121,10 @@ be executed as sudo. This is pure technical necessity unrelated to ASA³P itself
 **Complete example**:
 ```bash
 $ sudo docker pull oschwengers/asap
-$ wget https://s3.computational.bio.uni-giessen.de/swift/v1/asap/v1.2.2/asap.tar.gz
+$ wget https://zenodo.org/record/3606300/files/asap.tar.gz?download=1
 $ tar -xzf asap.tar.gz
 $ rm asap.tar.gz
-$ wget https://s3.computational.bio.uni-giessen.de/swift/v1/asap/example-lmonocytogenes-4.tar.gz
+$ wget https://zenodo.org/record/3606761/files/example-lmonocytogenes-4.tar.gz?download=1
 $ tar -xzf example-lmonocytogenes-4.tar.gz
 $ rm example-lmonocytogenes-4.tar.gz
 $ asap/asap-docker.sh -p example-lmonocytogenes-4/

@@ -11,7 +11,7 @@ instance Python3, Java and Perl.
 Therefore, the ASA³P directory containing everything else must be downloaded
 and extracted before executing ASA³P:
 ```bash
-$ wget https://s3.computational.bio.uni-giessen.de/swift/v1/asap/asap.tar.gz
+$ wget https://zenodo.org/record/3606300/files/asap.tar.gz?download=1
 $ tar -xzf asap.tar.gz
 $ rm asap.tar.gz
 ```
@@ -51,7 +51,7 @@ Example project:
 For demonstration purpose we offer an example project containing 4 Listeria monocytogenes genomes.
 Just download and extract it:
 ```bash
-$ wget https://s3.computational.bio.uni-giessen.de/swift/v1/asap/example-lmonocytogenes.tar.gz
+$ wget https://zenodo.org/record/3606761/files/example-lmonocytogenes-4.tar.gz?download=1
 $ tar -xzf example-lmonocytogenes.tar.gz
 $ rm example-lmonocytogenes.tar.gz
 $ asap/asap-docker.sh -p example-lmonocytogenes/
