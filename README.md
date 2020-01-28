@@ -146,7 +146,7 @@ information please have a look at our user manual.
 In order to trigger an **OpenStack** based cloud project, you need the following
 additional cloud related files:
 - ASA³P cloud tarball (containing binaries, property files and a customized BiBiGrid version):
-https://s3.computational.bio.uni-giessen.de/swift/v1/asap/asap-cloud.tar.gz (md5sum: c584dedcaf17963a240dbabfad95f608)
+[asap-cloud.tar.gz](https://zenodo.org/record/3606300/files/asap-cloud.tar.gz?download=1) (md5sum: c584dedcaf17963a240dbabfad95f608)
 
 Once ASA³P is properly setup you can start it by executing a single shell script:
 ```bash
@@ -159,8 +159,8 @@ Parameters:
 * `<PROJECT_DIR>`: path to the actual project directory (containing `config.xls` and `data` directory)
 
 For a comprehensive and detailed description of how to setup an OpenStack project
-and ASA³P therein, please have a look at our
-[manual](https://s3.computational.bio.uni-giessen.de/swift/v1/asap/manual.pdf).
+and ASA³P therein, please have a look at our manual stored here:
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3606299.svg)](https://doi.org/10.5281/zenodo.3606299)
 
 ## Input/Output
 
@@ -173,9 +173,9 @@ ASA³P expects all input files and information regarding a single execution
 (i.e. a "project") within a dedicated directory. All necessary information
 (meta information, reference genomes, isolate/sample names and files) are
 provided via an Excel config file named *config.xls*.
-A corresponding template can be downloaded [here](https://s3.computational.bio.uni-giessen.de/swift/v1/asap/config.xls).
+A corresponding template can be downloaded [here](https://zenodo.org/record/3606300/files/config.xls?download=1).
 For further details on how to fill out a proper configuration file, please have
-a look at the [manual](https://s3.computational.bio.uni-giessen.de/swift/v1/asap/manual.pdf)
+a look at the [manual](https://zenodo.org/record/3606300/files/manual.pdf?download=1)
 and the exemplary projects listed above. All input files referenced in a configuration
 spreadsheet need to be placed in a subdirectory called *data*.
 
@@ -344,9 +344,10 @@ To our best knowledge this is true for at least the following databases:
 
 ## FAQ
 * __Is there a public example project?__
-Just download and use this exemplary project containing a tiny set of 4 public
-*Listeria monocytogenes* genomes from **SRA**:
-https://s3.computational.bio.uni-giessen.de/swift/v1/asap/example-lmonocytogenes-4.tar.gz
+Just download and use one of these exemplary projects containing a tiny set of 4 public
+*Listeria monocytogenes* genomes from **SRA**, a larger 32 *L. monocytogenes* set as well as
+a comprehensive *E. coli* set covering all potential input data types:
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3606760.svg)](https://doi.org/10.5281/zenodo.3606760)
 
 * __Why do I have to pre-basecall ONT reads?__
 Unfortunately, there are too many combinations of flow cells, sequencing kits, etc.
