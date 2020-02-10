@@ -11,7 +11,11 @@
 ## Contents
 - [Description](#description)
 - [Features](#features)
+  - [Per Isolate](#per-isolate)
+  - [Comparative](#comparative)
 - [Availability](#availability)
+  - [Docker](#docker)
+  - [Cloud](#cloud-openstack)
 - [Input/Output](#inputoutput)
 - [Citation](#citation)
 - [License](#license)
@@ -132,7 +136,7 @@ $ asap/asap-docker.sh -p example-lmonocytogenes-4/
 
 For further information have a look at the Docker readme (docker/DOCKER.md ).
 
-### Cloud - OpenStack
+### Cloud OpenStack
 ASA³P's **OpenStack** based cloud version targets the analysis of hundreds to
 even thousands of bacterial isolates. Therefore, it features automatic creation,
 setup and orchestration of an **SGE** based compute cluster and its entire
