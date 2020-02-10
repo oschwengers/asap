@@ -330,6 +330,10 @@ project-dir
 
 To cite our work, please transitionally refer to:
 
+> Schwengers et al. (in press). ASA³P: An automatic and scalable pipeline for the assembly, annotation and higher level analysis of closely related bacterial isolates. PLOS Computational Biology
+
+Alternatively, you can also cite our bioRxiv preprint:
+
 > ASA³P: An automatic and scalable pipeline for the assembly, annotation and higher level analysis of closely related bacterial isolates. Oliver Schwengers, Andreas Hoek, Moritz Fritzenwanker, Linda Falgenhauer, Torsten Hain, Trinad Chakraborty, Alexander Goesmann. bioRxiv 654319; doi: https://doi.org/10.1101/654319
 
 ## License
