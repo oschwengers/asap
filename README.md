@@ -344,7 +344,7 @@ A file (README.md) within the ASA³P directory contains a list of all
 dependencies and related licenses.
 
 **NOTE**
-Please, notice that some bundled dependecies are published under a
+Please, notice that some bundled dependencies are published under a
 **free-for-academic** or **free-for-non-commercial** usage license model.
 To our best knowledge this is true for at least the following databases:
 - CARD: free for academic usage
