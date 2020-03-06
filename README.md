@@ -1,4 +1,4 @@
-[![DOI:10.1101/654319v1](https://zenodo.org/badge/DOI/10.1101/654319.svg)](https://www.biorxiv.org/content/10.1101/654319v1)
+[![DOI:10.1371/journal.pcbi.1007134](https://zenodo.org/badge/DOI/10.1371/journal.pcbi.1007134.svg)](https://doi.org/10.1371/journal.pcbi.1007134)
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-brightgreen.svg)](https://github.com/oschwengers/asap/blob/master/LICENSE)
 ![Don't judge me](https://img.shields.io/badge/Language-Groovy-blue.svg)
 ![GitHub release](https://img.shields.io/github/release/oschwengers/asap.svg)
@@ -328,13 +328,7 @@ project-dir
 
 ## Citation
 
-To cite our work, please transitionally refer to:
-
-> Schwengers et al. (in press). ASA³P: An automatic and scalable pipeline for the assembly, annotation and higher level analysis of closely related bacterial isolates. PLOS Computational Biology
-
-Alternatively, you can also cite our bioRxiv preprint:
-
-> ASA³P: An automatic and scalable pipeline for the assembly, annotation and higher level analysis of closely related bacterial isolates. Oliver Schwengers, Andreas Hoek, Moritz Fritzenwanker, Linda Falgenhauer, Torsten Hain, Trinad Chakraborty, Alexander Goesmann. bioRxiv 654319; doi: https://doi.org/10.1101/654319
+> Schwengers et al. (2020). ASA³P: An automatic and scalable pipeline for the assembly, annotation and higher level analysis of closely related bacterial isolates. PLOS Computational Biology 16(3): e1007134. https://doi.org/10.1371/journal.pcbi.1007134
 
 ## License
 ASA³P itself is published and distributed under GPL3 license. In contradiction,
