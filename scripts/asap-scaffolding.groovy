@@ -200,6 +200,7 @@ ProcessBuilder pb = new ProcessBuilder( 'java', '-jar', "${MEDUSA}/medusa.jar".t
     '-i', assemblyPath.toString(), // assembled alignments
     '-o', scaffoldsPath.toString(), // new name
     '-random', '100', // random rounds to find the best scaffolds
+    '-threads', '1', // reduce threads to 1 core
     '-scriptPath', Paths.get( MEDUSA ).resolve( 'medusa_scripts' ).toString() )// random rounds to find the best scaffolds
     .redirectErrorStream( true )
     .redirectOutput( ProcessBuilder.Redirect.INHERIT )
