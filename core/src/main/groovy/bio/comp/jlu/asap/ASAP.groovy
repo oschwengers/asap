@@ -168,7 +168,7 @@ if( !Files.exists( configPath ) )
 // parse config.json
 def config = (new JsonSlurper()).parseText( configPath.toFile().text )
 config.project.path = projectPath.toString() // store project path
-config.project.debugging = opts.b // store debbuging state
+config.project.debugging = opts.d // store debbuging state
 
 
 if( opts.c ) { // only check config and data files
