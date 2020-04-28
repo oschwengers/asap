@@ -109,6 +109,10 @@ class ScaffoldingReportStep extends ReportStep {
                 scaffoldingReportsPath.resolve( "${genomeName}.html" ).toFile() << detailWriter.toString()
                 steps.finished << stat
 
+                // remove unnecessary memory payload
+                stat.scaffolds.remove( 'syntenies' )
+                stat.scaffolds.remove( 'scaffolds' )
+
             } else if( stat.status == SKIPPED.toString() )
                 steps.skipped << stat
             else
