@@ -136,8 +136,19 @@ final Path tmpPath = Paths.get( '/', 'var', 'scratch', "tmp-${System.currentTime
 try { // create tmp dir
     log.info( "tmp-folder: ${tmpPath}" )
     Files.createDirectory( tmpPath )
+    if( !config.project.debugging ) {
+        addShutdownHook( {
+            try {
+                tmpPath.deleteDir()
+                // cleanup
+                log.debug( 'delete tmp-dir' )
+            } catch( IOException ex ) {
+                log.error( "could not recursively delete tmp-dir=${tmpPath}", ex )
+            }
+        } )
+    }
 } catch( Throwable t ) {
-    terminate( "could create tmp dir! gid=${genomeId}, tmp-dir=${tmpPath}", t, abrPath, genomeName )
+    terminate( "could create tmp dir! gid=${genomeId}, tmp-dir=${tmpPath}", t, taxPath, genomeName )
 }
 
 
@@ -262,11 +273,6 @@ abrs.each( { k, v ->
 // sort hits lists
 info.abr.perfect = perfectHits.sort( { it.orf.start } )
 info.abr.additional = additionalHits.sort( { a, b -> a.orf.start <=> b.orf.start ?: b.percentSeqIdentity <=> a.percentSeqIdentity ?: a.eValue <=> b.eValue } )
-
-
-// cleanup
-log.debug( 'delete tmp-dir' )
-if( !tmpPath.deleteDir() ) terminate( "could not recursively delete tmp-dir=${tmpPath}", abrPath, genomeName )
 
 
 // store info.json

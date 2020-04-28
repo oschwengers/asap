@@ -125,8 +125,19 @@ final Path tmpPath = Paths.get( '/', 'var', 'scratch', "tmp-${System.currentTime
 try { // create tmp dir
     log.info( "tmp-folder: ${tmpPath}" )
     Files.createDirectory( tmpPath )
+    if( !config.project.debugging ) {
+        addShutdownHook( {
+            try {
+                tmpPath.deleteDir()
+                // cleanup
+                log.debug( 'delete tmp-dir' )
+            } catch( IOException ex ) {
+                log.error( "could not recursively delete tmp-dir=${tmpPath}", ex )
+            }
+        } )
+    }
 } catch( Throwable t ) {
-    terminate( "could not create tmp dir! gid=${genomeId}, tmp-dir=${tmpPath}", t, vfPath, genomeName )
+    terminate( "could create tmp dir! gid=${genomeId}, tmp-dir=${tmpPath}", t, taxPath, genomeName )
 }
 
 
@@ -274,11 +285,6 @@ stdOut.eachLine( { line ->
 
 // sort hits
 info.vf = blastHits.values().sort( { it.bitScore } )
-
-
-// cleanup
-log.debug( 'delete tmp-dir' )
-if( !tmpPath.deleteDir() ) terminate( "could not recursively delete tmp-dir=${tmpPath}", vfPath, genomeName )
 
 
 // store info.json

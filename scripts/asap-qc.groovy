@@ -146,8 +146,19 @@ try { // create tmp dir
     Files.createDirectory( tmpPath )
     log.debug( "create tmp-trimmed folder: ${tmpTrimmedPath}" )
     Files.createDirectory( tmpTrimmedPath )
+    if( !config.project.debugging ) {
+        addShutdownHook( {
+            try {
+                tmpPath.deleteDir()
+                // cleanup
+                log.debug( 'delete tmp-dir' )
+            } catch( IOException ex ) {
+                log.error( "could not recursively delete tmp-dir=${tmpPath}", ex )
+            }
+        } )
+    }
 } catch( Throwable t ) {
-    terminate( "could not create tmp dir! gid=${genomeId}, tmp-dir=${tmpPath}, trimmed-tmp-dir=${tmpTrimmedPath}", t, genomeQCReadsPath )
+    terminate( "could create tmp dir! gid=${genomeId}, tmp-dir=${tmpPath}", t, taxPath, genomeName )
 }
 
 
@@ -536,11 +547,6 @@ sed "s,%ASAP_HOME%,${ASAP_HOME},g" ${FASTQ_SCREEN}\/fastq_screen.conf.template >
     }
 
 } )
-
-
-// cleanup
-log.debug( 'delete tmp-dir' )
-if( !tmpPath.deleteDir() ) terminate( "could not recursively delete tmp-dir=${tmpPath}", genomeQCReadsPath )
 
 
 // store info.json

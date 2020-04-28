@@ -145,13 +145,24 @@ if( !Files.exists( genomeContigsPath ) ) {
 }
 
 
-// create local tmp dir
-Path tmpPath = Paths.get( '/', 'var', 'scratch', "tmp-${System.currentTimeMillis()}-${Math.round(Math.random()*1000)}" )
+// create local tmp directory
+final Path tmpPath = Paths.get( '/', 'var', 'scratch', "tmp-${System.currentTimeMillis()}-${Math.round(Math.random()*1000)}" )
 try { // create tmp dir
     log.info( "tmp-folder: ${tmpPath}" )
     Files.createDirectory( tmpPath )
+    if( !config.project.debugging ) {
+        addShutdownHook( {
+            try {
+                tmpPath.deleteDir()
+                // cleanup
+                log.debug( 'delete tmp-dir' )
+            } catch( IOException ex ) {
+                log.error( "could not recursively delete tmp-dir=${tmpPath}", ex )
+            }
+        } )
+    }
 } catch( Throwable t ) {
-    terminate( "could not create tmp dir! gid=${genomeId}, tmp-dir=${tmpPath}", t, genomeContigsPath )
+    terminate( "could create tmp dir! gid=${genomeId}, tmp-dir=${tmpPath}", t, taxPath, genomeName )
 }
 
 
@@ -268,10 +279,6 @@ info.time.end = OffsetDateTime.now().toString()
 File infoJson = genomeContigsPath.resolve( 'info.json' ).toFile()
 infoJson << JsonOutput.prettyPrint( JsonOutput.toJson( info ) )
 
-
-// cleanup
-log.debug( 'delete tmp-dir' )
-if( !tmpPath.deleteDir() ) terminate( "could not recursively delete tmp-dir=${tmpPath}", genomeContigsPath )
 
 // set state-file to finished
 Files.move( genomeContigsPath.resolve( 'state.running' ), genomeContigsPath.resolve( 'state.finished' ) )

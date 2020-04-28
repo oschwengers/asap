@@ -92,18 +92,28 @@ if( config.project.debugging ) { // set logging to debug upon user request
 }
 
 
-
-
 final Path corePanPath = projectPath.resolve( PROJECT_PATH_CORE_PAN )
 Files.createFile( corePanPath.resolve( 'state.running' ) ) // create state.running
+
 
 // create local tmp directory
 final Path tmpPath = Paths.get( '/', 'var', 'scratch', "tmp-${System.currentTimeMillis()}-${Math.round(Math.random()*1000)}" )
 try { // create tmp dir
     log.info( "tmp-folder: ${tmpPath}" )
     Files.createDirectory( tmpPath )
+    if( !config.project.debugging ) {
+        addShutdownHook( {
+            try {
+                tmpPath.deleteDir()
+                // cleanup
+                log.debug( 'delete tmp-dir' )
+            } catch( IOException ex ) {
+                log.error( "could not recursively delete tmp-dir=${tmpPath}", ex )
+            }
+        } )
+    }
 } catch( Throwable t ) {
-    terminate( "could create tmp dir! gid=${genomeId}, tmp-dir=${tmpPath}", t, corePanPath )
+    terminate( "could create tmp dir! gid=${genomeId}, tmp-dir=${tmpPath}", t, taxPath, genomeName )
 }
 
 
@@ -319,11 +329,6 @@ corePanPath.resolve( 'core.fasta' ).text = sbCoreGenes.toString()
 info.time.end = OffsetDateTime.now().toString()
 File infoJson = corePanPath.resolve( 'info.json' ).toFile()
 infoJson << JsonOutput.prettyPrint( JsonOutput.toJson( info ) )
-
-
-// cleanup
-log.debug( 'delete tmp-dir' )
-if( !tmpPath.deleteDir() ) terminate( "could not recursively delete tmp-dir=${tmpPath}", corePanPath )
 
 
 // set state-file to finished

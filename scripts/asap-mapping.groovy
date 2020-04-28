@@ -126,8 +126,19 @@ final Path tmpPath = Paths.get( '/', 'var', 'scratch', "tmp-${System.currentTime
 try { // create tmp dir
     log.info( "tmp-folder: ${tmpPath}" )
     Files.createDirectory( tmpPath )
+    if( !config.project.debugging ) {
+        addShutdownHook( {
+            try {
+                tmpPath.deleteDir()
+                // cleanup
+                log.debug( 'delete tmp-dir' )
+            } catch( IOException ex ) {
+                log.error( "could not recursively delete tmp-dir=${tmpPath}", ex )
+            }
+        } )
+    }
 } catch( Throwable t ) {
-    terminate( "could create tmp dir! gid=${genomeId}, tmp-dir=${tmpPath}", t, mappingsPath, genomeName )
+    terminate( "could create tmp dir! gid=${genomeId}, tmp-dir=${tmpPath}", t, taxPath, genomeName )
 }
 
 
@@ -369,15 +380,6 @@ if( ft == FileType.READS_ILLUMINA_PAIRED_END  ||  ft == FileType.READS_ILLUMINA_
     Files.move( mappingsPath.resolve( "${genomeName}.running" ), mappingsPath.resolve( "${genomeName}.failed" ) ) // set state-file to failed
     System.exit( 0 )
 }
-
-
-
-
-
-
-// cleanup
-log.debug( 'delete tmp-dir' )
-if( !tmpPath.deleteDir() ) terminate( "could not recursively delete tmp-dir=${tmpPath}", mappingsPath, genomeName )
 
 
 // store info.json
