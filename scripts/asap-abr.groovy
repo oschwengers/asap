@@ -184,10 +184,11 @@ Files.copy( genomeSequencePath, localGenomeSequencePath )
 String cardOutput = 'card'
 Path cardOutputPath = tmpPath.resolve( "${cardOutput}.json" )
 ProcessBuilder pb = new ProcessBuilder( 'singularity',
-    'run',
+    'exec',
     '--no-home',
     '--bind', tmpPath.toString(), // mount tmp (cwd) directory
     SINGULARITY_CARD.toString(), // path to Singularity container file
+    'rgi', 'main',
     '--input_type', 'contig',
     '--num_threads', '1',
     '--input_sequence', localGenomeSequencePath.toString(),
