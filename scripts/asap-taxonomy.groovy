@@ -460,6 +460,7 @@ config.references.each( { ref ->
     // perform global alignments via nucmer
     log.debug( 'map contig fragments via nucmer...' )
     pb = new ProcessBuilder( NUCMER,
+        "--threads=${NUM_THREADS}".toString(),
         referencePath.toString(),
         dnaFragmentsPath.toString() )
     .directory( tmpPath.toFile() )
