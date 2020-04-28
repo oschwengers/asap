@@ -369,7 +369,7 @@ def checkConfig( def config, Path projectPath ) {
     if( !config.user.email )
         Misc.exit( log, 'User email is missing or empty in configuration file!', null )
     config.user.email = config.user.email.trim()
-    if( !(config.user.email ==~ /[\w-_\.]+@(?:[\w+-]+\.)+[a-z]{2,20}/) )
+    if( !(config.user.email ==~ /[\w\-_\.]+@(?:[\w+-]+\.)+[a-z]{2,20}/) )
         Misc.exit( log, "Unvalid user email (${config.user.email}) in configuration file!\nThe provided email seems to be unvalid.\nIf this is not the case, please do not hesitate to file an issue at GitHub.", null )
 
 
@@ -420,7 +420,7 @@ def checkConfig( def config, Path projectPath ) {
             if( !genome.strain )
                 Misc.exit( log, "Genome strain designation in configuration file for genome (${genome}) is empty!", null )
             String strain = genome.strain.trim()
-            if( !(strain ==~ /[a-zA-Z0-9\.-_]{2,50}/) )
+            if( !(strain ==~ /[a-zA-Z0-9\.\-_]{2,50}/) )
                 Misc.exit( log, "Strain designation (${strain}) in configuration file contains unvalid characters!\nOnly alpha-numerics, '-', '_' and '.' are allowed. It should contain at least 2 and a maximum of 50 characters.\nJust in case, this is not enough, please do not hesitate to file an issue at GitHub.", null )
             genome.strain = strain
 
@@ -465,7 +465,7 @@ def checkConfig( def config, Path projectPath ) {
     if( config.references ) {
         Path referencePath = projectPath.resolve( PROJECT_PATH_REFERENCES )
         config.references.each( { ref ->
-            if( !(ref ==~ /[a-zA-Z0-9\._-]{2,}/) ) {
+            if( !(ref ==~ /[a-zA-Z0-9\._\-]{2,}/) ) {
                 Misc.exit( log, "Wrong reference file name (${ref}) in configuration file!\nOnly alpha-numerics, '_', '-' and '.' are allowed. It should contain at least 2 characters.", null )
             } else if( !Files.isReadable( dataPath.resolve( ref ) ) ) {
                 Misc.exit( log, "Reference file (${ref}) does not exist or is not readable in project data subdirectory!", null )
