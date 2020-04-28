@@ -157,7 +157,7 @@ if( opts.c ) {
 
 // convert spreadsheet config into JSON config
 try {
-    ConfigWriterThread.convertConfig( log, projectPath )
+    ConfigWriter.convertConfig( log, projectPath )
 } catch( Exception ex ) {
     Misc.exit( log, "Could not convert configuration file to JSON! Please, check the configuration file and test it via the '-c/--check' option.", ex )
 }
@@ -201,17 +201,13 @@ if( opts.c ) { // only check config and data files
     if( !Files.exists( projectPath.resolve( 'state.finished' ) ) )
         Misc.exit( log, 'couldn\'t detect a former pipeline run! (no state.finished)', null )
 
-    def configWriterThread = new ConfigWriterThread( config )
-        configWriterThread.start() // start config writer thread
-
     // start html reporting
     def reportRunner = new ReportRunner( config )
         reportRunner.start()
         reportRunner.waitFor()
 
-    // shutdown config writer thread
-    configWriterThread.finish()
-    configWriterThread.join()
+    // write config update
+    ConfigWriter.writeConfig( config )
 
 } else { // normal setup, start pipeline
 
@@ -273,15 +269,16 @@ if( opts.c ) { // only check config and data files
     if( !Files.exists( projectPath.resolve( 'state.finished' ) ) ) // make sure it's the first run
         setupDirectories( config, projectPath ) // create project folder subdirectories
 
-    def configWriterThread = new ConfigWriterThread( config )
-        configWriterThread.start() // start config writer thread
-
     printInfo( config ) // print config.json
 
     if( !config.analyses ) // tmp fix for config bug
         config.analyses = [:]
     if( !config.steps ) // tmp fix for config bug
         config.steps = [:]
+
+
+    // write config update
+    ConfigWriter.writeConfig( config )
 
 
     // start init steps
@@ -333,9 +330,8 @@ if( opts.c ) { // only check config and data files
         reportRunner.waitFor()
 
 
-    // shutdown config writer thread
-    configWriterThread.finish()
-    configWriterThread.join()
+    // write config update
+    ConfigWriter.writeConfig( config )
 
 
     // delete tmp sequences dir

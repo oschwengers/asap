@@ -7,8 +7,6 @@ import java.nio.file.Path
 import java.nio.file.Paths
 import java.time.*
 import groovy.json.JsonOutput
-import groovy.transform.CompileStatic
-import groovy.util.logging.Slf4j
 import org.slf4j.Logger
 import bio.comp.jlu.asap.api.FileType
 
@@ -21,62 +19,14 @@ import static bio.comp.jlu.asap.ASAPConstants.*
  *
  * @author Oliver Schwengers <oliver.schwengers@computational.bio.uni-giessen.de
  */
-@Slf4j
-class ConfigWriterThread extends Thread {
+class ConfigWriter {
 
-    final Path projectPath
-    final Path configPath
 
-    def config
-    boolean finish = false
-
-    ConfigWriterThread( config ) {
-
-        this.config = config
+    public static void writeConfig( def config ) {
 
         // get config.json path
-        this.projectPath = Paths.get( config.project.path )
-        this.configPath  = projectPath.resolve( 'config.json' )
-
-        setName( 'ConfigWriterThread' )
-        setDaemon( true )
-
-    }
-
-
-    @CompileStatic
-    public void finish() {
-
-        finish = true
-
-    }
-
-
-    public void run() {
-
-        log.debug( 'start json writer...' )
-        while( !finish ) {
-
-            writeConfig()
-
-            try {
-                Thread.sleep( CONFIG_WRITER_SLEEP_PERIOD )
-            } catch( InterruptedException ex ) {
-                log.warning( ex )
-            }
-
-        }
-
-        // write final state
-        writeConfig()
-
-        log.debug( 'shutdown json writer...' )
-
-    }
-
-
-    @CompileStatic
-    private void writeConfig() {
+        Path projectPath = Paths.get( config.project.path )
+        Path configPath  = projectPath.resolve( 'config.json' )
 
         def json = JsonOutput.toJson( config )
         File tmpConfigFile = projectPath.resolve( 'tmp.json' ).toFile()
