@@ -495,7 +495,7 @@ sed "s,%ASAP_HOME%,${ASAP_HOME},g" ${FASTQ_SCREEN}\/fastq_screen.conf.template >
 
         // run FastQ Screen
         pb = new ProcessBuilder( "${FASTQ_SCREEN}/fastq_screen".toString(),
-            '--aligner', (isPacBio||ft == FileType.READS_NANOPORE) ? 'bwa' : 'bowtie2',
+            '--aligner', 'bwa',
             '--conf', "${tmpPath}/fastq_screen.conf",
             '--threads', NUM_THREADS,
             '--outdir', tmpTrimmedPath.toString() )
