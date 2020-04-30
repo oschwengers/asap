@@ -42,7 +42,7 @@ interactive visualizations.
 - assembly (**Illumnia**, **PacBio** & **ONT**)
 - scaffolding
 - annotation
-- taxonomic classification (**Kmer**, **16S** and **ANI**)
+- taxonomic classification (**Kmer/ANI**, **16S** and **ANI**)
 - multi locus sequence typing (**MLST**)
 - antibiotic resistance detection
 - virulence factor detection
@@ -62,12 +62,12 @@ analysed as a single project, we distribute ASA³P in two versions:
 - **OpenStack**: highly scalable cloud version for (very) large projects
 
 For both the following files are necessary:
-- ASA³P tarball containing binaries, 3rd party executables and databases: asap.tar.gz (md5: `a2dcb3465bcbace5930eb278e91bf395`)
+- ASA³P tarball containing binaries, 3rd party executables and databases: asap.tar.gz
 - configuration template: config.xls
 
 Note:
 As the ASA³P tarball contains all databases and 3rd party executables necessary,
-it is rather huge (78 Gb zipped, 142 Gb unzipped) and thus, download times may be very long.
+it is rather huge (23 Gb zipped, 29 Gb unzipped) and thus, download times may be quit long.
 To unzip the tarball a deflating tool supporting multithreadding might be beneficial,
 e.g. pigz on linux (`sudo apt install pigz` for Ubuntu).
 
@@ -76,9 +76,9 @@ Additional files:
 - configuration example: config-example.xls
 
 Additional example and benchmark projects are hostet in a distinct repository at Zenodo: [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3606760.svg)](https://doi.org/10.5281/zenodo.3606760)
-   - 4 public *L. monocytogenes* genomes: example-lmonocytogenes-4.tar.gz (md5: `3da5858e62a3c8a836dfa91e58a9983e`)
-   - 32 public *L. monocytogenes* genomes: example-lmonocytogenes-32.tar.gz (md5: `4e64aa96f24dff518dead76f150a936c`)
-   - 8 *E. coli* project merely showing support of different input types: example-ecoli-input.tar.gz (md5: `1da85ab18f9afae98cf176ef88c6c214`)
+   - 4 public *L. monocytogenes* genomes: example-lmonocytogenes-4.tar.gz
+   - 32 public *L. monocytogenes* genomes: example-lmonocytogenes-32.tar.gz
+   - 8 *E. coli* project merely showing support of different input types: example-ecoli-input.tar.gz
 
 ### Docker
 For small to medium projects (up to ~200 isolates) but also for the sake of
