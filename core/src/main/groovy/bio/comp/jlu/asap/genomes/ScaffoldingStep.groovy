@@ -26,6 +26,9 @@ class ScaffoldingStep extends GenomeStep {
 
     private static final GenomeSteps STEP_DEPENDENCY = GenomeSteps.ASSEMBLY
 
+    private static final String QSUB_SLOTS = '4'
+    private static final String QSUB_FREE_MEM = '0.25' // 1 Gig Memory divided by 4 PE instances -> 0.5
+
     private Path   genomePath
 
 
@@ -127,6 +130,8 @@ class ScaffoldingStep extends GenomeStep {
                 '-sync', 'y',
                 '-V', // export all env vars to cluster job
                 '-N', 'asap-scaf',
+                '-pe', 'multislot', QSUB_SLOTS,
+                '-l', "virtual_free=${QSUB_FREE_MEM}G".toString(),
                 '-o', genomePath.resolve( 'stdout.log' ).toString(),
                 '-e', genomePath.resolve( 'stderr.log' ).toString() )
             .redirectOutput( genomePath.resolve( 'qsub.log' ).toFile() )
@@ -177,7 +182,7 @@ class ScaffoldingStep extends GenomeStep {
     void clean() throws Throwable  {
 
         log.debug( "clean: genome.id=${genome.id}" )
-        
+
         genomePath.eachFile( groovy.io.FileType.FILES, {
             File file = it.toFile()
             if( file.name.endsWith( '.log' )  &&  file.length() == 0 ) {

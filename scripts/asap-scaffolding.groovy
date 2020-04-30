@@ -33,6 +33,8 @@ MUMMER = "${ASAP_HOME}/share/mummer"
 LINKER      = 'NNNNNNNNNNCTAGCTAGCTAGCNNNNNNNNNN'
 LINE_LENGTH = 70
 
+int noCores = Runtime.getRuntime().availableProcessors()
+NUM_THREADS = noCores < 4 ? Integer.toString( noCores ) : '4'
 
 /*********************
  *** Script Params ***
@@ -200,7 +202,7 @@ ProcessBuilder pb = new ProcessBuilder( 'java', '-jar', "${MEDUSA}/medusa.jar".t
     '-i', assemblyPath.toString(), // assembled alignments
     '-o', scaffoldsPath.toString(), // new name
     '-random', '100', // random rounds to find the best scaffolds
-    '-threads', '1', // reduce threads to 1 core
+    '-threads', NUM_THREADS, // reduce threads
     '-scriptPath', Paths.get( MEDUSA ).resolve( 'medusa_scripts' ).toString() )// random rounds to find the best scaffolds
     .redirectErrorStream( true )
     .redirectOutput( ProcessBuilder.Redirect.INHERIT )
@@ -303,6 +305,7 @@ config.references.each( { ref ->
         post: []
     ]
     pb = new ProcessBuilder( "${MUMMER}/nucmer".toString(),
+        "--threads=${NUM_THREADS}".toString(),
         referencesPath.resolve( "${refName}.fasta" ).toString(), // reference
         assemblyPath.toString() ) // assembled alignments
         .redirectErrorStream( true )
@@ -324,6 +327,7 @@ config.references.each( { ref ->
     reference.pre = parseNucmer( tmpPath.resolve( 'out-filtered.delta' ), false )
 
     pb = new ProcessBuilder( "${MUMMER}/nucmer".toString(),
+        "--threads=${NUM_THREADS}".toString(),
         referencesPath.resolve( "${refName}.fasta" ).toString(), // reference
         scaffoldsPath.toString() ) // scaffolds
         .redirectErrorStream( true )
