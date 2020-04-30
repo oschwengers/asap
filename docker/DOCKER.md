@@ -103,11 +103,11 @@ directories from inside the Docker container into Singularity containers ASA³P 
 need this **security related** `--privileged` option.
 
 Mounted volumes:
-* `<asap-dir>`: absolute path to downloaded and extracted ASA3P directory (asap.tar.gz)
-* `<project-dir>`: absolute path to local ASA3P project directory (containing config.xls and data subdirectory)
+* `<asap-dir>`: absolute path to downloaded and extracted ASA³P directory (asap.tar.gz)
+* `<project-dir>`: absolute path to local ASA³P project directory (containing config.xls and data subdirectory)
 * `<scratch-dir>`: optionally path to a distinct scratch/tmp dir
-* `/etc/group`: necessary to execute ASA3P as the current user instead of root within the Docker container
-* `/etc/passwd`: necessary to execute ASA3P as the current user instead of root within the Docker container
+* `/etc/group`: necessary to execute ASA³P as the current user instead of root within the Docker container
+* `/etc/passwd`: necessary to execute ASA³P as the current user instead of root within the Docker container
 
 Optional options/paramters:
 * `--rm` removes ephemeral storage (container & data within in)
