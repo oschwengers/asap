@@ -288,7 +288,7 @@
                                     <tr>
                                         <th><span class="glyphicon glyphicon-barcode"></span></th>
                                         <th class="text-center">Genome</th>
-                                        <th class="text-center"><abbr title="Kmer based taxonomic classification">Tax Class</abbr></th>
+                                        <th class="text-center"><abbr title="ANI based taxonomic classification">Tax Class</abbr></th>
                                         <th class="text-center"><abbr title="[kb]">Genome Size</abbr></th>
                                         <th class="text-center"># Contigs</th>
                                         <th class="text-center"><abbr title="[%]">GC</abbr></th>
@@ -303,7 +303,7 @@
 <tr onmouseover="onRow(this)" onmouseout="offRow(this)">
 <td class="text-center">${genome.id}</td>
 <td class="text-center">${genome.sampleName}</td>
-<td class="text-center"><a href="./taxonomy/${genome.genomeName}.html">${genome.kmer}</a></td>
+<td class="text-center"><a href="./taxonomy/${genome.genomeName}.html">${genome.ani}</a></td>
 <td class="text-center<#if (genome.zScores.genomeSize>2.5)> bg-danger<#elseif (genome.zScores.genomeSize>1.5)> bg-warning</#if>" gradient="1"><#if genome.genomeSize?is_number><a href="./assemblies/${genome.genomeName}.html">${genome.genomeSize}</a><#else>-</#if></td>
 <td class="text-center<#if (genome.zScores.noContigs>2.5)> bg-danger<#elseif (genome.zScores.noContigs>1.5)> bg-warning</#if>" gradient="2"><#if genome.noContigs?is_number><a href="./assemblies/${genome.genomeName}.html">${genome.noContigs}</a><#else>-</#if></td>
 <td class="text-center<#if (genome.zScores.gc>2.5)> bg-danger<#elseif (genome.zScores.gc>1.5)> bg-warning</#if>"><#if genome.gc?is_number><a href="./assemblies/${genome.genomeName}.html">${genome.gc?round}</a><#else>-</#if></td>

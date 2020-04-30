@@ -91,11 +91,11 @@
                               over the current and the next lower phylogenetic level together with the number of contigs
                               classified (weight) is displayed.</p>
 
-                            <h5>Kmer Contig Classifications</h5>
+                            <h5>Kmer / ANI classifications</h5>
 
-                            <p>Taxonomy was calculated based on kmers.</p>
+                            <p>Taxonomy was calculated based on kmer profiles and ANI values.</p>
 
-                            <h5>16S rRNA Classifications</h5>
+                            <h5>16S rRNA classifications</h5>
 
                             <p>Taxonomy was calculated based on 16S rRNAs.</p>
 
@@ -107,11 +107,11 @@
                               per page can be chosen on the top left of the table. Mouse over on underlined table headers
                               to display further information on it.</p>
 
-                            <h5>Kmer Contig Classifications</h5>
+                            <h5>Kmer / ANI classifications</h5>
 
-                            <p>Contains the set of kmer classification results of all contigs.</p>
+                            <p>The results from Mash / ANI are displayed.</p>
 
-                            <h5>16S rRNA Classifications</h5>
+                            <h5>16S rRNA classifications</h5>
 
                             <p>Contains 16S rRNA classification results for all detected 16S sequences based on highest scoring 16S
                               RNA.</p>
@@ -170,56 +170,27 @@
 
                     <!-- kmer -->
                 <#if kmer.classification?has_content>
-                    <div id="kmerRow" class="row">
-                        <div class="col">
-                            <h2><small>Kmer Contig Classifications</small></h2>
-                            <div id="kmerChart"></div>
-                            <script type="text/javascript">
-                                google.charts.load( "current", {packages:["sankey"]} );
-                                google.charts.setOnLoadCallback( function () {
-                                    const data = new google.visualization.DataTable();
-                                        data.addColumn('string', 'From');
-                                        data.addColumn('string', 'To');
-                                        data.addColumn('number', 'Weight');
-                                        data.addRows( [
-                                        <#list plots.sankeyKmer as link>
-                                            [ '${link.from}', '${link.to}', ${link.weight?c} ],
-                                        </#list>
-                                        ] );
-                                    let options = {
-                                        height: 400,
-                                        sankey: {
-                                            iterations: 80,
-                                            node: {
-                                                width: 2,
-                                                nodePadding: 20
-                                            }
-                                        }
-                                    };
-                                    const chart = new google.visualization.Sankey( document.getElementById( 'kmerChart' ) );
-                                        chart.draw( data, options );
-                                } );
-                            </script>
-                        </div>
-                    </div>
                     <div class="row voffset">
                         <div class="col">
+                            <h2><small>Kmer / ANI Classifications</small></h2>
                             <table id="kmerTable" class="table table-hover table-condensed">
                                 <thead>
                                     <tr>
                                         <th class="text-center">Classification</th>
-                                        <th class="text-center">Contigs [#]</th>
-                                        <th class="text-center">Contigs [%]</abbr></th>
-                                        <th class="text-center">Lineage</th>
+                                        <th class="text-center"><abbr title="ANI * conserved DNA">Rank</abbr></th>
+                                        <th class="text-center">Mash distance [#]</th>
+                                        <th class="text-center"><abbr title="Average Nucleotide Identity">ANI</abbr> [%]</th>
+                                        <th class="text-center">Conserved DNA [%]</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                <#list kmer.lineages as tax>
-                                    <tr>
-                                        <td class="text-center"><a href="http://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?name=${tax.classification?replace(" ", "+")}" target="_blank">${tax.classification}</a></td>
-                                        <td class="text-center">${tax.freq}</td>
-                                        <td class="text-center">${(tax.freq/kmer.hits*100)?string["0.0"]}</td>
-                                        <td class="text-center"><#list tax.lineage as taxon><span class="label label-default">${taxon}</span> </#list></td>
+                                <#list kmer.hits as hit>
+                                    <tr <#if hit.isClassifier>class="info"</#if>>
+                                        <td class="text-center"><a href="http://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=${hit.taxonId}" target="_blank">${hit.classification}</a></td>
+                                        <td class="text-center">${((hit.ani*hit.conservedDNA)?string["0.000"])}</td>
+                                        <td class="text-center">${hit.dist}</td>
+                                        <td class="text-center <#if (hit.ani >= 0.95)>success<#else>danger</#if>">${((hit.ani*100)?string["0.00"])}</td>
+                                        <td class="text-center <#if (hit.conservedDNA >= 0.69)>success<#else>danger</#if>">${((hit.conservedDNA*100)?string["0.00"])}</td>
                                     </tr>
                                 </#list>
                                 </tbody>
@@ -282,7 +253,7 @@
                                 </thead>
                                 <tbody>
                                 <#list rrna.lineages as tax>
-                                    <tr>
+                                    <tr <#if tax?index==0>class="info"</#if>>
                                         <td class="text-center"><a href="http://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?name=${tax.classification?replace(" ", "+")}" target="_blank">${tax.classification}</a></td>
                                         <td class="text-center">${tax.freq}</td>
                                         <td class="text-center">${(tax.freq/rrna.hits*100)?string["0.0"]}</td>
@@ -310,6 +281,7 @@
                                 <thead>
                                     <tr>
                                         <th>Reference</th>
+                                        <th class="text-center"><abbr title="ANI * conserved DNA">Rank</abbr></th>
                                         <th class="text-center"><abbr title="Average Nucleotide Identity">ANI</abbr> [%]</th>
                                         <th class="text-center">Conserved DNA [%]</th>
                                         </tr>
@@ -318,8 +290,9 @@
                                 <#list ani.all as ani>
                                     <tr>
                                         <td>${ani.reference}</td>
-                                        <td class="text-center">${((ani.ani*100)?string["0.0"])}</td>
-                                        <td class="text-center">${((ani.conservedDNA*100)?string["0.0"])}</td>
+                                        <td class="text-center">${((ani.ani*ani.conservedDNA)?string["0.000"])}</td>
+                                        <td class="text-center <#if (ani.ani>=0.95)>success<#else>danger</#if>">${((ani.ani*100)?string["0.00"])}</td>
+                                        <td class="text-center <#if (ani.conservedDNA>=0.69)>success<#else>danger</#if>">${((ani.conservedDNA*100)?string["0.00"])}</td>
                                     </tr>
                                 </#list>
                                 </tbody>

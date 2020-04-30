@@ -7,6 +7,7 @@
 
 import java.nio.file.*
 import java.time.*
+import java.util.zip.GZIPInputStream
 import groovy.json.*
 import groovy.util.CliBuilder
 import org.slf4j.*
@@ -27,13 +28,13 @@ import static bio.comp.jlu.asap.api.Paths.*
 final def env = System.getenv()
 ASAP_HOME = env.ASAP_HOME
 
-KRAKEN       = "${ASAP_HOME}/share/kraken"
+MASH         = "${ASAP_HOME}/share/mash"
 NUCMER       = "${ASAP_HOME}/share/mummer/nucmer"
 DELTA_FILTER = "${ASAP_HOME}/share/mummer/delta-filter"
 BLASTN       = "${ASAP_HOME}/share/blast/bin/blastn"
 CMSEARCH     = "${ASAP_HOME}/share/infernal/cmsearch"
 
-KRAKEN_DB = "${ASAP_HOME}/db/kraken"
+REFSEQ_DB    = "${ASAP_HOME}/db/refseq"
 SILVA_DB  = "${ASAP_HOME}/db/silva/silva-bacteria"
 RFAM_CM_SSU_RRNA = "${ASAP_HOME}/db/RF00177.cm"
 
@@ -175,7 +176,6 @@ def info = [
     ],
     path: taxPath.toString(),
     kmer: [
-        lineages: [],
         classification: [:]
     ],
     rrna: [
@@ -192,46 +192,82 @@ def info = [
 
 /********************
  *** Script Logic ***
- *** kmer (kraken) **
+ *** kmer / ANI (Mash/MUMmer) **
 ********************/
 
-log.info( 'start kmer species classification via Kraken' )
-ProcessBuilder pb = new ProcessBuilder( 'sh', '-c',
-"${KRAKEN}/kraken --fasta-input ${genomeSequencePath} --threads ${NUM_THREADS} \
-| ${KRAKEN}/kraken-translate \
-> tax.txt" )
-    .redirectErrorStream( true )
-    .redirectOutput( ProcessBuilder.Redirect.INHERIT )
+log.info( 'start kmer species classification via Mash' )
+ProcessBuilder pb = new ProcessBuilder( MASH,
+    'dist',
+    '-p', NUM_THREADS,
+    '-d', '0.1',
+    "${REFSEQ_DB}/db.msh".toString(),
+    genomeSequencePath.toString() )
     .directory( tmpPath.toFile() )
+    log.info( "exec: ${pb.command()}" )
+    log.info( '----------------------------------------------------------------------------------------------' )
+    proc = pb.start()
+    stdOut = new StringBuilder()
+    stdErr = new StringBuilder()
+    proc.consumeProcessOutput( stdOut, stdErr )
+    if( proc.waitFor() != 0 ){
+        log.error( stdErr.toString() )
+        terminate( 'could not exec mash!', taxPath, genomeName )
+    }
+    log.info( '----------------------------------------------------------------------------------------------' )
 
-def pbEnv = pb.environment() // set path variables
-pbEnv.put( 'KRAKEN_DEFAULT_DB', KRAKEN_DB )
 
-log.info( "exec: ${pb.command()}" )
-log.info( '----------------------------------------------------------------------------------------------' )
-if( pb.start().waitFor() != 0 ) terminate( 'could not exec kraken | kraken-translate > tax.txt!', taxPath, genomeName )
-log.info( '----------------------------------------------------------------------------------------------' )
-
-
-def taxSet = new HashMap<String,Integer>()
-int hits = 0
-tmpPath.resolve( 'tax.txt' ).eachLine( { line ->
-    hits++
-    String tax = line.split( '\t' )[1]
-    Integer noTax = taxSet.get( tax )
-    if( noTax == null ) taxSet.put( tax, 1 )
-    else                taxSet.put( tax, noTax+1 )
+def hits = []
+stdOut.toString().eachLine( { line ->
+    log.debug( "mash-hit: ${line}" )
+    def cols = line.split( '\t' )
+    hits << [
+        'accessionId': cols[0],
+        'dist': cols[2] as float,
+        'isClassifier': false  // only one hit can be selected as the kmer classifier hit
+    ]
 } )
-def taxList = taxSet.collect { k,v -> [ lineage: k, freq: v ] }
-taxList.sort( { -it.freq } )
+hits = hits.sort( { it.dist } )
+if( hits.size() > 10 )
+    hits = hits[0..9]
+
+
+// load taxonomic information & annotate result hits
+Paths.get("${REFSEQ_DB}/db.tsv").eachLine( { line ->
+    def cols = line.split( '\t' )
+    String accessionId = cols[0]
+    String taxonId = cols[1]
+    String species = cols[2]
+    def result = hits.find( { it.accessionId == accessionId } )
+    if( result ) {
+        result[ 'taxonId' ] = taxonId
+        result[ 'classification' ] = species
+    }
+} )
+
+
+log.info('start ANI calculation against RefSeq genomes')
+// build DNA fragemnts
+final def genomeFragmentObject = createDnaFragments( genomeSequencePath, tmpPath )
+
+hits.each( { hit ->
+    Path referenceDbPath = Paths.get( REFSEQ_DB, "${hit.accessionId}.fna.gz")
+    Path referencePath = tmpPath.resolve( "${hit.accessionId}.fna" )
+    decompressAndCopy( referenceDbPath, referencePath )
+    def ani = computeANI( genomeFragmentObject, referencePath, tmpPath )
+    hit << ani
+    hit['isSpecies'] = ( ani.ani >= 0.95  &&  ani.conservedDNA >= 0.69 ) ? true : false
+} )
+hits.sort( { -it.ani * it.conservedDNA } )
 info.kmer.hits = hits
-info.kmer.classification = taxList[0]
-taxList.each( {
-    it.lineage -= 'root;cellular organisms;'
-    it.lineage = it.lineage.split( ';' )
-    it.classification = it.lineage[ it.lineage.size()-1 ]
-    info.kmer.lineages << it
-} )
+
+speciesHits = hits.findAll( { it.isSpecies } ).sort( { -it.ani * it.conservedDNA } )
+if( speciesHits.size() > 0) {
+    speciesHit = speciesHits[0]
+    speciesHit.isClassifier = true
+    info.kmer.classification = speciesHit
+} else {
+    info.kmer.classification = [:]
+}
 
 
 
@@ -427,6 +463,33 @@ config.references.each( { ref ->
     Path referencePath = Paths.get( projectPath.toString(), PROJECT_PATH_REFERENCES, "${refName}.fasta" )
     log.info( "ANI reference=${refName}" )
 
+    // compute ANI & conservedDNA
+    def ani = computeANI( genomeFragmentObject, referencePath, tmpPath )
+    ani.reference = refName
+    info.ani.all << ani
+
+} )
+info.ani.best = info.ani.all.sort( { -it.ani } )[0]
+
+
+// store info.json
+info.time.end = OffsetDateTime.now().toString()
+File infoJson = taxPath.resolve( "${genomeName}.json" ).toFile()
+infoJson << JsonOutput.prettyPrint( JsonOutput.toJson( info ) )
+
+
+// set state-file to finished
+Files.move( taxPath.resolve( "${genomeName}.running" ), taxPath.resolve( "${genomeName}.finished" ) )
+
+
+
+
+/**********************
+ *** Script Methods ***
+**********************/
+
+
+private def createDnaFragments( Path genomeSequencePath, Path tmpPath ) {
 
     // build and write DNA fragemnts of length 1020
     log.debug( 'build dna-fragments.fasta file...' )
@@ -457,12 +520,21 @@ config.references.each( { ref ->
         dnaFragmentIdx++;
     } )
 
+    return [
+        dnaFragmentsPath: dnaFragmentsPath,
+        dnaFragments: dnaFragments
+    ]
+}
+
+
+private def computeANI( def genomeFragmentObject, Path referencePath, Path tmpPath ) {
+
     // perform global alignments via nucmer
     log.debug( 'map contig fragments via nucmer...' )
-    pb = new ProcessBuilder( NUCMER,
+    ProcessBuilder pb = new ProcessBuilder( NUCMER,
         "--threads=${NUM_THREADS}".toString(),
         referencePath.toString(),
-        dnaFragmentsPath.toString() )
+        genomeFragmentObject.dnaFragmentsPath.toString() )
     .directory( tmpPath.toFile() )
     .redirectErrorStream( true )
     .redirectOutput( ProcessBuilder.Redirect.INHERIT )
@@ -488,26 +560,26 @@ config.references.each( { ref ->
     def dnaFragment = null
     def dnaFragementMatches = []
     filterPath.text.eachLine( { line ->
-        if( line.charAt(0) == '>' ) {
-            def dnaFragmentId = line.split( ' ' )[1]
-            dnaFragment = dnaFragments.find( { it.id == Integer.parseInt( dnaFragmentId ) } )
-        } else if( dnaFragment != null ) {
-            def cols = line.split( ' ' )
-            if( cols.size() > 1 ) {
-                def (rStart, rStop, qStart, qStop, noNonIdentities, noNonSimilarities, noStopCodons ) = cols
-                dnaFragment.alignmentLength = Math.abs( Integer.parseInt(qStop) - Integer.parseInt(qStart) )
-                dnaFragment.noNonIdentities = Integer.parseInt( noNonIdentities )
-                dnaFragementMatches << dnaFragment
+            if( line.charAt(0) == '>' ) {
+                def dnaFragmentId = line.split( ' ' )[1]
+                dnaFragment = genomeFragmentObject.dnaFragments.find( { it.id == Integer.parseInt( dnaFragmentId ) } )
+            } else if( dnaFragment != null ) {
+                def cols = line.split( ' ' )
+                if( cols.size() > 1 ) {
+                    def (rStart, rStop, qStart, qStop, noNonIdentities, noNonSimilarities, noStopCodons ) = cols
+                    dnaFragment.alignmentLength = Math.abs( Integer.parseInt(qStop) - Integer.parseInt(qStart) )
+                    dnaFragment.noNonIdentities = Integer.parseInt( noNonIdentities )
+                    dnaFragementMatches << dnaFragment
+                }
             }
-        }
-    } )
+        } )
 
     // calc % conserved DNA
     log.debug( 'calc ANI...' )
     def alignmentSum = dnaFragementMatches.findAll( { ((it.alignmentLength-it.noNonIdentities)/it.alignmentLength) > 0.9 } )
-        .collect( { it.alignmentLength } )
-        .sum() ?: 0
-    def genomeLength = dnaFragments.collect( { it.length } ).sum() ?: 0
+    .collect( { it.alignmentLength } )
+    .sum() ?: 0
+    def genomeLength = genomeFragmentObject.dnaFragments.collect( { it.length } ).sum() ?: 0
     def conservedDNA = genomeLength > 0 ? alignmentSum/genomeLength : 0
     log.info( "conserved DNA: ${ conservedDNA*100 } %" )
 
@@ -517,31 +589,31 @@ config.references.each( { ref ->
     def ani = aniMatches.size() > 0 ? niSum / aniMatches.size() : 0
     log.info( "ANI: ${ani*100} %" )
 
-    info.ani.all << [
-        reference: refName ,
+    return [
         conservedDNA: conservedDNA,
         ani: ani
     ]
-
-} )
-info.ani.best = info.ani.all.sort( { -it.ani } )[0]
+}
 
 
-// store info.json
-info.time.end = OffsetDateTime.now().toString()
-File infoJson = taxPath.resolve( "${genomeName}.json" ).toFile()
-infoJson << JsonOutput.prettyPrint( JsonOutput.toJson( info ) )
+private void decompressAndCopy( Path inputPath, Path outputPath ) {
 
+    try {
+        BufferedReader bi = new BufferedReader( new InputStreamReader( GZIPInputStream gzis = new GZIPInputStream( Files.newInputStream( inputPath ) ) ) )
+        BufferedWriter bo = Files.newBufferedWriter( outputPath )
 
-// set state-file to finished
-Files.move( taxPath.resolve( "${genomeName}.running" ), taxPath.resolve( "${genomeName}.finished" ) )
+        int len
+        char[] buffer = new char[1024]
+        while( (len = bi.read( buffer, 0, 1024 ) ) > 0 ) {
+            bo.write( buffer, 0, len )
+        }
 
-
-
-
-/**********************
- *** Script Methods ***
-**********************/
+        bi.close()
+        bo.close()
+    } catch( Exception ex ) {
+        throw ex
+    }
+}
 
 
 private void terminate( String msg, Path taxPath, String genomeName ) {

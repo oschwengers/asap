@@ -80,15 +80,15 @@
                               For the taxonomic classification of bacterial isolates ASA&#179;P uses three distinct methods:</p>
 
                             <ul>
-                              <li>Kmer profiles</li>
+                              <li>Kmer / ANI profiles</li>
 
                               <li>16S sequence homology</li>
 
                               <li>Comparison of average nucleotide identities (<code>ANI</code>)</li>
                             </ul>
 
-                            <p>The first two methods are reference free solutions where the last one is reference based approach. Kmer profiles are analyzed via
-                              the <code>Kraken</code> tool and subsequent kmer profile hits are extracted from a custom <code>RefSeq</code> based database.
+                            <p>The first two methods are user provided reference-free solutions where the last one is a user provided reference-based approach. Kmer profiles are compated against <code>RefSeq</code>
+                              reference and representative genomes via <code>Mash</code>. For resulting candidate reference genomes with a max Mash distance smaller than 0.1 average nucleotide identity (ANI) and conserved DNA values are computed.
                               In order to search for 16S homology the pipeline uses <code>Infernal</code> to extract untruncated 16S sequences with a bitscore larger than 1,000 and
                               subsequently queries it against the <code>RDP</code> 16S database.</p>
 
@@ -103,7 +103,7 @@
 
                             <h5>Reference Free Classifications</h5>
 
-                            <p>The results from Kraken and Infernal are displayed.</p>
+                            <p>The results from Mash/ANI and Infernal/Blastn are displayed.</p>
 
                             <h5>Highest Reference ANIs</h5>
 
@@ -249,7 +249,7 @@
                                     <tr>
                                         <th><span class="glyphicon glyphicon-barcode"></span></th>
                                         <th>Genome</th>
-                                        <th class="text-center">Kmer</th>
+                                        <th class="text-center">Kmer / ANI</th>
                                         <th class="text-center">16S rRNA</th>
                                         <th class="text-center">Details</th>
                                         </tr>
@@ -259,7 +259,7 @@
                                     <tr>
                                         <td>${step.genome.id}</td>
                                         <td>${project.genus[0]}. ${step.genome.species} ${step.genome.strain}</td>
-                                        <td class="text-center"><#if step.kmer.classification?has_content><a href="http://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?name=${step.kmer.classification.classification?replace(" ", "+")}" target="_blank">${step.kmer.classification.classification}</a><#else>-</#if></td>
+                                        <td class="text-center"><#if step.kmer.classification?has_content><a href="http://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=${step.kmer.classification.taxonId}" target="_blank">${step.kmer.classification.classification}</a><#else>-</#if></td>
                                         <td class="text-center"><#if step.rrna.classification?has_content><a href="http://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?name=${step.rrna.classification.classification?replace(" ", "+")}" target="_blank">${step.rrna.classification.classification}</a><#else>-</#if></td>
                                         <td class="text-center"><a href="./taxonomy/${step.genomeName}.html"><span class="glyphicon glyphicon-search"></span></a></td>
                                     </tr>

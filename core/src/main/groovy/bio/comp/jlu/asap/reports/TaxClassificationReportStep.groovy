@@ -84,24 +84,7 @@ class TaxClassificationReportStep extends ReportStep {
 
                 // sankey diagram computations
                 stat.plots = [:]
-                def linkCounts = [:] // kmer sankey
-                stat.kmer.lineages.each( {
-                    def lin = it.lineage
-                    for( int i=0; i<lin.size()-1; i++ ) {
-                        if( lin[i] != lin[i+1] ) {
-                            String link = lin[i] + '-' + lin[i+1]
-                            if( linkCounts.containsKey( link ) )
-                                linkCounts[ (link) ] += it.freq
-                            else
-                                linkCounts[ (link) ] = it.freq
-                        }
-                    }
-                } )
-                stat.plots.sankeyKmer = linkCounts.collect( { k,v ->
-                    def split = k.split( '-' )
-                    return [ from: split[0], to: split[1], weight: v ]
-                } )
-                linkCounts = [:] // rRna sankey
+                def linkCounts = [:] // rRna sankey
                 stat.rrna.lineages.each( {
                     def lin = it.lineage
                     for( int i=0; i<lin.size()-1; i++ ) {
@@ -118,7 +101,7 @@ class TaxClassificationReportStep extends ReportStep {
                     def split = k.split( '-' )
                     return [ from: split[0], to: split[1], weight: v ]
                 } )
-                [ stat.kmer.lineages + stat.rrna.lineages ].flatten().each( {
+                [ stat.rrna.lineages ].flatten().each( {
                     if( taxonCounts.containsKey( it.classification ) )
                         taxonCounts[ (it.classification) ] += it.freq
                     else

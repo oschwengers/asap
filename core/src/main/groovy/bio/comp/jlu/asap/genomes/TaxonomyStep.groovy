@@ -28,7 +28,7 @@ class TaxonomyStep extends GenomeStep {
     private static final GenomeSteps STEP_DEPENDENCY = GenomeSteps.SCAFFOLDING
 
     private static final String QSUB_SLOTS = '4'
-    private static final String QSUB_FREE_MEM = '4' // 16 Gig Memory divided by 4 PE instances -> 4
+    private static final String QSUB_FREE_MEM = '0.5' // 2 Gig Memory divided by 4 PE instances -> 0.5
 
     private Path   taxPath = projectPath.resolve( PROJECT_PATH_TAXONOMY )
 
@@ -168,7 +168,7 @@ class TaxonomyStep extends GenomeStep {
     void clean() throws Throwable  {
 
         log.debug( "clean: genome.id=${genome.id}" )
-        
+
         taxPath.eachFileMatch( groovy.io.FileType.FILES, ~/$genomeName\..+\.log/, {
             if( it.toFile().length() == 0 ) {
                 try{
