@@ -1,3 +1,17 @@
+# v1.3.0
+## Features
+- Replaced Kraken based kmer taxonomic classification by a Mash lookup / ANI computation approach
+
+## Enhancements
+- Updated CARD db to 3.0.7
+- Updated VFDB to 2020-04-28
+- Updated PubMLST to 2020-04-28
+- Improved scaffolding runtime performance
+- Added JVM shutdown hook to delete tmp directories
+- Fixed a memory leak in scaffolding report creation
+- Fixed config strain check regex
+- Removed redundand QC mapping index files
+
 # v1.2.2
 ## Enhancements
 - Improved the `-c/--check` logic and error messages

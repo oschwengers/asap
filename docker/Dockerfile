@@ -1,6 +1,6 @@
 FROM ubuntu:16.04
 
-LABEL version="1.2.1"
+LABEL version="1.3.0"
 LABEL maintainer="andreas.hoek@bio.uni-giessen.de"
 LABEL maintainer="oliver.schwengers@computational.bio.uni-giessen.de"
 

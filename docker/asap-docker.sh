@@ -163,7 +163,7 @@ if [ "$SCRATCH" != "" ]; then
         --volume="$SCRATCH:/var/scratch" \
         --volume="/etc/group:/etc/group:ro" \
         --volume="/etc/passwd:/etc/passwd:ro" \
-        oschwengers/asap:v1.2.2 \
+        oschwengers/asap:v1.3.0 \
         $SKIP_CHAR $SKIP_COMP $DEBUG
 
 else
@@ -175,7 +175,7 @@ else
     --volume="$DATA:/data" \
     --volume="/etc/group:/etc/group:ro" \
     --volume="/etc/passwd:/etc/passwd:ro" \
-    oschwengers/asap:v1.2.2 \
+    oschwengers/asap:v1.3.0 \
     $SKIP_CHAR $SKIP_COMP $DEBUG
 fi
 
