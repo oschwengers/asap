@@ -1,4 +1,4 @@
-[![DOI:10.1101/654319v1](https://zenodo.org/badge/DOI/10.1101/654319.svg)](https://www.biorxiv.org/content/10.1101/654319v1)
+[![DOI:10.1371/journal.pcbi.1007134](https://zenodo.org/badge/DOI/10.1371/journal.pcbi.1007134.svg)](https://doi.org/10.1371/journal.pcbi.1007134)
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-brightgreen.svg)](https://github.com/oschwengers/asap/blob/master/LICENSE)
 ![Don't judge me](https://img.shields.io/badge/Language-Groovy-blue.svg)
 ![GitHub release](https://img.shields.io/github/release/oschwengers/asap.svg)
@@ -11,7 +11,11 @@
 ## Contents
 - [Description](#description)
 - [Features](#features)
+  - [Per Isolate](#per-isolate)
+  - [Comparative](#comparative)
 - [Availability](#availability)
+  - [Docker](#docker)
+  - [Cloud](#cloud-openstack)
 - [Input/Output](#inputoutput)
 - [Citation](#citation)
 - [License](#license)
@@ -132,7 +136,7 @@ $ asap/asap-docker.sh -p example-lmonocytogenes-4/
 
 For further information have a look at the Docker readme (docker/DOCKER.md ).
 
-### Cloud - OpenStack
+### Cloud OpenStack
 ASA³P's **OpenStack** based cloud version targets the analysis of hundreds to
 even thousands of bacterial isolates. Therefore, it features automatic creation,
 setup and orchestration of an **SGE** based compute cluster and its entire
@@ -324,9 +328,7 @@ project-dir
 
 ## Citation
 
-To cite our work, please transitionally refer to:
-
-> ASA³P: An automatic and scalable pipeline for the assembly, annotation and higher level analysis of closely related bacterial isolates. Oliver Schwengers, Andreas Hoek, Moritz Fritzenwanker, Linda Falgenhauer, Torsten Hain, Trinad Chakraborty, Alexander Goesmann. bioRxiv 654319; doi: https://doi.org/10.1101/654319
+> Schwengers et al. (2020). ASA³P: An automatic and scalable pipeline for the assembly, annotation and higher level analysis of closely related bacterial isolates. PLOS Computational Biology 16(3): e1007134. https://doi.org/10.1371/journal.pcbi.1007134
 
 ## License
 ASA³P itself is published and distributed under GPL3 license. In contradiction,
@@ -336,7 +338,7 @@ A file (README.md) within the ASA³P directory contains a list of all
 dependencies and related licenses.
 
 **NOTE**
-Please, notice that some bundled dependecies are published under a
+Please, notice that some bundled dependencies are published under a
 **free-for-academic** or **free-for-non-commercial** usage license model.
 To our best knowledge this is true for at least the following databases:
 - CARD: free for academic usage
