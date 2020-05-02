@@ -11,7 +11,7 @@ instance Python3, Java and Perl.
 Therefore, the ASA³P directory containing everything else must be downloaded
 and extracted before executing ASA³P:
 ```bash
-$ wget https://zenodo.org/record/3606300/files/asap.tar.gz?download=1
+$ wget https://zenodo.org/record/3780003/files/asap.tar.gz
 $ tar -xzf asap.tar.gz
 $ rm asap.tar.gz
 ```
