@@ -2,7 +2,8 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-brightgreen.svg)](https://github.com/oschwengers/asap/blob/master/LICENSE)
 ![Don't judge me](https://img.shields.io/badge/Language-Groovy-blue.svg)
 ![GitHub release](https://img.shields.io/github/release/oschwengers/asap.svg)
-![Docker Pulls](https://img.shields.io/docker/pulls/oschwengers/asap.svg)
+[![Docker Pulls](https://img.shields.io/docker/pulls/oschwengers/asap.svg)](https://hub.docker.com/r/oschwengers/asap)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3606299.svg)](https://doi.org/10.5281/zenodo.3606299)
 
 # ASA³P - Automatic Bacterial Isolate Assembly, Annotation and Analyses Pipeline
 
