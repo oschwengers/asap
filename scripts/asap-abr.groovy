@@ -211,6 +211,9 @@ def abrs = [:]
     if( !cardHit.value[ 'data_type' ] ) {
         cardHit.value.values().findAll( { !it?.nudged } ) // skip "nudged" CARD entries
         .each( { hsp ->
+            def tmp = hsp.orf_from.split('_')
+            tmp = tmp[0..-2]
+            String contig = tmp.join('_')
             def abr = [
                 model: [
                     aroId: hsp.ARO_accession,
@@ -224,10 +227,11 @@ def abrs = [:]
                 percentSeqIdentity: hsp.perc_identity / 100,
                 alignment: hsp.match,
                 orf: [
+                    contig: contig,
+                    strand: hsp.orf_strand,
                     start: hsp.orf_start,
                     end: hsp.orf_end,
-                    length: Math.abs( hsp.orf_start - hsp.orf_end ) + 1,
-                    strand: hsp.orf_strand
+                    length: Math.abs( hsp.orf_start - hsp.orf_end ) + 1
                 ],
                 antibiotics: [],
                 drugClasses: []

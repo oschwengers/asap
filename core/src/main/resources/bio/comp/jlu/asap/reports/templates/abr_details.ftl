@@ -188,10 +188,11 @@
                                         <th class="text-center">Model</th>
                                         <th class="text-center">Drug Class(es)</th>
                                         <th class="text-center">Target Drugs</th>
+                                        <th class="text-center">Contig</th>
+                                        <th class="text-center">Strand</th>
                                         <th class="text-center">Start</th>
                                         <th class="text-center">End</th>
                                         <th class="text-center">Length</th>
-                                        <th class="text-center">Strand</th>
                                         </tr>
                                     </thead>
                                 <tbody>
@@ -200,10 +201,11 @@
                                         <td class="text-center"><a href="https://card.mcmaster.ca/aro/${abr_.model.aroId}" target="_blank" class="model-description" data-toggle="popover" title="Model Information" data-content="<p>ARO-ID: ${abr_.model.aroId}</p><p>Name: ${abr_.model.name}</p><p>Description: ${abr_.model.desc}</p><p>Type: ${abr_.model.type}</p><p>Bitscore: ${abr_.model.bitScore}</p>">${abr_.model.name}</a></td>
                                         <td class="text-center">${abr_.drugClasses?join(", ")}</td>
                                         <td class="text-center">${abr_.antibiotics?join(", ")}</td>
+                                        <td class="text-center">${abr_.orf.contig}</td>
+                                        <td class="text-center">${abr_.orf.strand}</td>
                                         <td class="text-center">${abr_.orf.start}</td>
                                         <td class="text-center">${abr_.orf.end}</td>
                                         <td class="text-center">${abr_.orf.length}</td>
-                                        <td class="text-center">${abr_.orf.strand}</td>
                                     </tr>
                                     </#list>
                                 </tbody>
@@ -220,11 +222,12 @@
                                         <th class="text-center">Model</th>
                                         <th class="text-center">Drug Class(es)</th>
                                         <th class="text-center">Target Drugs</th>
+                                        <th class="text-center">Contig</th>
+                                        <th class="text-center">Strand</th>
                                         <th class="text-center">Start</th>
                                         <th class="text-center">End</th>
                                         <th class="text-center">Length</th>
                                         <th class="text-center">Bit Score</th>
-                                        <th class="text-center">Strand</th>
                                         <th class="text-center">eValue</th>
                                         <th class="text-center"><abbr title="[%]">Seq Identity</abbr></th>
                                         </tr>
@@ -235,11 +238,12 @@
                                         <td class="text-center"><a href="https://card.mcmaster.ca/aro/${abr_.model.aroId}" target="_blank" class="model-description" data-toggle="popover" title="Model Information" data-content="<p>ARO-ID: ${abr_.model.aroId}</p><p>Name: ${abr_.model.name}</p><p>Description: ${abr_.model.desc}</p><p>Type: ${abr_.model.type}</p><p>Bitscore: ${abr_.model.bitScore}</p>">${abr_.model.name}</a></td>
                                         <td class="text-center">${abr_.drugClasses?join(", ")}</td>
                                         <td class="text-center">${abr_.antibiotics?join(", ")}</td>
+                                        <td class="text-center">${abr_.orf.contig}</td>
+                                        <td class="text-center">${abr_.orf.strand}</td>
                                         <td class="text-center">${abr_.orf.start}</td>
                                         <td class="text-center">${abr_.orf.end}</td>
                                         <td class="text-center">${abr_.orf.length}</td>
                                         <td class="text-center"><abbr title="${abr_.alignment}">${abr_.bitScore?round}</abbr></a></td>
-                                        <td class="text-center">${abr_.orf.strand}</td>
                                         <td class="text-center"><#if abr_.eValue==0>0<#else>${abr_.eValue?string["0E0"]}</#if></td>
                                         <td class="text-center abr">${abr_.percentSeqIdentity * 100}</td>
                                     </tr>
@@ -258,11 +262,12 @@
                                         <th class="text-center">Model</th>
                                         <th class="text-center">Drug Class(es)</th>
                                         <th class="text-center">Target Drugs</th>
+                                        <th class="text-center">Contig</th>
+                                        <th class="text-center">Strand</th>
                                         <th class="text-center">Start</th>
                                         <th class="text-center">End</th>
                                         <th class="text-center">Length</th>
                                         <th class="text-center">Bit Score</th>
-                                        <th class="text-center">Strand</th>
                                         <th class="text-center">eValue</th>
                                         <th class="text-center"><abbr title="[%]">Seq Identity</abbr></th>
                                         </tr>
@@ -273,11 +278,12 @@
                                         <td class="text-center"><a href="https://card.mcmaster.ca/aro/${abr_.model.aroId}" target="_blank" class="model-description" data-toggle="popover" title="Model Information" data-content="<p>ARO-ID: ${abr_.model.aroId}</p><p>Name: ${abr_.model.name}</p><p>Description: ${abr_.model.desc}</p><p>Type: ${abr_.model.type}</p><p>Bitscore: ${abr_.model.bitScore}</p>">${abr_.model.name}</a></td>
                                         <td class="text-center">${abr_.drugClasses?join(", ")}</td>
                                         <td class="text-center">${abr_.antibiotics?join(", ")}</td>
+                                        <td class="text-center">${abr_.orf.contig}</td>
+                                        <td class="text-center">${abr_.orf.strand}</td>
                                         <td class="text-center">${abr_.orf.start}</td>
                                         <td class="text-center">${abr_.orf.end}</td>
                                         <td class="text-center">${abr_.orf.length}</td>
                                         <td class="text-center"><abbr title="${abr_.alignment}">${abr_.bitScore?round}</abbr></a></td>
-                                        <td class="text-center">${abr_.orf.strand}</td>
                                         <td class="text-center"><#if abr_.eValue==0>0<#else>${abr_.eValue?string["0E0"]}</#if></td>
                                         <td class="text-center abr">${abr_.percentSeqIdentity * 100}</td>
                                     </tr>
