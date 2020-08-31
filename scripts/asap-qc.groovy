@@ -158,7 +158,7 @@ try { // create tmp dir
         } )
     }
 } catch( Throwable t ) {
-    terminate( "could create tmp dir! gid=${genomeId}, tmp-dir=${tmpPath}", t, taxPath, genomeName )
+    terminate( "could not create tmp dir! gid=${genomeId}, tmp-dir=${tmpPath}", t, genomeQCReadsPath )
 }
 
 
