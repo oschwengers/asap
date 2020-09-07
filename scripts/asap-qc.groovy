@@ -600,6 +600,7 @@ private def runFastQC( Path readsPath, Path tmpPath, Path destinationPath ) {
     String fileName = readsPath.toFile().name
     [
         '.gz',
+        '.fq',
         '.fastq',
         '.bam'
     ].each( {
