@@ -392,7 +392,7 @@ strSNPStats.eachLine( { line ->
 
 if( !hasReferenceAnnotation ) { // calc change rate if not provided by SnpEff
     def fastaLines = fastaPath.text.split( '\n' ).drop( 1 )
-    info.changeRate = fastaLines.join( '' ).length() / info.noSNPs
+    info.changeRate = info.noSNPs > 0 ? fastaLines.join( '' ).length() / info.noSNPs : 'NA'
 }
 
 
