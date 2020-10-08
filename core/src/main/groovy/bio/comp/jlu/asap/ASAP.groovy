@@ -440,8 +440,8 @@ def checkConfig( def config, Path projectPath ) {
                     if( datum.files.size() == 0 )
                         Misc.exit( log, "Input data file/s in configuration file for genome (${genome}) is/are missing!", null )
                     if( (ft?.getDataType() == DataType.READS)  ||  (ft == FileType.GENOME) ) {
-                        datum.files.each( {
-                            if( !Files.isReadable( dataPath.resolve( it ) ) ) {
+                        datum.files.each( { fileName ->
+                            if( !Files.isReadable( dataPath.resolve( fileName ) ) ) {
                                 Misc.exit( log, "Could not read input data file (${fileName}) for genome (${genomeName}) in project data subdirectory!", null )
                             }
                         } )
