@@ -477,5 +477,6 @@
                 </div>
             </div>
         </div>
+        <script src="../js/psos-integration.js"></script>
     </body>
 </html>
