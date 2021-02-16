@@ -27,7 +27,7 @@ import static bio.comp.jlu.asap.api.Paths.*
 final def env = System.getenv()
 ASAP_HOME = env.ASAP_HOME
 
-FAST_TREE_MP = "${ASAP_HOME}/share/fasttreemp/FastTreeMP"
+FAST_TREE_MP = 'FastTreeMP'
 
 
 

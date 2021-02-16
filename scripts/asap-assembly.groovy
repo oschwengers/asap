@@ -29,20 +29,17 @@ import static bio.comp.jlu.asap.api.GenomeSteps.*
 final def env = System.getenv()
 ASAP_HOME = env.ASAP_HOME
 
-SPADES        = "${ASAP_HOME}/share/spades/bin/spades.py"
-SMRTLINK      = "${ASAP_HOME}/share/smrtlink"
-DATASET       = "${SMRTLINK}/smrtcmds/bin/dataset"
-BAM2FASTQ     = "${SMRTLINK}/smrtcmds/bin/bam2fastq"
-HGAP4         = "${SMRTLINK}/smrtcmds/bin/pbsmrtpipe"
-UNICYCLER     = "${ASAP_HOME}/share/unicycler"
-RACON         = "${ASAP_HOME}/share/racon"
-MAKEBLASTDB   = "${ASAP_HOME}/share/blast/bin/makeblastdb"
-TBLASTN       = "${ASAP_HOME}/share/blast/bin/tblastn"
-SAMTOOLS      = "${ASAP_HOME}/share/samtools/samtools"
-BOWTIE2       = "${ASAP_HOME}/share/bowtie2/bowtie2"
-BOWTIE2_BUILD = "${ASAP_HOME}/share/bowtie2/bowtie2-build"
-PILON         = "${ASAP_HOME}/share/pilon.jar"
-MINIMAP2      = "${ASAP_HOME}/share/minimap2"
+SPADES        = 'spades.py'
+FLYE          = 'flye'
+UNICYCLER     = 'unicycler'
+RACON         = 'racon'
+MAKEBLASTDB   = 'makeblastdb'
+TBLASTN       = 'tblastn'
+SAMTOOLS      = 'samtools'
+BOWTIE2       = 'bowtie2'
+BOWTIE2_BUILD = 'bowtie2-build'
+PILON         = 'pilon.jar'
+MINIMAP2      = 'minimap2'
 
 SAMTOOLS_SORT_MEM = '1G' // max-ram usage until tmp-file is created during sorting (optimum 4G for avg. files)
 
@@ -181,32 +178,16 @@ Files.createFile( genomeContigsPath.resolve( 'state.running' ) )
 genome.data.each( { datum ->
     FileType ft = FileType.getEnum( datum.type )
     if( ft?.getDataType() == DataType.READS ) {
-        if( ft == FileType.READS_PACBIO_RSII  ||  ft == FileType.READS_PACBIO_SEQUEL ) {
+        datum.files.each( { file ->
             try{
-                Path srcFile  = genomeQCReadsPath.resolve( "${genomeName}.subreads.bam" )
-                Path destFile = tmpPath.resolve( "${genomeName}.subreads.bam" )
-                log.info( "copy: ${srcFile} -> ${destFile}" )
-                Files.copy( srcFile, destFile )
-
-                srcFile  = genomeQCReadsPath.resolve( "${genomeName}.subreads.bam.pbi" )
-                destFile = tmpPath.resolve( "${genomeName}.subreads.bam.pbi" )
+                Path srcFile  = genomeQCReadsPath.resolve( file )
+                Path destFile = tmpPath.resolve( file )
                 log.info( "copy: ${srcFile} -> ${destFile}" )
                 Files.copy( srcFile, destFile )
             } catch( Exception ex ) {
-                terminate( "Failed to copy file!", ex, genomeContigsPath )
+                terminate( "Failed to copy file! src=${srcFile}, dest=${destFile}", ex, genomeContigsPath )
             }
-        } else {
-            datum.files.each( { file ->
-                try{
-                    Path srcFile  = genomeQCReadsPath.resolve( file )
-                    Path destFile = tmpPath.resolve( file )
-                    log.info( "copy: ${srcFile} -> ${destFile}" )
-                    Files.copy( srcFile, destFile )
-                } catch( Exception ex ) {
-                    terminate( "Failed to copy file! src=${srcFile}, dest=${destFile}", ex, genomeContigsPath )
-                }
-            } )
-        }
+        } )
     }
 } )
 
@@ -228,8 +209,8 @@ def info = [
 
 /** Determine which assembler to use
   *  - only Illumina reads -> Unicycler
-  *  - only PacBio reads -> HGap
-  *  - only ONT reads -> Unicycler
+  *  - only PacBio reads -> Flye
+  *  - only ONT reads -> Flye
   *  - ONT/PacBio + Illumina reads -> Unicycler
 **/
 def fileTypes = genome.data*.type
@@ -240,7 +221,7 @@ if( (FileType.READS_NANOPORE.toString() in fileTypes)  &&  (FileType.READS_ILLUM
     log.info( 'detected ONT & Illumina PE reads -> run Unicycler' )
     runUnicycler( config, genome, genomeContigsPath, tmpPath, info )
 
-} else if( ((FileType.READS_PACBIO_RSII.toString() in fileTypes)  ||  (FileType.READS_PACBIO_SEQUEL.toString() in fileTypes))  &&  (FileType.READS_ILLUMINA_PAIRED_END.toString() in fileTypes)) {
+} else if( (FileType.READS_PACBIO.toString() in fileTypes)  &&  (FileType.READS_ILLUMINA_PAIRED_END.toString() in fileTypes)) {
 
     // PacBio + Illumina reads -> Unicycler
     log.info( 'detected PacBio & Illumina PE reads -> run Unicycler' )
@@ -248,19 +229,19 @@ if( (FileType.READS_NANOPORE.toString() in fileTypes)  &&  (FileType.READS_ILLUM
 
 } else if( FileType.READS_NANOPORE.toString() in fileTypes ) {
 
-    // ONT only reads -> Unicycler
-    log.info( 'detected ONT reads -> run Unicycler' )
-    runUnicycler( config, genome, genomeContigsPath, tmpPath, info )
+    // ONT only reads -> Flye
+    log.info( 'detected ONT reads -> run Flye' )
+    runUFlye( config, genome, genomeContigsPath, tmpPath, info, FileType.READS_NANOPORE )
 
-} else if( (FileType.READS_PACBIO_RSII.toString() in fileTypes)  ||  (FileType.READS_PACBIO_SEQUEL.toString() in fileTypes) ) {
+} else if( FileType.READS_PACBIO.toString() in fileTypes ) {
 
-    // all reads in bax.h5 or bam file format -> use HGap
-    log.info( 'detected PacBio reads -> run HGap' )
-    runHGap( config, genome, genomeContigsPath, tmpPath, info )
+    // PB only reads -> use Flye
+    log.info( 'detected PacBio reads -> run Flye' )
+    runFlye( config, genome, genomeContigsPath, tmpPath, info, FileType.READS_PACBIO )
 
 } else if( FileType.READS_ILLUMINA_PAIRED_END.toString() in fileTypes  ||  FileType.READS_ILLUMINA_SINGLE.toString() in fileTypes ) {
 
-    // only short reads -> SPAdes
+    // only short reads -> UniCycler
     log.info( 'detected Illumina SE/PE reads -> run Unicycler' )
     runUnicycler( config, genome, genomeContigsPath, tmpPath, info )
 
@@ -296,18 +277,8 @@ private void runUnicycler( def config, def genome, Path genomeContigsPath, Path 
 
         final Path longReadsPath
         FileType ft = FileType.getEnum( genome.data[0].type )
-        if( ft == FileType.READS_PACBIO_SEQUEL  ||  ft == FileType.READS_PACBIO_RSII ) {
-            // convert PacBio bam to fastq
-            pb = new ProcessBuilder( BAM2FASTQ,
-                '-o', "${genomeName}",
-                '-u',
-                tmpPath.resolve( "${genomeName}.subreads.bam" ).toString() )
-            .directory( tmpPath.toFile() )
-            log.info( "exec: ${pb.command()}" )
-            log.info( '----------------------------------------------------------------------------------------------' )
-            if( pb.start().waitFor() != 0 ) terminate( 'could not exec bam2fastq!', genomeContigsPath )
-            log.info( '----------------------------------------------------------------------------------------------' )
-            longReadsPath = tmpPath.resolve( "${genomeName}.fastq" )
+        if( ft == FileType.READS_PACBIO ) {
+            longReadsPath = tmpPath.resolve( genome.data[0].files[0] )
         } else if( ft == FileType.READS_NANOPORE ) {
             longReadsPath = tmpPath.resolve( genome.data[0].files[0] )
         } else {
@@ -321,13 +292,6 @@ private void runUnicycler( def config, def genome, Path genomeContigsPath, Path 
             '--mode', 'normal',
             '--keep', '0',
             '--min_fasta_length', '150',
-            '--racon_path', RACON.toString(),
-            '--makeblastdb_path', MAKEBLASTDB.toString(),
-            '--tblastn_path', TBLASTN.toString(),
-            '--bowtie2_path', BOWTIE2.toString(),
-            '--bowtie2_build_path', BOWTIE2_BUILD.toString(),
-            '--samtools_path', SAMTOOLS.toString(),
-            '--pilon_path', PILON.toString(),
             '--out', tmpPath.toString()
             )
             .redirectErrorStream( true )
@@ -337,8 +301,6 @@ private void runUnicycler( def config, def genome, Path genomeContigsPath, Path 
 
         def cmd = pb.command()
         if( genome.data.size() == 2 ) { // multiple data -> hybrid assembly
-            cmd << '--spades_path'
-                cmd << SPADES.toString()
             cmd << '--short1'
                 cmd << tmpPath.resolve( genome.data[1].files[0] ).toString()
             cmd << '--short2'
@@ -348,8 +310,6 @@ private void runUnicycler( def config, def genome, Path genomeContigsPath, Path 
         } else { // single data -> short or long reads only
             String dataType = genome.data[0].type
             if( longReadsPath == null ) {  // short read assembly
-                cmd << '--spades_path'
-                    cmd << SPADES.toString()
                 cmd << '--short1'
                     cmd << tmpPath.resolve( genome.data[0].files[0] ).toString()
                 cmd << '--short2'
@@ -387,7 +347,7 @@ private void runUnicycler( def config, def genome, Path genomeContigsPath, Path 
                 ${SAMTOOLS} sort --threads ${NUM_THREADS} -m ${SAMTOOLS_SORT_MEM} -O BAM | \
                 ${SAMTOOLS} depth -" )
                 .directory( tmpPath.toFile() )
-        } else if( ft == FileType.READS_PACBIO_SEQUEL  ||  ft == FileType.READS_PACBIO_RSII ) { // PB long reads only
+        } else if( ft == FileType.READS_PACBIO ) { // PB long reads only
             pb = new ProcessBuilder( 'sh', '-c',
                 "${MINIMAP2} -a -Q -t ${NUM_THREADS} -x map-pb ${rawAssemblyPath} ${longReadsPath} | \
                 ${SAMTOOLS} sort --threads ${NUM_THREADS} -m ${SAMTOOLS_SORT_MEM} -O BAM | \
@@ -471,6 +431,143 @@ private void runUnicycler( def config, def genome, Path genomeContigsPath, Path 
 
     } catch( Throwable t ) {
         terminate( "Unicycler assembly failed! gid=${genome.id}", t, genomeContigsPath )
+    }
+
+
+}
+
+
+private void runFlye( def config, def genome, Path genomeContigsPath, Path tmpPath, def info, def readType ) {
+
+    try {
+
+        final Path longReadsPath
+        FileType ft = FileType.getEnum( genome.data[0].type )
+        if( ft == FileType.READS_PACBIO ) {
+            longReadsPath = tmpPath.resolve( genome.data[0].files[0] )
+        } else if( ft == FileType.READS_NANOPORE ) {
+            longReadsPath = tmpPath.resolve( genome.data[0].files[0] )
+        } else {
+            longReadsPath = null
+        }
+
+
+        // run Unicycler
+        ProcessBuilder pb = new ProcessBuilder( FLYE.toString(),
+            '--threads', NUM_THREADS,
+            '--trestle',
+            '--out-dir', tmpPath.toString()
+            )
+            .redirectErrorStream( true )
+            .redirectOutput( ProcessBuilder.Redirect.INHERIT )
+            .directory( tmpPath.toFile() )
+
+
+        def cmd = pb.command()
+        if( dataType == FileType.READS_NANOPORE ) {
+            cmd << '--nano-raw'
+                cmd << longReadsPath.toString()
+        } else if( dataType == FileType.READS_NANOPORE ) {
+            cmd << '--pacbio-raw'
+                cmd << longReadsPath.toString()
+        }
+
+
+        log.info( "exec: ${pb.command()}" )
+        log.info( '----------------------------------------------------------------------------------------------' )
+        int exitCode = pb.start().waitFor()
+        log.info( '----------------------------------------------------------------------------------------------' )
+        if( exitCode != 0 ) terminate( "abnormal Flye exit code! exitCode!=${exitCode}", genomeContigsPath )
+
+
+        // calc preFilter assembly stats
+        Path rawAssemblyPath = tmpPath.resolve( 'assembly.fasta' )
+        def preFilterStatistics = calcAssemblyStatistics( rawAssemblyPath )
+
+
+        // Check for long (PB/ONT) reads
+        // 1. create mapping (minimap2) for subsequent samtools depth call
+        // 2. sort mapped reads
+        // 3. compute depth per position
+        def contigDepths = [:]
+        if( readType == FileType.READS_PACBIO ) { // PB long reads only
+            pb = new ProcessBuilder( 'sh', '-c',
+                "${MINIMAP2} -a -Q -t ${NUM_THREADS} -x map-pb ${rawAssemblyPath} ${longReadsPath} | \
+                ${SAMTOOLS} sort --threads ${NUM_THREADS} -m ${SAMTOOLS_SORT_MEM} -O BAM | \
+                ${SAMTOOLS} depth -" )
+                .directory( tmpPath.toFile() )
+        } else if( ft == FileType.READS_NANOPORE ) { // ONT long reads only
+            pb = new ProcessBuilder( 'sh', '-c',
+                "${MINIMAP2} -a -Q -t ${NUM_THREADS} -x map-ont ${rawAssemblyPath} ${longReadsPath} | \
+                ${SAMTOOLS} sort --threads ${NUM_THREADS} -m ${SAMTOOLS_SORT_MEM} -O BAM | \
+                ${SAMTOOLS} depth -" )
+                .directory( tmpPath.toFile() )
+        }
+
+
+        log.info( "exec: ${pb.command()}" )
+        log.info( '----------------------------------------------------------------------------------------------' )
+        Process ps = pb.start()
+        ps.in.eachLine( {
+            String[] content = it.split( '\t' )
+            String contigName = content[0]
+            int depth = content[2] as int
+            if( contigDepths[ contigName ] )
+                contigDepths[ contigName ] += depth
+            else
+                contigDepths[ contigName ] = depth
+        } )
+        log.info( '----------------------------------------------------------------------------------------------' )
+
+        // calc contig coverage based on summed contig depths and contig length
+        log.debug( "assembly info: ${info}" )
+        log.debug( "contig depths: ${contigDepths}" )
+        log.debug( 'calc contig coverage:' )
+        contigDepths.each( { key, val ->
+            log.debug( "\tkey=${key}, val=${val}")
+            def contig = preFilterStatistics.contigs.find( {
+                log.debug( "\t\tcontigs=${it}" )
+                it.name == key
+            } )
+            assert contig != null
+            contig.coverage = val / contig.length
+            log.debug( "\tname=${key}, depth-sum=${val}, length=${contig.length}, coverage=${contig.coverage}" )
+        } )
+
+        // calc N50/N90 Coverage
+        def n50Contigs = preFilterStatistics.contigs.findAll( { it.length >= preFilterStatistics.n50 } )
+        preFilterStatistics.n50Coverage = n50Contigs.collect( {it.coverage * it.length} ).sum() / n50Contigs.collect( {it.length} ).sum()
+        log.debug( "pre-filter-N50=${preFilterStatistics.n50}" )
+        def n90Contigs = preFilterStatistics.contigs.findAll( { it.length >= preFilterStatistics.n90 } )
+        preFilterStatistics.n90Coverage = n50Contigs.collect( {it.coverage * it.length} ).sum() / n90Contigs.collect( {it.length} ).sum()
+
+        // filter contigs due to GC content, length and coverage
+        filterContigs( config, genome, rawAssemblyPath, genomeContigsPath, preFilterStatistics, info )
+        Path assemblyPath = genomeContigsPath.resolve( "${config.project.genus}_${genome.species}_${genome.strain}.fasta" )
+        info << calcAssemblyStatistics( assemblyPath )
+
+        // calc contig coverage based on summed contig depths and contig length
+        log.debug( 'calc contig coverage:' )
+        contigDepths.each( { key, val ->
+            log.debug( "\tkey=${key}, val=${val}")
+            def contig = info.contigs.find( {
+                log.debug( "\t\tcontigs=${it}" )
+                it.name == key
+            } )
+            if( contig != null ) {
+                contig.coverage = val / contig.length
+                log.debug( "\tname=${key}, depth-sum=${val}, length=${contig.length}, coverage=${contig.coverage}" )
+            }
+        } )
+        // calc N50/N90 Coverage based on filtered contigs
+        n50Contigs = info.contigs.findAll( { it.length >= info.n50 } )
+        info.n50Coverage = n50Contigs.collect( {it.coverage * it.length} ).sum() / n50Contigs.collect( {it.length} ).sum()
+        log.debug( "post-filter-N50=${info.n50Coverage}" )
+        n90Contigs = info.contigs.findAll( { it.length >= info.n90 } )
+        info.n90Coverage = n50Contigs.collect( {it.coverage * it.length} ).sum() / n90Contigs.collect( {it.length} ).sum()
+
+    } catch( Throwable t ) {
+        terminate( "Flye assembly failed! gid=${genome.id}", t, genomeContigsPath )
     }
 
 

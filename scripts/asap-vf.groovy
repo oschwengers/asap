@@ -27,8 +27,8 @@ import static bio.comp.jlu.asap.api.Paths.*
 final def env = System.getenv()
 ASAP_HOME = env.ASAP_HOME
 
-BLASTP   = "${ASAP_HOME}/share/blast/bin/blastp"
-PRODIGAL = "${ASAP_HOME}/share/prodigal"
+BLASTP   = 'blastp'
+PRODIGAL = 'prodigal'
 VF_DB    = "${ASAP_HOME}/db/sequences/vfdb"
 VF_CATEGORIES    = "${ASAP_HOME}/db/sequences/vfdb-categories.tsv"
 

@@ -28,7 +28,7 @@ final def env = System.getenv()
 ASAP_HOME = env.ASAP_HOME
 
 MEDUSA = "${ASAP_HOME}/share/medusa"
-MUMMER = "${ASAP_HOME}/share/mummer"
+MUMMER = 'mummer'
 
 LINKER      = 'NNNNNNNNNNCTAGCTAGCTAGCNNNNNNNNNN'
 LINE_LENGTH = 70
@@ -197,7 +197,7 @@ Path linkedScaffoldsPath = tmpPath.resolve( "${genomeName}-pseudo.fasta" )
 
 
 // run MeDuSa
-ProcessBuilder pb = new ProcessBuilder( 'java', '-jar', "${MEDUSA}/medusa.jar".toString(),
+ProcessBuilder pb = new ProcessBuilder( 'medusa',
     '-f', referencesTmpPath.toString(), // reference
     '-i', assemblyPath.toString(), // assembled alignments
     '-o', scaffoldsPath.toString(), // new name
@@ -304,7 +304,7 @@ config.references.each( { ref ->
         pre: [],
         post: []
     ]
-    pb = new ProcessBuilder( "${MUMMER}/nucmer".toString(),
+    pb = new ProcessBuilder( 'nucmer',
         "--threads=${NUM_THREADS}".toString(),
         referencesPath.resolve( "${refName}.fasta" ).toString(), // reference
         assemblyPath.toString() ) // assembled alignments
@@ -316,7 +316,7 @@ config.references.each( { ref ->
     if( pb.start().waitFor() != 0 ) terminate( 'could not exec nucmer!', genomeScaffoldsPath )
     log.info( '----------------------------------------------------------------------------------------------' )
     pb = new ProcessBuilder( 'sh', '-c',
-        "${MUMMER}/delta-filter -q -i 0.8 ${tmpPath}/out.delta > ${tmpPath}/out-filtered.delta".toString() ) // assembled alignments
+        "delta-filter -q -i 0.8 ${tmpPath}/out.delta > ${tmpPath}/out-filtered.delta".toString() ) // assembled alignments
         .redirectErrorStream( true )
         .redirectOutput( ProcessBuilder.Redirect.INHERIT )
         .directory( tmpPath.toFile() )
@@ -326,7 +326,7 @@ config.references.each( { ref ->
     log.info( '----------------------------------------------------------------------------------------------' )
     reference.pre = parseNucmer( tmpPath.resolve( 'out-filtered.delta' ), false )
 
-    pb = new ProcessBuilder( "${MUMMER}/nucmer".toString(),
+    pb = new ProcessBuilder( 'nucmer',
         "--threads=${NUM_THREADS}".toString(),
         referencesPath.resolve( "${refName}.fasta" ).toString(), // reference
         scaffoldsPath.toString() ) // scaffolds
@@ -338,7 +338,7 @@ config.references.each( { ref ->
     if( pb.start().waitFor() != 0 ) terminate( 'could not exec nucmer!', genomeScaffoldsPath )
     log.info( '----------------------------------------------------------------------------------------------' )
     pb = new ProcessBuilder( 'sh', '-c',
-        "${MUMMER}/delta-filter -q -i 0.8 ${tmpPath}/out.delta > ${tmpPath}/out-filtered.delta".toString() ) // assembled alignments
+        "delta-filter -q -i 0.8 ${tmpPath}/out.delta > ${tmpPath}/out-filtered.delta".toString() ) // assembled alignments
         .redirectErrorStream( true )
         .redirectOutput( ProcessBuilder.Redirect.INHERIT )
         .directory( tmpPath.toFile() )

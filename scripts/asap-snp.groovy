@@ -28,11 +28,12 @@ import static bio.comp.jlu.asap.api.Paths.*
 final def env = System.getenv()
 ASAP_HOME = env.ASAP_HOME
 
-SAMTOOLS = "${ASAP_HOME}/share/samtools"
-SNPEFF   = "java -jar ${ASAP_HOME}/share/snpeff/snpEff.jar"
-SNPSIFT  = "java -jar ${ASAP_HOME}/share/snpeff/SnpSift.jar"
-BGZIP    = "${SAMTOOLS}/bgzip"
-TABIX    = "${SAMTOOLS}/tabix"
+SAMTOOLS = 'samtools'
+BCFTOOLS = 'bcftools'
+SNPEFF   = 'snpEff'
+SNPSIFT  = 'SnpSift'
+BGZIP    = 'bgzip'
+TABIX    = 'tabix'
 
 
 
@@ -173,15 +174,15 @@ Path variantsPath = snpDetectionPath.resolve( "${genomeName}.vcf" )
 ProcessBuilder pb
 if( hasReferenceAnnotation ) {
     pb = new ProcessBuilder( 'sh', '-c',
-    "${SAMTOOLS}/samtools mpileup -uRI -f ${fastaPath} ${bamFilePath} \
-    | ${SAMTOOLS}/bcftools call --variants-only --skip-variants indels --output-type v --ploidy 1 -c  \
+    "${SAMTOOLS} mpileup -uRI -f ${fastaPath} ${bamFilePath} \
+    | ${BCFTOOLS} call --variants-only --skip-variants indels --output-type v --ploidy 1 -c  \
     | ${SNPSIFT} filter \"( QUAL >= 30 ) & (( na FILTER ) | (FILTER = 'PASS')) & ( DP >= 20 ) & ( MQ >= 20 )\" \
     | ${SNPEFF} ann -nodownload -no-intron -no-downstream -no SPLICE_SITE_REGION -upDownStreamLen 250 -config ${snpDetectionPath}/snpEff.config -csvStats ${genomeName}.csv ref - \
     > ${variantsPath}" )
 } else {
     pb = new ProcessBuilder( 'sh', '-c',
-    "${SAMTOOLS}/samtools mpileup -uRI -f ${fastaPath} ${bamFilePath} \
-    | ${SAMTOOLS}/bcftools call --variants-only --skip-variants indels --output-type v --ploidy 1 -c  \
+    "${SAMTOOLS} mpileup -uRI -f ${fastaPath} ${bamFilePath} \
+    | ${BCFTOOLS} call --variants-only --skip-variants indels --output-type v --ploidy 1 -c  \
     | ${SNPSIFT} filter \"( QUAL >= 30 ) & (( na FILTER ) | (FILTER = 'PASS')) & ( DP >= 20 ) & ( MQ >= 20 )\" \
     > ${variantsPath}" )
 }
@@ -315,7 +316,7 @@ if( hasReferenceAnnotation ) {
 
 // bgzip
 pb = new ProcessBuilder(
-    "${SAMTOOLS}/bgzip".toString(),
+    BGZIP,
     variantsPath.toString() )
     .redirectErrorStream( true )
     .redirectOutput( ProcessBuilder.Redirect.INHERIT )
@@ -329,7 +330,7 @@ log.info( '---------------------------------------------------------------------
 // tabix
 Path zippedVariantsPath = snpDetectionPath.resolve( "${genomeName}.vcf.gz" )
 pb = new ProcessBuilder(
-    "${SAMTOOLS}/tabix".toString(),
+    TABIX,
     zippedVariantsPath.toString() )
     .redirectErrorStream( true )
     .redirectOutput( ProcessBuilder.Redirect.INHERIT )
@@ -343,7 +344,7 @@ log.info( '---------------------------------------------------------------------
 // bcftools consensus
 String shortGenomeName = "${config.project.genus.toUpperCase().charAt(0)}_${genome.species}_${genome.strain}"
 pb = new ProcessBuilder( 'sh', '-c',
-    "${SAMTOOLS}/bcftools consensus --fasta-ref ${fastaPath} --haplotype 1 ${zippedVariantsPath} | sed 's/^>.*\$/>${shortGenomeName}/' > ${snpDetectionPath}/${genomeName}.consensus.fasta" )
+    "${BCFTOOLS} consensus --fasta-ref ${fastaPath} --haplotype 1 ${zippedVariantsPath} | sed 's/^>.*\$/>${shortGenomeName}/' > ${snpDetectionPath}/${genomeName}.consensus.fasta" )
     .redirectErrorStream( true )
     .redirectOutput( ProcessBuilder.Redirect.INHERIT )
     .directory( snpDetectionPath.toFile() )
@@ -356,7 +357,7 @@ log.info( '---------------------------------------------------------------------
 // bcftools stats
 Path variantsStatsPath = snpDetectionPath.resolve( "${genomeName}.chk" )
 pb = new ProcessBuilder( 'sh', '-c',
-    "${SAMTOOLS}/bcftools stats ${zippedVariantsPath} > ${variantsStatsPath}" )
+    "${BCFTOOLS} stats ${zippedVariantsPath} > ${variantsStatsPath}" )
     .redirectErrorStream( true )
     .redirectOutput( ProcessBuilder.Redirect.INHERIT )
     .directory( snpDetectionPath.toFile() )

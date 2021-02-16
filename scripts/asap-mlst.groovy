@@ -29,7 +29,7 @@ final def env = System.getenv()
 ASAP_HOME = env.ASAP_HOME
 
 MLST_DB = "${ASAP_HOME}/db/mlst"
-BLASTN  = "${ASAP_HOME}/share/blast/bin/blastn"
+BLASTN  = 'blastn'
 
 
 

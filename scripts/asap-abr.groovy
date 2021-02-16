@@ -28,7 +28,6 @@ final def env = System.getenv()
 ASAP_HOME = env.ASAP_HOME
 
 CARD             = "${ASAP_HOME}/share/card"
-SINGULARITY_CARD = "${CARD}/card.simg"
 
 PERC_SEQ_IDENT = 0.4
 
@@ -183,12 +182,7 @@ Path localGenomeSequencePath = tmpPath.resolve("${genomeName}.fasta")
 Files.copy( genomeSequencePath, localGenomeSequencePath )
 String cardOutput = 'card'
 Path cardOutputPath = tmpPath.resolve( "${cardOutput}.json" )
-ProcessBuilder pb = new ProcessBuilder( 'singularity',
-    'exec',
-    '--no-home',
-    '--bind', tmpPath.toString(), // mount tmp (cwd) directory
-    SINGULARITY_CARD.toString(), // path to Singularity container file
-    'rgi', 'main',
+ProcessBuilder pb = new ProcessBuilder( 'rgi', 'main',
     '--input_type', 'contig',
     '--num_threads', '1',
     '--input_sequence', localGenomeSequencePath.toString(),
