@@ -219,7 +219,7 @@ SeqIO.convert( "${emblPath}", "${Format.embl}", "${genbankPath}", "${Format.genb
                         StringBuilder sb = new StringBuilder( 10000000 )
                         String fastaHeader = null
                         boolean isSequence = false
-                        gffPath.eachLine( { line ->
+                        Files.lines( gffPath ).forEach( { line ->
                             if( isSequence ) {
                                 sb.append( line ).append( '\n' )
                             } else if( line.charAt(0) == '>' ) {

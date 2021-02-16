@@ -172,7 +172,7 @@ class SNPAnnotationSetup extends Step {
         Files.createLink( snpEffRefPath.resolve( 'genes.gbk' ), refGenbankPath )
 
         // build snpEff configuration
-        def lines = refGenbankPath.readLines()
+        def lines = refGenbankPath.toFile().readLines()
         String definition = lines.find( { it ==~ /^DEFINITION.+/ } ).split('DEFINITION')[1].trim()
         if( definition.contains(',')) {
             definition = definition.split(',')[0]
@@ -190,8 +190,7 @@ codon.Bacterial_and_Plant_Plastid			: TTT/F, TTC/F, TTA/L, TTG/L+, TCT/S, TCC/S,
         snpDetectionPath.resolve( 'snpEff.config' ).toFile().text = configTemplate
 
         // build snpEff ref database
-        ProcessBuilder pb = new ProcessBuilder( 'java', '-jar',
-            SNP_EFF,
+        ProcessBuilder pb = new ProcessBuilder( 'snpEff',
             'build',
             '-c', snpDetectionPath.resolve( 'snpEff.config' ).toString(),
             '-genbank',

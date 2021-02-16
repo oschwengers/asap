@@ -56,7 +56,7 @@ class PhylogenyAnalysis extends AnalysisStep {
         // check analyes/phylotree directory
         try {
             if( Files.exists( phylogenyPath ) ) {
-                phylogenyPath.deleteDir()
+                phylogenyPath.toFile().deleteDir()
                 log.debug( "existing dir \"${phylogenyPath}\" deleted!" )
             }
             Files.createDirectory( phylogenyPath )

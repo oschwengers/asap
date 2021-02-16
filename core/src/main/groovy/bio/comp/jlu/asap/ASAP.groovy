@@ -5,8 +5,8 @@ import java.io.IOException
 import java.nio.file.*
 import java.time.*
 import java.util.concurrent.*
+import groovy.cli.commons.CliBuilder
 import groovy.json.JsonSlurper
-import groovy.util.CliBuilder
 import ch.qos.logback.classic.*
 import org.slf4j.*
 import ch.qos.logback.classic.Level
@@ -25,7 +25,7 @@ import static bio.comp.jlu.asap.ASAPConstants.*
 
 
 // check options
-def cli = new CliBuilder( usage: "java -jar asap-${ASAP_VERSION}.jar -p <project-directory> [-h|-i|-c|-r] [-n] [-l] [-s <grid-slots>] [-k|-a] [-d]" )
+def cli = new CliBuilder( usage: "java -jar asap-${ASAP_VERSION}.jar -p <project-directory> [-h|-i|-c|-r] [-n] [-l] [-s <grid-slots>] [-t <tmp-dir>] [-k|-a] [-d]" )
     cli.p( longOpt: 'project-dir', args: 1, argName: 'project-directory',    required: true,  'The path to a project directory.' )
     cli.h( longOpt: 'help',      args: 0, argName: 'show help',              required: false, 'Show ASA³P usage.' )
     cli.i( longOpt: 'info',      args: 0, argName: 'info',                   required: false, 'Show information about a certain project.' )
@@ -122,7 +122,7 @@ if( opts.n ) { // clear project folder
         PROJECT_PATH_PHYLOGENY
     ].each( {
         Path folderPath = projectPath.resolve( it )
-        if( !folderPath.deleteDir()  )
+        if( !folderPath.toFile().deleteDir()  )
             Misc.exit( log, "Couldn't delete directory! dir=${folderPath}", null )
     } )
     [
@@ -335,7 +335,7 @@ if( opts.c ) { // only check config and data files
 
 
     // delete tmp sequences dir
-    projectPath.resolve( PROJECT_PATH_SEQUENCES ).deleteDir()
+    projectPath.resolve( PROJECT_PATH_SEQUENCES ).toFile().deleteDir()
 
 
     // print runtime statistics

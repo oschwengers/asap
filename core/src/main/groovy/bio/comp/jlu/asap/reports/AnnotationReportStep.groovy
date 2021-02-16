@@ -252,7 +252,7 @@ class AnnotationReportStep extends ReportStep {
         // get genome sequence
         StringBuilder sb = new StringBuilder( 10000000 )
         boolean isSequencePart = false
-        genomeGffPath.eachLine( { line ->
+        Files.lines( genomeGffPath ).forEach( { line ->
             char firstChar = line.charAt( 0 )
             if( firstChar == '>' ) {
                 isSequencePart = true

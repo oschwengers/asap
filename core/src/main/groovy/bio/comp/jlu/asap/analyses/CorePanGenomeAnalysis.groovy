@@ -55,7 +55,7 @@ class CorePanGenomeAnalysis extends AnalysisStep {
         // check analyes/phylotree directory
         try {
             if( Files.exists( corePanPath ) ) {
-                corePanPath.deleteDir()
+                corePanPath.toFile().deleteDir()
                 log.debug( "existing dir \"${corePanPath}\" deleted!" )
             }
             Files.createDirectory( corePanPath )
