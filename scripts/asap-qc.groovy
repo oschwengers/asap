@@ -133,7 +133,7 @@ Files.createFile( genomeQCReadsPath.resolve( 'state.running' ) ) // create state
 
 
 // create local tmp directory
-final Path tmpPath = Paths.get( '/', 'var', 'scratch', "tmp-${System.currentTimeMillis()}-${Math.round(Math.random()*1000)}" )
+final Path tmpPath = Paths.get( config.runtime.tmp, "tmp-${System.currentTimeMillis()}-${Math.round(Math.random()*1000)}" )
 final Path tmpTrimmedPath = tmpPath.resolve( 'trimmed' )
 try { // create tmp dir
     log.info( "tmp-folder: ${tmpPath}" )
@@ -221,7 +221,7 @@ genome.data.each( { datum ->
             Path tmpFilePath = tmpPath.resolve( 'read.tmp' )
             String illuminaEncoding = info.rawReads[0].encoding
             ProcessBuilder pb = new ProcessBuilder( FASTP,
-                '--threads', NUM_THREADS,
+                '--thread', NUM_THREADS,
                 genomeRawReadsPath.resolve( fileName ).toString(),
                 tmpFilePath.toString(),
                 )
@@ -237,7 +237,7 @@ genome.data.each( { datum ->
             Path tmpFile1Path = tmpPath.resolve( 'read-1.tmp' )
             Path tmpFile2Path = tmpPath.resolve( 'read-2.tmp' )
             ProcessBuilder pb = new ProcessBuilder( FASTP,
-                '--threads', NUM_THREADS,
+                '--thread', NUM_THREADS,
                 genomeRawReadsPath.resolve( datum.files[0] ).toString(),
                 genomeRawReadsPath.resolve( datum.files[1] ).toString(),
                 )

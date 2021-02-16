@@ -70,12 +70,16 @@ class ConfigWriter {
         final Table projectTable = tableBook.getTable( 0 )
         final Table genomeTable  = tableBook.getTable( 1 )
 
+        // runtime
+        config.runtime = [
+            version:     ASAP_VERSION
+        ]
+
         // project
         config.project = [
             name:        projectTable.getCellContent( ConfigTemplate.ROW_ID_PROJECT_NAME, 1 ),
             description: projectTable.getCellContent( ConfigTemplate.ROW_ID_PROJECT_DESCRIPTION, 1 ),
-            genus:       projectTable.getCellContent( ConfigTemplate.ROW_ID_PROJECT_GENUS, 1 ),
-            version:     ASAP_VERSION
+            genus:       projectTable.getCellContent( ConfigTemplate.ROW_ID_PROJECT_GENUS, 1 )
         ]
 
         // user

@@ -143,7 +143,7 @@ if( !Files.exists( genomeContigsPath ) ) {
 
 
 // create local tmp directory
-final Path tmpPath = Paths.get( '/', 'var', 'scratch', "tmp-${System.currentTimeMillis()}-${Math.round(Math.random()*1000)}" )
+final Path tmpPath = Paths.get( config.runtime.tmp, "tmp-${System.currentTimeMillis()}-${Math.round(Math.random()*1000)}" )
 try { // create tmp dir
     log.info( "tmp-folder: ${tmpPath}" )
     Files.createDirectory( tmpPath )
