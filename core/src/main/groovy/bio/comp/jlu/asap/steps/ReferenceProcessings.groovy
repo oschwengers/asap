@@ -24,9 +24,6 @@ class ReferenceProcessings extends Step {
 
     public static final String STEP_ABBR = 'referenceProcessings'
 
-
-    private static String SAMTOOLS = "${ASAP_HOME}/share/samtools/samtools"
-
     private Path referencesPath
 
     enum Format{
@@ -222,24 +219,29 @@ SeqIO.convert( "${genbankPath}", "${Format.genbank}", "${fastaPath}", "${Format.
 
             // remove possible accession version suffix from fasta header
             StringBuilder sb = new StringBuilder( 10000000 )
-            fastaPath.eachLine { line ->
-                if( line ==~ /^>.*/ ) {
-                    def header = line.split( ' ' )
-                    def locus = header[0]
-                    header -= locus
-                    locus = locus.substring(1)
-                    if( locus.contains('.') ) {
-                        locus = locus.split( '\\.' )[0]
-                        sb.append( ">${locus} ${header.join(' ')}\n" )
-                    } else sb.append( ">${locus} ${header.join(' ')}\n" )
-                } else sb.append( line ).append('\n')
-            }
-            fastaPath.text = sb.toString()
+            Files.lines(fastaPath).forEach( { line ->
+                    if( line ==~ /^>.*/ ) {
+                        def header = line.split( ' ' )
+                        def locus = header[0]
+                        header -= locus
+                        locus = locus.substring(1)
+                        if( locus.contains('.') ) {
+                            locus = locus.split( '\\.' )[0]
+                            sb.append( ">${locus} ${header.join(' ')}\n" )
+                        } else {
+                            sb.append( ">${locus} ${header.join(' ')}\n" )
+                        }
+                    } else {
+                        sb.append( line ).append('\n')
+                    }
+                }
+            )
+            fastaPath.toFile().text = sb.toString()
 
 
             try { // start fasta index creation process
                 ProcessBuilder pb = new ProcessBuilder(
-                    SAMTOOLS, 'faidx',
+                    'samtools', 'faidx',
                     fastaPath.toString() )
                 log.debug( "exec: ${pb.command()}" )
                 log.debug( '----------------------------------------------------------------------------------------------' )
