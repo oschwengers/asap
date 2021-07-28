@@ -1,0 +1,46 @@
+cff-version: 1.1.0
+message: "If you use ASA³P, please cite it using these metadata."
+authors: 
+  -
+    family-names: Schwengers
+    given-names: Oliver
+    orcid: https://orcid.org/0000-0003-4216-2721
+    affiliation: Bioinformatics and Systems Biology, Justus Liebig University Giessen, Giessen, 35392, Germany
+  -
+    family-names: Hoek
+    given-names: Andreas
+    affiliation: Bioinformatics and Systems Biology, Justus Liebig University Giessen, Giessen, 35392, Germany
+  -
+    family-names: Fritzenwanker
+    given-names: Moritz
+    affiliation: Institute of Medical Microbiology, Justus Liebig University Giessen, Giessen, 35392, Germany
+  -
+    family-names: Falgenhauer
+    given-names: Linda
+    affiliation: Institute of Medical Microbiology, Justus Liebig University Giessen, Giessen, 35392, Germany
+  -
+    family-names: Hain
+    given-names: Torsten
+    affiliation: Institute of Medical Microbiology, Justus Liebig University Giessen, Giessen, 35392, Germany
+  -
+    family-names: Chakraborty
+    given-names: Trinad
+    affiliation: Institute of Medical Microbiology, Justus Liebig University Giessen, Giessen, 35392, Germany
+  -
+    family-names: Goesmann
+    given-names: Alexander
+    orcid: https://orcid.org/0000-0002-7086-2568
+    affiliation: Bioinformatics and Systems Biology, Justus Liebig University Giessen, Giessen, 35392, Germany
+title: "ASA³P: An automatic and scalable pipeline for the assembly, annotation and higher-level analysis of closely related bacterial isolates"
+doi: "10.1371/journal.pcbi.1007134"
+version: 1.3.0
+keywords: 
+  - bioinformatics
+  - assembly
+  - annotation
+  - NGS
+  - WGS
+  - bacteria
+  - AMR
+license: GPL-3.0
+
