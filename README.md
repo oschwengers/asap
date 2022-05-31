@@ -355,7 +355,7 @@ a comprehensive *E. coli* set covering all potential input data types:
 * __Why do I have to pre-basecall ONT reads?__
 Unfortunately, there are too many combinations of flow cells, sequencing kits, etc.
 We had to ask to put all these information in the config sheets which would blow them up.
-Therefore, we decided to outsource these very specifc pre-processing step.
+Therefore, we decided to outsource these very specific pre-processing step.
 
 * __Can I install ASA³P by myself?__
 Yes you can! Nevertheless, we highly encourage to use either the **Docker**
@@ -366,6 +366,6 @@ linux distributions and software/database versions, we cannot give any support f
 If you run into any issues with ASA³P, we'd be happy to hear about it!
 Please, start the pipeline with `-d` (verbose debugging logs) and do not hesitate
 to file an issue including as much of the following as possible:
-- a deteiled description of the issue
+- a detailed description of the issue
 - the `asap.log` file within your project/data directory
 - in case you can already pinpoint the error: the log file of the failed subanalysis
