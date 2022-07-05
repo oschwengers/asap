@@ -59,7 +59,7 @@ interactive visualizations.
 - phylogenetic tree creation
 
 ## Availability
-All necessary files are hostet at Zenodo: [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3606299.svg)](https://doi.org/10.5281/zenodo.3606299)
+All necessary files are hosted at Zenodo: [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3606299.svg)](https://doi.org/10.5281/zenodo.3606299)
 
 Targeting different project sizes, i.e. number of genomes which should be
 analysed as a single project, we distribute ASA³P in two versions:
