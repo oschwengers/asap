@@ -5,7 +5,7 @@ package bio.comp.jlu.asap.genomes
 import java.io.IOException
 import java.nio.file.*
 import groovy.util.logging.Slf4j
-import groovy.io.FileType
+//import groovy.io.FileType
 import bio.comp.jlu.asap.api.FileType
 import bio.comp.jlu.asap.api.DataType
 import bio.comp.jlu.asap.api.GenomeSteps

@@ -34,7 +34,6 @@ def cli = new CliBuilder( usage: "java -jar asap-${ASAP_VERSION}.jar -p <project
     cli.n( longOpt: 'clean',     args: 0, argName: 'clean project',          required: false, 'Clean project folder. Attention! This will delete all data from earlier ASA³P runs.' )
     cli.l( longOpt: 'local',     args: 0, argName: 'local execution',        required: false, 'Carry out all computations locally on the current host. Use this option if no grid engine is available.' )
     cli.s( longOpt: 'slots',     args: 1, argName: 'grid-slots',             required: false, 'Amount of grid computing slots ASA³P should use. Default: 50' )
-    cli.t( longOpt: 'tmp',       args: 1, argName: 'tmp-dir',                required: false, 'Path to temporary directory. Default: /tmp/' )
     cli.k( longOpt: 'skip-comp', args: 0, argName: 'skip comparatives',      required: false, 'Skip comparative analyses. Use this option to disable pan/core genome and phylogeny steps.' )
     cli.a( longOpt: 'skip-char', args: 0, argName: 'skip characterizations', required: false, 'Skip characterization analyses. Use this option to disable taxonomic classification, MLST, ABR, VF detection and mapping steps. WARNING: this also disables the comparative steps as those partially depend on the characterization steps!' )
     cli.d( longOpt: 'debug',     args: 0, argName: 'debug',                  required: false, 'Activate intensive logging for debugging purposes.' )
@@ -67,19 +66,6 @@ if( !Files.isReadable( rawProjectPath )  ||  !Files.isWritable( rawProjectPath )
 Path projectPath = rawProjectPath.toRealPath()
 
 
-// check tmp dir
-Path rawTmpPath = opts.t ? Paths.get( opts.t ) : Paths.get( '/tmp/' )
-if( !Files.exists( rawTmpPath ) ) {
-    println( "Error: Tmp directory (${rawTmpPath}) does not exist!" )
-    System.exit(1)
-}
-if( !Files.isReadable( rawTmpPath )  ||  !Files.isWritable( rawTmpPath )  ||  !Files.isExecutable( rawTmpPath ) ) {
-    println( "Error: Wrong tmp directory (${rawTmpPath}) file permissions! The directory is either not readable, accessible or writable. Please, check the read/write/execute flags." )
-    System.exit(1)
-}
-Path tmpPath = rawTmpPath.toRealPath()
-
-
 System.setProperty( 'PROJECT_PATH', projectPath.toString() ) // set project path for logging output
 log = LoggerFactory.getLogger( getClass().getName() )
 if( opts.d ) { // set logging to debug upon user request
@@ -103,7 +89,6 @@ log.debug( "os.name: ${props['os.name']}" )
 log.debug( "os.version: ${props['os.version']}" )
 log.debug( "file.encoding: ${props['file.encoding']}" )
 log.info( "project-path: ${projectPath}" )
-log.info( "tmp-path: ${tmpPath}" )
 log.info( "command line: ${args}" )
 log.debug( "option -s/--slots: ${opts.s}" )
 log.debug( "option -i/--info: ${opts.i}" )
@@ -111,7 +96,6 @@ log.debug( "option -r/--reports: ${opts.r}" )
 log.debug( "option -c/--check: ${opts.c}" )
 log.debug( "option -n/--clean: ${opts.n}" )
 log.debug( "option -l/--local: ${opts.l}" )
-log.debug( "option -t/--tmp: ${opts.t}" )
 log.debug( "option -k/--skip-comp: ${opts.k}" )
 log.debug( "option -a/--skip-char: ${opts.a}" )
 log.debug( "option -d/--debug: ${opts.d}" )
@@ -184,7 +168,6 @@ if( !Files.exists( configPath ) )
 // parse config.json
 def config = (new JsonSlurper()).parseText( configPath.toFile().text )
 config.project.path = projectPath.toString() // store project path
-config.runtime.tmp  = tmpPath.toString() // store tmp path
 config.runtime.debugging = opts.d // store debbuging state
 
 

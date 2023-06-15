@@ -146,7 +146,7 @@ if( !Files.exists( genomeContigsPath ) ) {
 
 
 // create local tmp directory
-final Path tmpPath = Paths.get( config.runtime.tmp, "tmp-${System.currentTimeMillis()}-${Math.round(Math.random()*1000)}" )
+final Path tmpPath = Paths.get( '/', 'var', 'scratch', "tmp-${System.currentTimeMillis()}-${Math.round(Math.random()*1000)}" )
 try { // create tmp dir
     log.info( "tmp-folder: ${tmpPath}" )
     Files.createDirectory( tmpPath )
@@ -227,7 +227,7 @@ def info = [
 
 
 /** Determine which assembler to use
-  *  - only Illumina reads -> Unicycler
+  *  - only Illumina reads -> SPAdes
   *  - only PacBio reads -> HGap
   *  - only ONT reads -> Unicycler
   *  - ONT/PacBio + Illumina reads -> Unicycler
@@ -263,6 +263,12 @@ if( (FileType.READS_NANOPORE.toString() in fileTypes)  &&  (FileType.READS_ILLUM
     // only short reads -> SPAdes
     log.info( 'detected Illumina SE/PE reads -> run Unicycler' )
     runUnicycler( config, genome, genomeContigsPath, tmpPath, info )
+
+} else if( FileType.READS_SANGER.toString() in fileTypes ) {
+
+    // sanger reads -> SPAdes
+    log.info( 'detected sanger reads -> run SPAdes' )
+    runSpades( config, genome, genomeContigsPath, tmpPath, info )
 
 } else {
 
@@ -474,6 +480,118 @@ private void runUnicycler( def config, def genome, Path genomeContigsPath, Path 
     }
 
 
+}
+
+
+private void runSpades( def config, def genome, Path genomeContigsPath, Path tmpPath, def info ) {
+
+    try {
+
+        // run SPAdes
+        ProcessBuilder pb = new ProcessBuilder( SPADES,
+            '--threads', NUM_THREADS,
+            '--memory', '16',
+            '--isolate',
+            '--disable-gzip-output',
+            '--cov-cutoff', '1',
+            '--phred-offset', '33',
+            '-o', tmpPath.toString() )
+            .redirectErrorStream( true )
+            .redirectOutput( ProcessBuilder.Redirect.INHERIT )
+            .directory( tmpPath.toFile() )
+        def cmd = pb.command()
+        int readLibNr = 1
+        genome.data.each( { datum ->
+                switch( FileType.getEnum( datum.type ) ) {
+                    case FileType.READS_ILLUMINA_SINGLE:
+                        cmd << "--s${readLibNr}".toString()
+                        cmd << datum.files[0]
+                        readLibNr++
+                        break
+                    case FileType.READS_ILLUMINA_PAIRED_END:
+                        cmd << "--pe${readLibNr}-1".toString()
+                        cmd << datum.files[0]
+                        cmd << "--pe${readLibNr}-2".toString()
+                        cmd << datum.files[1]
+                        readLibNr++
+                        break
+                    case FileType.READS_ILLUMINA_MATE_PAIRS:
+                        cmd << "--mp${readLibNr}-1".toString()
+                        cmd << datum.files[0]
+                        cmd << "--mp${readLibNr}-2".toString()
+                        cmd << datum.files[1]
+                        readLibNr++
+                        break
+                    case FileType.READS_SANGER:
+                        cmd << '--sanger'
+                        cmd << datum.files[0]
+                        break
+                    default:
+                        break
+                }
+        } )
+        log.info( "exec: ${pb.command()}" )
+        log.info( '----------------------------------------------------------------------------------------------' )
+        int exitCode = pb.start().waitFor()
+        log.info( '----------------------------------------------------------------------------------------------' )
+        if( exitCode != 0 ) terminate( "abnormal SPAdes exit code! exitCode!=${exitCode}", genomeContigsPath )
+
+        // cp assembled contigs to genome contig folder
+        Path rawAssemblyPath = tmpPath.resolve( 'scaffolds.fasta' )
+        if( !Files.exists( rawAssemblyPath ) ) {
+            rawAssemblyPath = tmpPath.resolve( 'contigs.fasta' )
+        }
+
+        // calc preFilter assembly stats
+        def preFilterStatistics = calcAssemblyStatistics( rawAssemblyPath )
+        // extract SPAdes converage stats
+        rawAssemblyPath.eachLine( { line ->
+            def m = line =~ /^>(NODE_\d+_length_(\d+)_cov_([\d\.e+]+))/
+            if( m ){
+                String name = m[0][1]
+                int length = m[0][2] as int
+                double coverage = m[0][3] as double
+                def contig = preFilterStatistics.contigs.find( { it.name == name } )
+                assert contig != null
+                assert contig.length == length
+                contig.coverage = coverage
+            }
+        } )
+        // calc N50/N90 Coverage
+        def n50Contigs = preFilterStatistics.contigs.findAll( { it.length >= preFilterStatistics.n50 } )
+        preFilterStatistics.n50Coverage = n50Contigs.collect( {it.coverage * it.length} ).sum() / n50Contigs.collect( {it.length} ).sum()
+        log.debug( "pre-filter-N50=${preFilterStatistics.n50Coverage}" )
+        def n90Contigs = preFilterStatistics.contigs.findAll( { it.length >= preFilterStatistics.n90 } )
+        preFilterStatistics.n90Coverage = n50Contigs.collect( {it.coverage * it.length} ).sum() / n90Contigs.collect( {it.length} ).sum()
+
+
+        // filter contigs due to GC content, length and coverage
+        filterContigs( config, genome, rawAssemblyPath, genomeContigsPath, preFilterStatistics, info )
+        Path assemblyPath = genomeContigsPath.resolve( "${config.project.genus}_${genome.species}_${genome.strain}.fasta" )
+        info << calcAssemblyStatistics( assemblyPath )
+        // extract SPAdes converage stats
+        assemblyPath.eachLine( { line ->
+            def m = line =~ /^>(NODE_\d+_length_(\d+)_cov_([\d\.e+]+))/
+            if( m ){
+                String name = m[0][1]
+                int length = m[0][2] as int
+                double coverage = m[0][3] as double
+                def contig = info.contigs.find( { it.name == name } )
+                assert contig != null
+                assert contig.length == length
+                contig.coverage = coverage
+            }
+        } )
+        // calc N50/N90 Coverage based on filtered contigs
+        n50Contigs = info.contigs.findAll( { it.length >= info.n50 } )
+        info.n50Coverage = n50Contigs.collect( {it.coverage * it.length} ).sum() / n50Contigs.collect( {it.length} ).sum()
+        log.debug( "post-filter-N50=${info.n50Coverage}" )
+        n90Contigs = info.contigs.findAll( { it.length >= info.n90 } )
+        info.n90Coverage = n50Contigs.collect( {it.coverage * it.length} ).sum() / n90Contigs.collect( {it.length} ).sum()
+
+    } catch( Throwable t ) {
+        terminate( "SPAdes assembly failed! gid=${genome.id}", t, genomeContigsPath )
+    }
 }
 
 
