@@ -9,7 +9,7 @@ In order to update the MLST database execute the subsequent commands:
     $ASAP_HOME/bin/groovy $ASAP_HOME/scripts/admin/asap-mlst-create-db-json.groovy -p schemes/ > mlst-db.json
     tar -czf schemes.tar.gz schemes/
     rm -r schemes
-    cp -r ./* $ASAP_HOME/db/mlst/
+    cp -r ./* $ASAP_DB/mlst/
 
 
 ## Annotation sequences
