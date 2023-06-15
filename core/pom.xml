@@ -20,17 +20,17 @@
         <dependency>
             <artifactId>groovy</artifactId>
             <groupId>org.codehaus.groovy</groupId>
-            <version>3.0.7</version>
+            <version>3.0.17</version>
         </dependency>
         <dependency>
             <artifactId>groovy-json</artifactId>
             <groupId>org.codehaus.groovy</groupId>
-            <version>3.0.7</version>
+            <version>3.0.17</version>
         </dependency>
         <dependency>
             <artifactId>groovy-cli-commons</artifactId>
             <groupId>org.codehaus.groovy</groupId>
-            <version>3.0.7</version>
+            <version>3.0.17</version>
         </dependency>
         <dependency>
             <groupId>commons-cli</groupId>
