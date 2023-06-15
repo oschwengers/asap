@@ -22,6 +22,8 @@ class MappingIndices extends Step {
 
     public static final String STEP_ABBR = 'mappingIndices'
 
+    private static String BOWTIE2_BUILD = "${ASAP_HOME}/share/bowtie2/bowtie2-build"
+
 
     MappingIndices( def config ) {
 
@@ -156,7 +158,7 @@ class MappingIndices extends Step {
             String fileName = ref.substring( 0, ref.lastIndexOf( '.' ) )
             Path fastaPath  = referencesPath.resolve( "${fileName}.fasta" )
             log.debug( "reference-file: ${ref}, fileName: ${fileName}, fasta: ${fastaPath}" )
-            ProcessBuilder pb = new ProcessBuilder( 'bowtie2-build', "${fastaPath}", "${fileName}" )
+            ProcessBuilder pb = new ProcessBuilder( BOWTIE2_BUILD, "${fastaPath}", "${fileName}" )
                 pb.directory( referencesPath.toFile() )
             log.debug( "exec: ${pb.command()}" )
             log.debug( '----------------------------------------------------------------------------------------------' )

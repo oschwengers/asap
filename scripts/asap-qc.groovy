@@ -27,10 +27,16 @@ import static bio.comp.jlu.asap.api.Paths.*
 final def env = System.getenv()
 ASAP_HOME = env.ASAP_HOME
 
-FASTQC          = 'fastqc'
-FASTP           = 'fastp'
-FILTLONG        = 'filtlong'
-FASTQ_SCREEN    = 'fastq_screen'
+FASTQC              = "${ASAP_HOME}/share/fastqc/fastqc"
+TRIMMOMATIC         = "${ASAP_HOME}/share/trimmomatic.jar"
+FILTLONG            = "${ASAP_HOME}/share/filtlong"
+FASTQ_SCREEN        = "${ASAP_HOME}/share/fastq_screen"
+BAX2BAM             = "${ASAP_HOME}/share/smrtlink/smrtcmds/bin/bax2bam"
+BAM2FASTQ           = "${ASAP_HOME}/share/smrtlink/smrtcmds/bin/bam2fastq"
+PBINDEX             = "${ASAP_HOME}/share/smrtlink/smrtcmds/bin/pbindex"
+ILLUMINA_ADAPTER_SE = "${ASAP_HOME}/db/sequences/adapters-illumina-se.fa"
+ILLUMINA_ADAPTER_PE = "${ASAP_HOME}/db/sequences/adapters-illumina-pe.fa"
+FILTER_PHIX         = "${ASAP_HOME}/db/sequences/phiX.fasta"
 
 int noCores = Runtime.getRuntime().availableProcessors()
 NUM_THREADS = noCores < 8 ? Integer.toString( noCores ) : '8'
@@ -133,7 +139,7 @@ Files.createFile( genomeQCReadsPath.resolve( 'state.running' ) ) // create state
 
 
 // create local tmp directory
-final Path tmpPath = Paths.get( config.runtime.tmp, "tmp-${System.currentTimeMillis()}-${Math.round(Math.random()*1000)}" )
+final Path tmpPath = Paths.get( '/', 'var', 'scratch', "tmp-${System.currentTimeMillis()}-${Math.round(Math.random()*1000)}" )
 final Path tmpTrimmedPath = tmpPath.resolve( 'trimmed' )
 try { // create tmp dir
     log.info( "tmp-folder: ${tmpPath}" )
@@ -190,10 +196,50 @@ genome.data.each( { datum ->
 
     final FileType ft = FileType.getEnum( datum.type )
     if( ft?.getDataType() == DataType.READS ) {
-        
-        datum.files.each( {
-            info.rawReads << runFastQC( genomeRawReadsPath.resolve( it ), tmpPath, genomeRawReadsPath )
-        } )
+
+        final boolean isPacBio = ft == FileType.READS_PACBIO_RSII  ||  ft == FileType.READS_PACBIO_SEQUEL
+
+        // assess raw reads quality
+        if( isPacBio ) {
+
+            if( ft == FileType.READS_PACBIO_RSII ) { // PACBIO RSII reads -> convert all 3 bax.h5 files into a single bam file
+
+                // create file of files
+                StringBuilder sb = new StringBuilder()
+                datum.files.each( {
+                    sb.append( genomeRawReadsPath.resolve( it ).toString() )
+                    sb.append( '\n' )
+                } )
+                Path fofnPath = tmpPath.resolve( 'fofn.txt' )
+                fofnPath.text = sb.toString()
+                log.info( "wrote file of files: ${fofnPath}" )
+
+                ProcessBuilder pb = new ProcessBuilder( BAX2BAM,
+                    '-f', 'fofn.txt',
+                    '-o', genomeName )
+                    .redirectErrorStream( true )
+                    .redirectOutput( ProcessBuilder.Redirect.INHERIT )
+                    .directory( tmpPath.toFile() )
+                log.info( "exec: ${pb.command()}" )
+                log.info( '----------------------------------------------------------------------------------------------' )
+                if( pb.start().waitFor() != 0 ) terminate( 'could not exec bax2bam!', genomeQCReadsPath )
+                log.info( '----------------------------------------------------------------------------------------------' )
+
+                info.rawReads << runFastQC( tmpPath.resolve( "${genomeName}.subreads.bam" ), tmpPath, genomeRawReadsPath )
+            } else { // PacBio Sequel
+
+                Files.createSymbolicLink( tmpPath.resolve( "${genomeName}.subreads.bam" ), genomeRawReadsPath.resolve( datum.files[0] ) )
+                info.rawReads << runFastQC( tmpPath.resolve( "${genomeName}.subreads.bam" ), tmpPath, genomeRawReadsPath )
+
+            }
+
+        } else { // Illumina, Nanopore, Sanger are all FastQ files...
+
+            datum.files.each( {
+                info.rawReads << runFastQC( genomeRawReadsPath.resolve( it ), tmpPath, genomeRawReadsPath )
+            } )
+
+        }
 
         int l = info.rawReads.size()
         info.rawReadsAvg = [
@@ -213,39 +259,88 @@ genome.data.each( { datum ->
         ]
 
 
+
+
         // trim reads
         if( ft == FileType.READS_ILLUMINA_SINGLE ) {
             def fileName = datum.files[0]
             log.info( "trim single reads: file=${fileName}" )
-            // exec fastp -> adapter, qual
+            // exec Trimmomatic -> adapter, qual
             Path tmpFilePath = tmpPath.resolve( 'read.tmp' )
             String illuminaEncoding = info.rawReads[0].encoding
-            ProcessBuilder pb = new ProcessBuilder( FASTP,
-                '--thread', NUM_THREADS,
+            ProcessBuilder pb = new ProcessBuilder( 'java', '-jar',
+                TRIMMOMATIC, 'SE',
+                '-threads', NUM_THREADS,
+                "-phred${illuminaEncoding}",
                 genomeRawReadsPath.resolve( fileName ).toString(),
                 tmpFilePath.toString(),
-                )
+                "ILLUMINACLIP:${ILLUMINA_ADAPTER_SE}:2:30:10",
+                'LEADING:15',
+                'TRAILING:15',
+                'SLIDINGWINDOW:4:20',
+                'MINLEN:20',
+                'TOPHRED33' )
                 .redirectErrorStream( true )
                 .redirectOutput( ProcessBuilder.Redirect.INHERIT )
             log.info( "exec: ${pb.command()}" )
             log.info( '----------------------------------------------------------------------------------------------' )
-            if( pb.start().waitFor() != 0 ) terminate( 'could not exec fastp!', genomeQCReadsPath )
+            if( pb.start().waitFor() != 0 ) terminate( 'could not exec trimmomatic!', genomeQCReadsPath )
+            log.info( '----------------------------------------------------------------------------------------------' )
+            // exec Trimmomatic -> phiX filter
+            pb = new ProcessBuilder( 'java', '-jar',
+                TRIMMOMATIC, 'SE',
+                '-threads', NUM_THREADS,
+                "-phred${illuminaEncoding}",
+                tmpFilePath.toString(),
+                tmpTrimmedPath.resolve( fileName ).toString(),
+                "ILLUMINACLIP:${FILTER_PHIX}:2:30:10" )
+                .redirectErrorStream( true )
+                .redirectOutput( ProcessBuilder.Redirect.INHERIT )
+            log.info( "exec: ${pb.command()}" )
+            log.info( '----------------------------------------------------------------------------------------------' )
+            if( pb.start().waitFor() != 0 ) terminate( 'could not exec trimmomatic!', genomeQCReadsPath )
             log.info( '----------------------------------------------------------------------------------------------' )
         } else if( ft == FileType.READS_ILLUMINA_PAIRED_END ) {
             log.info( "trim paired reads: file=${datum.files}" )
-            // exec fastp -> adapter, qual
+            // exec Trimmomatic -> adapter, qual
             Path tmpFile1Path = tmpPath.resolve( 'read-1.tmp' )
             Path tmpFile2Path = tmpPath.resolve( 'read-2.tmp' )
-            ProcessBuilder pb = new ProcessBuilder( FASTP,
-                '--thread', NUM_THREADS,
+            String illuminaEncoding = info.rawReads[0].encoding
+            ProcessBuilder pb = new ProcessBuilder( 'java', '-jar',
+                TRIMMOMATIC, 'PE',
+                '-threads', NUM_THREADS,
+                "-phred${illuminaEncoding}",
                 genomeRawReadsPath.resolve( datum.files[0] ).toString(),
                 genomeRawReadsPath.resolve( datum.files[1] ).toString(),
-                )
+                tmpFile1Path.toString(), '/dev/null',
+                tmpFile2Path.toString(), '/dev/null',
+                "ILLUMINACLIP:${ILLUMINA_ADAPTER_PE}:2:30:10",
+                'LEADING:15',
+                'TRAILING:15',
+                'SLIDINGWINDOW:4:20',
+                'MINLEN:20',
+                'TOPHRED33' )
                 .redirectErrorStream( true )
                 .redirectOutput( ProcessBuilder.Redirect.INHERIT )
             log.info( "exec: ${pb.command()}" )
             log.info( '----------------------------------------------------------------------------------------------' )
             if( pb.start().waitFor() != 0 ) terminate( 'could not exec trimmomatic (adapter)!', genomeQCReadsPath )
+            log.info( '----------------------------------------------------------------------------------------------' )
+            // exec Trimmomatic -> phiX filter
+            pb = new ProcessBuilder( 'java', '-jar',
+                TRIMMOMATIC, 'PE',
+                '-threads', NUM_THREADS,
+                "-phred${illuminaEncoding}",
+                tmpFile1Path.toString(),
+                tmpFile2Path.toString(),
+                tmpTrimmedPath.resolve( datum.files[0] ).toString(), '/dev/null',
+                tmpTrimmedPath.resolve( datum.files[1] ).toString(), '/dev/null',
+                "ILLUMINACLIP:${FILTER_PHIX}:2:30:10" )
+                .redirectErrorStream( true )
+                .redirectOutput( ProcessBuilder.Redirect.INHERIT )
+            log.info( "exec: ${pb.command()}" )
+            log.info( '----------------------------------------------------------------------------------------------' )
+            if( pb.start().waitFor() != 0 ) terminate( 'could not exec trimmomatic (quality)!', genomeQCReadsPath )
             log.info( '----------------------------------------------------------------------------------------------' )
         } else if( ft == FileType.READS_NANOPORE ) {
 
@@ -261,19 +356,34 @@ genome.data.each( { datum ->
                 if( pb.start().waitFor() != 0 ) terminate( 'could not exec filtlong|gzip!', genomeQCReadsPath )
                 log.info( '----------------------------------------------------------------------------------------------' )
 
-        } else if( ft == FileType.READS_PACBIO ) {
+        } else if( ft == FileType.READS_PACBIO_RSII ) {
 
-            log.info( "trim PB reads: file=${datum.files}" )
-            // exec Filtlong -> length, qual
-            ProcessBuilder pb = new ProcessBuilder( 'sh', '-c',
-                "${FILTLONG} --min_length 500 --min_mean_q 85 --min_window_q 65 ${genomeRawReadsPath.resolve( datum.files[0] )} | gzip > ${tmpTrimmedPath.resolve( datum.files[0] )}" )
-                .redirectErrorStream( true )
-                .redirectOutput( ProcessBuilder.Redirect.INHERIT )
-                .directory( tmpPath.toFile() )
-                log.info( "exec: ${pb.command()}" )
-                log.info( '----------------------------------------------------------------------------------------------' )
-                if( pb.start().waitFor() != 0 ) terminate( 'could not exec filtlong|gzip!', genomeQCReadsPath )
-                log.info( '----------------------------------------------------------------------------------------------' )
+            log.warn( 'no trimming for PacBio reads!' )
+            // Do not trim PacBio reads as HGAP4 has its own internal clipping logic.
+            // Additionally, link converted bam file instead of raw bax.h5 files.
+            Path trimmedBamPath = tmpTrimmedPath.resolve( "${genomeName}.subreads.bam" )
+            Files.createSymbolicLink( trimmedBamPath, tmpPath.resolve( "${genomeName}.subreads.bam" ) )
+
+            ProcessBuilder pb = new ProcessBuilder( PBINDEX, trimmedBamPath.toString() )
+                .directory( tmpTrimmedPath.toFile() )
+            log.info( "exec: ${pb.command()}" )
+            log.info( '----------------------------------------------------------------------------------------------' )
+            if( pb.start().waitFor() != 0 ) terminate( 'could not exec pbindex!', genomeQCReadsPath )
+            log.info( '----------------------------------------------------------------------------------------------' )
+
+        } else if( ft == FileType.READS_PACBIO_SEQUEL ) {
+
+            log.warn( 'no trimming for PacBio reads!' )
+            // do not trim PacBio reads as HGAP4 has its own internal clipping logic
+            Path trimmedBamPath = tmpTrimmedPath.resolve( "${genomeName}.subreads.bam" )
+            Files.createSymbolicLink( trimmedBamPath, genomeRawReadsPath.resolve( datum.files[0] ) )
+
+            ProcessBuilder pb = new ProcessBuilder( PBINDEX, trimmedBamPath.toString() )
+                .directory( tmpTrimmedPath.toFile() )
+            log.info( "exec: ${pb.command()}" )
+            log.info( '----------------------------------------------------------------------------------------------' )
+            if( pb.start().waitFor() != 0 ) terminate( 'could not exec pbindex!', genomeQCReadsPath )
+            log.info( '----------------------------------------------------------------------------------------------' )
 
         } else {
 
@@ -288,20 +398,44 @@ genome.data.each( { datum ->
 
 
         // copy trimmed read files to reads_qc folder
-        datum.files.each( {
-            Path localQCReadFilePath = tmpTrimmedPath.resolve( it )
-            Path genomeQCReadFilePath = genomeQCReadsPath.resolve( it )
+        if( isPacBio ) {
+
+            Path localQCReadFilePath = tmpTrimmedPath.resolve( "${genomeName}.subreads.bam" )
+            Path genomeQCReadFilePath = genomeQCReadsPath.resolve( "${genomeName}.subreads.bam" )
             log.info( "copy: ${localQCReadFilePath} -> ${genomeQCReadFilePath}" )
             Files.copy( localQCReadFilePath, genomeQCReadFilePath )
-        } )
 
+            // copy PacBio index file
+            localQCReadFilePath = tmpTrimmedPath.resolve( "${genomeName}.subreads.bam.pbi" )
+            genomeQCReadFilePath = genomeQCReadsPath.resolve( "${genomeName}.subreads.bam.pbi" )
+            log.info( "copy: ${localQCReadFilePath} -> ${genomeQCReadFilePath}" )
+            Files.copy( localQCReadFilePath, genomeQCReadFilePath )
+
+        } else { // Illumina, Nanopore, Sanger are all FastQ files...
+
+            datum.files.each( {
+                Path localQCReadFilePath = tmpTrimmedPath.resolve( it )
+                Path genomeQCReadFilePath = genomeQCReadsPath.resolve( it )
+                log.info( "copy: ${localQCReadFilePath} -> ${genomeQCReadFilePath}" )
+                Files.copy( localQCReadFilePath, genomeQCReadFilePath )
+            } )
+
+        }
 
 
 
         // assess qc reads quality
-        datum.files.each( {
-            info.qcReads << runFastQC( tmpTrimmedPath.resolve( it ), tmpPath, genomeQCReadsPath )
-        } )
+        if( isPacBio ) {
+
+            info.qcReads << runFastQC( tmpTrimmedPath.resolve( "${genomeName}.subreads.bam" ), tmpPath, genomeQCReadsPath )
+
+        } else { // Illumina, Nanopore, Sanger are all FastQ files...
+
+            datum.files.each( {
+                info.qcReads << runFastQC( tmpTrimmedPath.resolve( it ), tmpPath, genomeQCReadsPath )
+            } )
+
+        }
 
         l = info.qcReads.size()
         info.qcReadsAvg = [
@@ -338,8 +472,24 @@ sed "s,%ASAP_HOME%,${ASAP_HOME},g" ${FASTQ_SCREEN}\/fastq_screen.conf.template >
 
         // create merged read files
         Path localQCReadFilePath = tmpTrimmedPath.resolve( datum.files[0] )
-        if( ft == FileType.READS_ILLUMINA_PAIRED_END ) { // only use forward files
+        if( isPacBio ) { // convert bam to fastq
+
+            // convert bam files to fastq format
+            pb = new ProcessBuilder( BAM2FASTQ,
+                '-o', "${genomeName}",
+                '-u',
+                tmpTrimmedPath.resolve( "${genomeName}.subreads.bam" ).toString() )
+                .directory( tmpPath.toFile() )
+            log.info( "exec: ${pb.command()}" )
+            log.info( '----------------------------------------------------------------------------------------------' )
+            if( pb.start().waitFor() != 0 ) terminate( 'could not exec bam2fastq!', genomeQCReadsPath )
+            log.info( '----------------------------------------------------------------------------------------------' )
+            localQCReadFilePath = tmpPath.resolve( "${genomeName}.fastq" )
+
+        } else if( ft == FileType.READS_ILLUMINA_PAIRED_END ) { // only use forward files
+
             localQCReadFilePath = tmpTrimmedPath.resolve( datum.files[0] )
+
         }
 
 
@@ -352,7 +502,7 @@ sed "s,%ASAP_HOME%,${ASAP_HOME},g" ${FASTQ_SCREEN}\/fastq_screen.conf.template >
             .redirectErrorStream( true )
             .redirectOutput( ProcessBuilder.Redirect.INHERIT )
         def cmd = pb.command()
-        if( ft == FileType.READS_PACBIO  ||  ft == FileType.READS_NANOPORE) {
+        if( ft == FileType.READS_PACBIO_RSII  ||  ft == FileType.READS_PACBIO_SEQUEL  ||  ft == FileType.READS_NANOPORE) {
             cmd << '--subset'
             cmd << '1000'
         }
@@ -363,7 +513,7 @@ sed "s,%ASAP_HOME%,${ASAP_HOME},g" ${FASTQ_SCREEN}\/fastq_screen.conf.template >
         log.info( '----------------------------------------------------------------------------------------------' )
 
         // parse FastQ Screen output
-        String fileName = localQCReadFilePath.toFile().name.replaceAll( '.gz', '' ).replaceAll( '.fastq', '' )
+        String fileName = localQCReadFilePath.toFile().name.replaceAll( '.gz', '' ).replaceAll( '.fastq', '' ).replaceAll( '.bam', '' )
         tmpTrimmedPath.resolve( "${fileName}_screen.txt" ).eachLine( { line ->
             if( !line.isEmpty() ) {
                 char first = line.charAt(0)
@@ -451,7 +601,8 @@ private def runFastQC( Path readsPath, Path tmpPath, Path destinationPath ) {
     [
         '.gz',
         '.fq',
-        '.fastq'
+        '.fastq',
+        '.bam'
     ].each( {
         fileName = fileName.replace( it, '' )
     } )

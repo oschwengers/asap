@@ -28,11 +28,11 @@ import static bio.comp.jlu.asap.api.Paths.*
 final def env = System.getenv()
 ASAP_HOME = env.ASAP_HOME
 
-MASH         = 'mash'
-NUCMER       = 'nucmer'
-DELTA_FILTER = 'delta-filter'
-BLASTN       = 'blastn'
-CMSEARCH     = 'cmsearch'
+MASH         = "${ASAP_HOME}/share/mash"
+NUCMER       = "${ASAP_HOME}/share/mummer/nucmer"
+DELTA_FILTER = "${ASAP_HOME}/share/mummer/delta-filter"
+BLASTN       = "${ASAP_HOME}/share/blast/bin/blastn"
+CMSEARCH     = "${ASAP_HOME}/share/infernal/cmsearch"
 
 REFSEQ_DB    = "${ASAP_HOME}/db/refseq"
 SILVA_DB  = "${ASAP_HOME}/db/silva/silva-bacteria"

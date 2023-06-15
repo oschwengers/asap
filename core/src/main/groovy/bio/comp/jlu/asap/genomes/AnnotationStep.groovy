@@ -22,6 +22,8 @@ import static bio.comp.jlu.asap.api.RunningStates.*
 class AnnotationStep extends GenomeStep {
 
     private static final String QSUB_SLOTS = '8'
+    private static final String PROKKA = "${ASAP_HOME}/share/prokka" // Prokka (http://bioinformatics.net.au/prokka-manual.html)
+    private static final String BARNAP = "${ASAP_HOME}/share/barrnap"
     private static final String PROTEINS = "${ASAP_HOME}/db/sequences/asap-proteins.faa"
 
     private static final GenomeSteps STEP_DEPENDENCY = GenomeSteps.SCAFFOLDING
@@ -136,6 +138,13 @@ class AnnotationStep extends GenomeStep {
             .redirectErrorStream( true )
 
 
+        def env = pb.environment() // set path variables
+        String pathEnv = env.get( 'PATH' )
+            pathEnv += ":${PROKKA}/bin"
+            pathEnv += ":${BARNAP}/bin"
+        env.put( 'PATH', pathEnv )
+
+
         String noThreads = QSUB_SLOTS
         if( localMode ) {
             pb.redirectOutput( genomePath.resolve( 'std.log' ).toFile() )
@@ -163,7 +172,7 @@ class AnnotationStep extends GenomeStep {
 
 
         List<String> cmd = pb.command()
-        cmd << 'prokka'
+        cmd << "${PROKKA}/bin/prokka".toString()
         cmd << '--genus'
             cmd << config.project.genus
         cmd << '--species'
@@ -235,7 +244,7 @@ class AnnotationStep extends GenomeStep {
         // parse gff
         info.features = []
         boolean isSequencePart = false
-        Files.lines( genomePath.resolve( "${genomeName}.gff" ) ).forEach( { line ->
+        genomePath.resolve( "${genomeName}.gff" ).eachLine( { line ->
             if( !isSequencePart ) {
                 char firstChar = line.charAt( 0 )
                 if( firstChar == '>' ) {

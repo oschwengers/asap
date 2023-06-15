@@ -25,6 +25,8 @@ import static bio.comp.jlu.asap.api.Paths.*
 final def env = System.getenv()
 ASAP_HOME = env.ASAP_HOME
 ROARY = 'roary'
+BLASTP  = "${ASAP_HOME}/share/blast/bin/blastp"
+MAKEBLASTDB  = "${ASAP_HOME}/share/blast/bin/makeblastdb"
 
 NUM_THREADS = Integer.toString( Runtime.getRuntime().availableProcessors() )
 
@@ -162,6 +164,8 @@ pb = new ProcessBuilder( ROARY,
     '-n', //fast nucleotide alignment with mafft
     '-cd', '100', // a gene must be present in ALL genes, not only in 99 % (Roary standard)
     '-g', '100000', // increase max # of allowed clusters to 100k (default 50k)
+    '-b', BLASTP,
+    '-m', MAKEBLASTDB,
     '-z') // don't delete intermediate files
     .redirectErrorStream( true )
     .redirectOutput( ProcessBuilder.Redirect.INHERIT )
