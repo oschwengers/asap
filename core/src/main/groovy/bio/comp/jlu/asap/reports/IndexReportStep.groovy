@@ -70,7 +70,7 @@ class IndexReportStep extends ReportStep {
             // parse characterization results
             Path infoJsonPath = Paths.get( projectPath.toString(), PROJECT_PATH_TAXONOMY, "${genomeName}.json" )
             if( Files.exists( infoJsonPath ) ) {
-                def taxStats = (new JsonSlurper()).parseText( infoJsonPath.text )
+                def taxStats = (new JsonSlurper()).parseText( infoJsonPath.toFile().text )
                 stat.ani = !taxStats.kmer.classification.isEmpty() ? taxStats.kmer.classification.classification : '-'
             } else {
                 stat.ani = '-'
@@ -80,7 +80,7 @@ class IndexReportStep extends ReportStep {
             // parse assembly results
             infoJsonPath = Paths.get( projectPath.toString(), PROJECT_PATH_ASSEMBLIES, genomeName, 'info.json' )
             if( Files.exists( infoJsonPath ) ) {
-                def assemblyStats = (new JsonSlurper()).parseText( infoJsonPath.text )
+                def assemblyStats = (new JsonSlurper()).parseText( infoJsonPath.toFile().text )
                 stat.genomeSize = (int)(assemblyStats.length / 1000)
                 stat.noContigs = assemblyStats.noContigs
                 stat.gc = (assemblyStats.gc as double) * 100
@@ -93,7 +93,7 @@ class IndexReportStep extends ReportStep {
             // parse annotation results
             infoJsonPath = Paths.get( projectPath.toString(), PROJECT_PATH_ANNOTATIONS, genomeName, 'info.json' )
             if( Files.exists( infoJsonPath ) ) {
-                def annotationStats = (new JsonSlurper()).parseText( infoJsonPath.text )
+                def annotationStats = (new JsonSlurper()).parseText( infoJsonPath.toFile().text )
                 stat.noGenes = annotationStats.noGenes
             } else {
                 stat.noGenes = '-'
@@ -102,7 +102,7 @@ class IndexReportStep extends ReportStep {
             // parse ABR results
             infoJsonPath = Paths.get( projectPath.toString(), PROJECT_PATH_ABR, "${genomeName}.json" )
             if( Files.exists( infoJsonPath ) ) {
-                def abrStats = (new JsonSlurper()).parseText( infoJsonPath.text )
+                def abrStats = (new JsonSlurper()).parseText( infoJsonPath.toFile().text )
                 stat.noABRs = abrStats.abr.perfect.size()
             } else {
                 stat.noABRs = '-'
@@ -111,7 +111,7 @@ class IndexReportStep extends ReportStep {
             // parse virulence factor results
             infoJsonPath = Paths.get( projectPath.toString(), PROJECT_PATH_VF, "${genomeName}.json" )
             if( Files.exists( infoJsonPath ) ) {
-                def vfStats = (new JsonSlurper()).parseText( infoJsonPath.text )
+                def vfStats = (new JsonSlurper()).parseText( infoJsonPath.toFile().text )
                 stat.noVFs = vfStats.vf.size()
             } else {
                 stat.noVFs = '-'
@@ -120,7 +120,7 @@ class IndexReportStep extends ReportStep {
             // parse SNP results
             infoJsonPath = Paths.get( projectPath.toString(), PROJECT_PATH_SNPS, "${genomeName}.json" )
             if( Files.exists( infoJsonPath ) ) {
-                def snpStats = (new JsonSlurper()).parseText( infoJsonPath.text )
+                def snpStats = (new JsonSlurper()).parseText( infoJsonPath.toFile().text )
                 stat.noHISNPs = snpStats.highImpactSNPs.size()
             } else {
                 stat.noHISNPs = '-'

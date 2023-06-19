@@ -11,6 +11,6 @@ public final class ASAPConstants {
 public final static int MAX_STEP_WAITING_PERIOD = 24*60*60*1000;
 public final static int EXP_BACKOFF_EXP = 10;
 
-public final static String ASAP_VERSION = "1.3.0";
+public final static String ASAP_VERSION = "1.4.0-SNAPSHOT";
 
 }

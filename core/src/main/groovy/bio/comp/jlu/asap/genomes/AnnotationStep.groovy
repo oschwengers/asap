@@ -223,7 +223,7 @@ class AnnotationStep extends GenomeStep {
         ]
 
         // parse Prokka stats
-        String prokkaSummary = genomePath.resolve( "${genomeName}.txt" ).text
+        String prokkaSummary = genomePath.resolve( "${genomeName}.txt" ).toFile().text
         def m = prokkaSummary =~ /bases: (\d+)/
         info.genomeSize = m ? m[0][1] as int : 0
         m = prokkaSummary =~ /gene: (\d+)/
@@ -244,7 +244,7 @@ class AnnotationStep extends GenomeStep {
         // parse gff
         info.features = []
         boolean isSequencePart = false
-        genomePath.resolve( "${genomeName}.gff" ).eachLine( { line ->
+        genomePath.resolve( "${genomeName}.gff" ).toFile().eachLine( { line ->
             if( !isSequencePart ) {
                 char firstChar = line.charAt( 0 )
                 if( firstChar == '>' ) {
@@ -296,14 +296,13 @@ class AnnotationStep extends GenomeStep {
 
         log.debug( "clean: genome.id=${genome.id}" )
         
-        genomePath.eachFile( groovy.io.FileType.FILES, {
-            File file = it.toFile()
-            if( file.name.endsWith( '.log' )  &&  file.length() == 0 ) {
-                log.debug( "remove empty log file: ${file}" )
+        genomePath.toFile().eachFile( groovy.io.FileType.FILES, {
+            if( it.getName().endsWith( '.log' )  &&  it.length() == 0 ) {
+                log.debug( "remove empty log file: ${it}" )
                 try{
                     Files.delete( it )
                 } catch( Exception ex ) {
-                    log.warn( "could not delete file: ${file}", ex )
+                    log.warn( "could not delete file: ${it}", ex )
                 }
             }
         } )

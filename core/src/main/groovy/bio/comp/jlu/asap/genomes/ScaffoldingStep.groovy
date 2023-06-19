@@ -183,14 +183,13 @@ class ScaffoldingStep extends GenomeStep {
 
         log.debug( "clean: genome.id=${genome.id}" )
 
-        genomePath.eachFile( groovy.io.FileType.FILES, {
-            File file = it.toFile()
-            if( file.name.endsWith( '.log' )  &&  file.length() == 0 ) {
-                log.debug( "remove empty log file: ${file}" )
+        genomePath.toFile().eachFile( groovy.io.FileType.FILES, {
+            if( it.getName().endsWith( '.log' )  &&  it.length() == 0 ) {
+                log.debug( "remove empty log file: ${it}" )
                 try{
                     Files.delete( it )
                 } catch( Exception ex ) {
-                    log.warn( "could not delete file: ${file}", ex )
+                    log.warn( "could not delete file: ${it}", ex )
                 }
             }
         } )

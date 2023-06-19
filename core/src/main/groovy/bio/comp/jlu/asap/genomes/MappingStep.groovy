@@ -161,14 +161,13 @@ class MappingStep extends GenomeStep {
 
         log.debug( "clean: genome.id=${genome.id}" )
         
-        mappingsPath.eachFileMatch( FileType.FILES, ~/${genomeName}\..+\.log/, {
-            File file = it.toFile()
-            if( file.name.endsWith( '.log' )  &&  file.length() == 0 ) {
+        mappingsPath.toFile().eachFileMatch( FileType.FILES, ~/${genomeName}\..+\.log/, {
+            if( it.getName().endsWith( '.log' )  &&  it.length() == 0 ) {
                 try{
-                    log.debug( "remove empty log file: ${file}" )
+                    log.debug( "remove empty log file: ${it}" )
                     Files.delete( it )
                 } catch( Exception ex ) {
-                    log.warn( "could not delete file: ${file}", ex )
+                    log.warn( "could not delete file: ${it}", ex )
                 }
             }
         } )

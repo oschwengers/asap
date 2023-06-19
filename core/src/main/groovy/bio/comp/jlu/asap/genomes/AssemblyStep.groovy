@@ -179,15 +179,14 @@ class AssemblyStep extends GenomeStep {
 
         log.debug( "clean: genome.id=${genome.id}" )
         
-        genomePath.eachFile( groovy.io.FileType.FILES, {
-            File file = it.toFile()
-            if( ( file.name.endsWith( '.log' )  ||  file.name == 'spades.err' )
-                    &&  file.length() == 0 ) {
-                log.debug( "genome.id=${genome.id}: remove empty log file: ${file}" )
+        genomePath.toFile().eachFile( groovy.io.FileType.FILES, {
+            if( ( it.getName().endsWith( '.log' )  ||  it.name == 'spades.err' )
+                    &&  it.length() == 0 ) {
+                log.debug( "genome.id=${genome.id}: remove empty log file: ${it}" )
                 try{
                     Files.delete( it )
                 } catch( Exception ex ) {
-                    log.warn( "genome.id=${genome.id}: could not delete file: ${file}", ex )
+                    log.warn( "genome.id=${genome.id}: could not delete file: ${it}", ex )
                 }
             }
         } )

@@ -78,7 +78,7 @@ class VFReportStep extends ReportStep {
             if( Files.exists( vfPath.resolve( "${genomeName}.finished" ) ) ) {
 
                 Path infoJsonPath = vfPath.resolve( "${genomeName}.json" )
-                stat << (new JsonSlurper()).parseText( infoJsonPath.text )
+                stat << (new JsonSlurper()).parseText( infoJsonPath.toFile().text )
                 stat.genomeName = genomeName
 
                 // aggregations

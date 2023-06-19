@@ -190,7 +190,8 @@ codon.Bacterial_and_Plant_Plastid			: TTT/F, TTC/F, TTA/L, TTG/L+, TCT/S, TCC/S,
         snpDetectionPath.resolve( 'snpEff.config' ).toFile().text = configTemplate
 
         // build snpEff ref database
-        ProcessBuilder pb = new ProcessBuilder( 'snpEff',
+        ProcessBuilder pb = new ProcessBuilder( 'java', '-jar',
+            SNP_EFF,
             'build',
             '-c', snpDetectionPath.resolve( 'snpEff.config' ).toString(),
             '-genbank',

@@ -120,14 +120,13 @@ class PhylogenyAnalysis extends AnalysisStep {
 
         log.debug( 'clean' )
         
-        phylogenyPath.eachFile( FileType.FILES, {
-            File file = it.toFile()
-            if( file.name.endsWith( '.log' )  &&  file.length() == 0 ) {
+        phylogenyPath.toFile().eachFile( FileType.FILES, {
+            if( it.getName().endsWith( '.log' )  &&  it.length() == 0 ) {
                 try{
-                    log.debug( "remove empty log file: ${file}" )
+                    log.debug( "remove empty log file: ${it}" )
                     Files.delete( it )
                 } catch( Exception ex ) {
-                    log.warn( "could not delete file: ${file}", ex )
+                    log.warn( "could not delete file: ${it}", ex )
                 }
             }
         } )

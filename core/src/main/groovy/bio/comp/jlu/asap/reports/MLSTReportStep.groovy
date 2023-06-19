@@ -80,7 +80,7 @@ class MLSTReportStep extends ReportStep {
             if( Files.exists( mlstPath.resolve( "${genomeName}.finished" ) ) ) {
 
                 Path infoJsonPath = mlstPath.resolve( "${genomeName}.json" )
-                stat << (new JsonSlurper()).parseText( infoJsonPath.text )
+                stat << (new JsonSlurper()).parseText( infoJsonPath.toFile().text )
                 stat.genomeName = genomeName
 
                 // conversions

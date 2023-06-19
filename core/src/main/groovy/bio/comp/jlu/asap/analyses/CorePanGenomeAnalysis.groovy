@@ -125,13 +125,12 @@ class CorePanGenomeAnalysis extends AnalysisStep {
 
         log.debug( 'clean' )
 
-        corePanPath.eachFile( FileType.FILES, {
-            File file = it.toFile()
-            if( file.name.endsWith( '.log' )  &&  file.length() == 0 ) {
+        corePanPath.toFile().eachFile( FileType.FILES, {
+            if( it.getName().endsWith( '.log' )  &&  it.length() == 0 ) {
                 try{
                     Files.delete( it )
                 } catch( Exception ex ) {
-                    log.warn( "could not delete file: ${file}", ex )
+                    log.warn( "could not delete file: ${it}", ex )
                 }
             }
         } )

@@ -159,8 +159,8 @@ class SNPDetectionStep extends GenomeStep {
 
         log.debug( "clean: genome.id=${genome.id}" )
         
-        snpDetectionPath.eachFileMatch( FileType.FILES, ~/${genomeName}\..+\.log/, {
-            if( it.toFile().length() == 0 ) {
+        snpDetectionPath.toFile().eachFileMatch( FileType.FILES, ~/${genomeName}\..+\.log/, {
+            if( it.length() == 0 ) {
                 try{
                     log.debug( "remove empty log file: ${it}" )
                     Files.delete( it )

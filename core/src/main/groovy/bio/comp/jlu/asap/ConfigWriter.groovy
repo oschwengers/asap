@@ -79,7 +79,8 @@ class ConfigWriter {
         config.project = [
             name:        projectTable.getCellContent( ConfigTemplate.ROW_ID_PROJECT_NAME, 1 ),
             description: projectTable.getCellContent( ConfigTemplate.ROW_ID_PROJECT_DESCRIPTION, 1 ),
-            genus:       projectTable.getCellContent( ConfigTemplate.ROW_ID_PROJECT_GENUS, 1 )
+            genus:       projectTable.getCellContent( ConfigTemplate.ROW_ID_PROJECT_GENUS, 1 ),
+            version:     ASAP_VERSION
         ]
 
         // user

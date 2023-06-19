@@ -79,7 +79,7 @@ class TaxClassificationReportStep extends ReportStep {
             if( Files.exists( taxPath.resolve( "${genomeName}.finished" ) ) ) {
 
                 Path infoJsonPath = taxPath.resolve( "${genomeName}.json" )
-                stat << (new JsonSlurper()).parseText( infoJsonPath.text )
+                stat << (new JsonSlurper()).parseText( infoJsonPath.toFile().text )
                 stat.genomeName = genomeName
 
                 // sankey diagram computations

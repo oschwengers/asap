@@ -99,8 +99,8 @@ class QCReportStep extends ReportStep {
                 stat.qcReads.each {
                     Path fileQcReadsPath = qcReadsPath.resolve( it.fileName )
                     Files.createDirectory( fileQcReadsPath )
-                    Paths.get( projectPath.toString(), PROJECT_PATH_READS_QC, genomeName, it.fileName ).eachFile( {
-                        Files.createLink( fileQcReadsPath.resolve( it.fileName ), it )
+                    Paths.get( projectPath.toString(), PROJECT_PATH_READS_QC, genomeName, it.fileName ).toFile().eachFile( {
+                        Files.createLink( fileQcReadsPath.resolve( it.getName() ), it.toPath() )
                     } )
                 }
 
@@ -110,8 +110,8 @@ class QCReportStep extends ReportStep {
                 stat.rawReads.each {
                     Path fileRawReadsPath = rawReadsPath.resolve( it.fileName )
                     Files.createDirectory( fileRawReadsPath )
-                    Paths.get( projectPath.toString(), PROJECT_PATH_READS_RAW, genomeName, it.fileName ).eachFile( {
-                        Files.createLink( fileRawReadsPath.resolve( it.fileName ), it )
+                    Paths.get( projectPath.toString(), PROJECT_PATH_READS_RAW, genomeName, it.fileName ).toFile().eachFile( {
+                        Files.createLink( fileRawReadsPath.resolve( it.getName() ), it.toPath() )
                     } )
                 }
 

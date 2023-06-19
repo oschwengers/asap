@@ -124,7 +124,7 @@ class ABRReportStep extends ReportStep {
             if( Files.exists( abrPath.resolve( "${genomeName}.finished" ) ) ) {
 
                 Path infoJsonPath = abrPath.resolve( "${genomeName}.json" )
-                stat << (new JsonSlurper()).parseText( infoJsonPath.text )
+                stat << (new JsonSlurper()).parseText( infoJsonPath.toFile().text )
                 stat.genomeName = genomeName
 
                 // conversions
